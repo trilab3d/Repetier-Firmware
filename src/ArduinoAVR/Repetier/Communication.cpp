@@ -470,6 +470,46 @@ FSTRINGVALUE(Com::tStartupGCode, STARTUP_GCODE)
 FSTRINGVALUE(Com::tTrinamicMotorCurrent,  "Trinamic motor current:")
 FSTRINGVALUE(Com::tTrinamicMicrostepMode, "Trinamic microstep mode:")
 #endif
+#ifdef USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1
+FSTRINGVALUE(Com::tUserQuickMenuItemCustomScript1,USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1)
+#endif
+#ifdef USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2
+FSTRINGVALUE(Com::tUserQuickMenuItemCustomScript2,USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2)
+#endif
+#ifdef USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3
+FSTRINGVALUE(Com::tUserQuickMenuItemCustomScript3,USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3)
+#endif
+#ifdef USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4
+FSTRINGVALUE(Com::tUserQuickMenuItemCustomScript4,USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4)
+#endif
+#ifdef USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_5
+FSTRINGVALUE(Com::tUserQuickMenuItemCustomScript5,USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_5)
+#endif
+#ifdef UI_SERVICE_MENU_ITEM1
+FSTRINGVALUE(Com::tServiceMenuItem1,UI_SERVICE_MENU_ITEM1)
+#endif
+#ifdef UI_SERVICE_MENU_ITEM2
+FSTRINGVALUE(Com::tServiceMenuItem2,UI_SERVICE_MENU_ITEM2)
+#endif
+#ifdef UI_SERVICE_MENU_ITEM3
+FSTRINGVALUE(Com::tServiceMenuItem3,UI_SERVICE_MENU_ITEM3)
+#endif
+#ifdef UI_SERVICE_MENU_ITEM4
+FSTRINGVALUE(Com::tServiceMenuItem4,UI_SERVICE_MENU_ITEM4)
+#endif
+#ifdef UI_SERVICE_MENU_ITEM5
+FSTRINGVALUE(Com::tServiceMenuItem5,UI_SERVICE_MENU_ITEM5)
+#endif
+#ifdef EXTRUDER_JAM_CONTROL
+FSTRINGVALUE(Com::tEPREofControl, "Filament sensor control disabled:")
+#endif
+
+
+
+
+
+
+
 bool Com::writeToAll = true; // transmit start messages to all devices!
 
 void Com::cap(FSTRINGPARAM(text)) {

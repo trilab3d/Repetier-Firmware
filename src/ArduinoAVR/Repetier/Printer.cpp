@@ -82,8 +82,10 @@ millis_t Printer::lastTempReport = 0;
 
 #if EEPROM_MODE != 0
 float Printer::zBedOffset = HAL::eprGetFloat(EPR_Z_PROBE_Z_OFFSET);
+float Printer::zProbeHeight  = HAL::eprGetFloat(EPR_Z_PROBE_HEIGHT);
 #else
 float Printer::zBedOffset = Z_PROBE_Z_OFFSET;
+float Printer::zProbeHeight  = Z_PROBE_HEIGHT;
 #endif
 #if FEATURE_AUTOLEVEL
 float Printer::autolevelTransformation[9]; ///< Transformation matrix
@@ -514,17 +516,20 @@ void Printer::updateDerivedParameter() {
 	if(minimumSpeed2 > minimumSpeed) {
 		minimumSpeed = minimumSpeed2;
 	}
+	/*
     if(maxJerk < 2 * minimumSpeed) {// Enforce minimum start speed if target is faster and jerk too low
         maxJerk = 2 * minimumSpeed;
         Com::printFLN(PSTR("XY jerk was too low, setting to "), maxJerk);
     }
+	*/
     accel = RMath::max(maxAccelerationMMPerSquareSecond[Z_AXIS], maxTravelAccelerationMMPerSquareSecond[Z_AXIS]);
 #if DRIVE_SYSTEM != DELTA
     float minimumZSpeed = 0.5 * accel * sqrt(2.0f / (axisStepsPerMM[Z_AXIS] * accel));
-    if(maxZJerk < 2 * minimumZSpeed) {
+    /*
+	if(maxZJerk < 2 * minimumZSpeed) {
         maxZJerk = 2 * minimumZSpeed;
         Com::printFLN(PSTR("Z jerk was too low, setting to "), maxZJerk);
-    }
+    }*/
 #endif
 /*
     maxInterval = F_CPU / (minimumSpeed * axisStepsPerMM[X_AXIS]);
@@ -2631,7 +2636,7 @@ void Printer::stopPrint() {
 #if defined(DRV_TMC2130)
     void Printer::configTMC2130(TMC2130Stepper* tmc_driver, bool tmc_stealthchop, int8_t tmc_sgt,
       uint8_t tmc_pwm_ampl, uint8_t tmc_pwm_grad, bool tmc_pwm_autoscale, uint8_t tmc_pwm_freq) {
-        while(!tmc_driver->stst());                     // Wait for motor stand-still
+        //while(!tmc_driver->stst());                     // Wait for motor stand-still
         tmc_driver->begin();                            // Initiate pins and registeries
         tmc_driver->I_scale_analog(true);               // Set current reference source
         tmc_driver->interpolate(true);                  // Set internal microstep interpolation
