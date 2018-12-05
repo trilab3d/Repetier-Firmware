@@ -253,6 +253,8 @@
 #define UI_ACTION_Z_OFFSET              1241
 #define UI_ACTION_TOGGLE_JAMCONTROL     1242
 
+#define UI_ACTION_LEAST_SQUARES_CALIB   1243
+
 // 1500-1699 reserved for custom actions
 
 #define UI_ACTION_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1         1500

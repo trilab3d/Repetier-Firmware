@@ -1479,8 +1479,10 @@ UI_MENU_SUBMENU_T(ui_menu_conf_delta, UI_TEXT_ZCALIB_ID, ui_menu_delta)
 #define UI_MENU_DELTA_COND
 #define UI_MENU_DELTA_CNT 0
 #endif
-#define UI_MENU_CONFIGURATION {UI_MENU_ADDCONDBACK LANGMENU_ENTRY &ui_menu_general_baud,&ui_menu_general_stepper_inactive,&ui_menu_general_max_inactive  ,&ui_menu_conf_accel,&ui_menu_conf_feed UI_MENU_EXTCONF_COND UI_MENU_BEDCONF_COND UI_MENU_EEPROM_COND UI_MENU_DELTA_COND UI_MENU_SL_COND}
-UI_MENU(ui_menu_configuration, UI_MENU_CONFIGURATION, UI_MENU_BACKCNT + LANGMENU_COUNT + UI_MENU_EEPROM_CNT + UI_MENU_EXTCONF_CNT + UI_MENU_BEDCONF_CNT + UI_MENU_DELTA_CNT + UI_MENU_SL_CNT + 5)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_least_squares_calib, UI_TEXT_LEAST_SQUARES_CALIB_ID, UI_ACTION_LEAST_SQUARES_CALIB)
+
+#define UI_MENU_CONFIGURATION {UI_MENU_ADDCONDBACK LANGMENU_ENTRY &ui_menu_general_baud,&ui_menu_general_stepper_inactive,&ui_menu_general_max_inactive  ,&ui_menu_conf_accel,&ui_menu_conf_feed UI_MENU_EXTCONF_COND UI_MENU_BEDCONF_COND UI_MENU_EEPROM_COND UI_MENU_DELTA_COND UI_MENU_SL_COND,&ui_menu_least_squares_calib}
+UI_MENU(ui_menu_configuration, UI_MENU_CONFIGURATION, UI_MENU_BACKCNT + LANGMENU_COUNT + UI_MENU_EEPROM_CNT + UI_MENU_EXTCONF_CNT + UI_MENU_BEDCONF_CNT + UI_MENU_DELTA_CNT + UI_MENU_SL_CNT + 6)
 
 // **** Preheat menu ****
 

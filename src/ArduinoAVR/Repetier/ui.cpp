@@ -39,6 +39,8 @@ extern const int8_t encoder_table[16] PROGMEM ;
 #include <inttypes.h>
 #include <ctype.h>
 
+#include "LastSquareCalib.h"
+
 #if FEATURE_SERVO > 0 && UI_SERVO_CONTROL > 0
 #if   UI_SERVO_CONTROL == 1 && defined(SERVO0_NEUTRAL_POS)
 uint16_t servoPosition = SERVO0_NEUTRAL_POS;
@@ -3998,6 +4000,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
                 Printer::distortion.enable(true);
             break;
 #endif
+
+        case UI_ACTION_LEAST_SQUARES_CALIB:
+            leastSquaresCalibration();
+            break;
+
         default:
             EVENT_UI_EXECUTE(action, allowMoves);
             break;
