@@ -27,7 +27,7 @@
 
 #if defined(DELTA_AUTO_CALIBRATION)
 
-#include <math.h>
+#define DEBUG_AUTO_CALIBRATION
 
 #define degreesToRadians PI / 180.0
 #define min(a,b) ((a)<(b)?(a):(b))
@@ -56,6 +56,14 @@ void ArrayGaussJordan(float ar[][num_Factors + 1], float solution[], int numRows
       }
     }
 
+    Com::printFLN(PSTR("----- ArrayGaussJordan 1 -----"));
+    for(int i=0; i < 6; ++i) {
+      for(int j = 0; j < 7; ++j) {
+        Com::printF(PSTR(", "), ar[i][j], 4);
+      }
+      Com::printFLN(PSTR(""));
+    }
+
     // Use row i to eliminate the ith element from previous and subsequent rows
     float v = ar[i][i];
     for (int j = 0; j < i; ++j) {
@@ -66,12 +74,28 @@ void ArrayGaussJordan(float ar[][num_Factors + 1], float solution[], int numRows
       }
     }
 
+    Com::printFLN(PSTR("----- ArrayGaussJordan 2 -----"));
+    for(int i=0; i < 6; ++i) {
+      for(int j = 0; j < 7; ++j) {
+        Com::printF(PSTR(", "), ar[i][j], 4);
+      }
+      Com::printFLN(PSTR(""));
+    }
+
     for (int j = i + 1; j < numRows; ++j) {
       float factor = ar[j][i]/v;
       ar[j][i] = 0.0;
       for (int k = i + 1; k <= numRows; ++k) {
         ar[j][k] -= ar[i][k] * factor;
       }
+    }
+
+    Com::printFLN(PSTR("----- ArrayGaussJordan 3 -----"));
+    for(int i=0; i < 6; ++i) {
+      for(int j = 0; j < 7; ++j) {
+        Com::printF(PSTR(", "), ar[i][j], 4);
+      }
+      Com::printFLN(PSTR(""));
     }
   }
 
@@ -337,8 +361,6 @@ void DoDeltaCalibration(Parameters *params) {
   //   return "Error: need at least as many points as factors you want to calibrate";
   // }
 
-  // ClearDebug();
-
   // // Transform the probing points to motor endpoints and store them in a matrix, so that we can do multiple iterations using the same data
   float probeMotorPositions[params->numPoints][3];
   float corrections[params->numPoints];
@@ -355,20 +377,24 @@ void DoDeltaCalibration(Parameters *params) {
     probeMotorPositions[i][2] = params->deltaParams.Transform(machinePos, 2);
 
     initialSumOfSquares += sq(params->probePoints[i][2]);
-
-    Com::printFLN(PSTR("probeMotorPositions0"), probeMotorPositions[i][0]);
-    Com::printFLN(PSTR("probeMotorPositions0"), probeMotorPositions[i][1]);
-    Com::printFLN(PSTR("probeMotorPositions0"), probeMotorPositions[i][2]);
-    Com::printFLN(PSTR("initialSumOfSquares"), initialSumOfSquares);
   }
 
-  // // DebugPrint(probeMotorPositions.Print("Motor positions:"));
-  Com::printFLN(PSTR("--------------------------------"));
+  Com::printFLN(PSTR("----- probeMotorPositions -----"));
+  for(int i=0; i < params->numPoints; ++i) {
+    Com::printF(PSTR("X="), probeMotorPositions[i][0], 4);
+    Com::printF(PSTR(", Y="), probeMotorPositions[i][1], 4);
+    Com::printFLN(PSTR(", Z="), probeMotorPositions[i][2], 4);
+  }
+  Com::printFLN(PSTR("initialSumOfSquares"), initialSumOfSquares, 4);
 
+
+  Com::printFLN(PSTR("---------- Newton-Raphson iterations ----------"));
   // // // Do 1 or more Newton-Raphson iterations
   int iteration = 0;
   bool expectedRmsError;
   for (;;) {
+    Com::printFLN(PSTR("iteration "), iteration);
+
     // Build a Nx7 matrix of derivatives with respect to xa, xb, yc, za, zb, zc, diagonal.
     float derivativeMatrix[params->numPoints][params->numFactors];
     for (int i = 0; i < params->numPoints; ++i) {
@@ -377,16 +403,13 @@ void DoDeltaCalibration(Parameters *params) {
       }
     }
 
-    Com::printFLN(PSTR("derivativeMatrix"));
+    Com::printFLN(PSTR("----- derivativeMatrix -----"));
     for(int i=0; i < params->numPoints; ++i) {
       for(int j = 0; j < params->numFactors; ++j) {
-        Com::printF(PSTR(", "), derivativeMatrix[i][j]);
+        Com::printF(PSTR(", "), derivativeMatrix[i][j], 4);
       }
       Com::printFLN(PSTR(""));
     }
-
-  // //   DebugPrint(derivativeMatrix.Print("Derivative matrix:"));
-    Com::printFLN(PSTR("--------------------------------"));
 
     // Now build the normal equations for least squares fitting
     float normalMatrix[params->numFactors][num_Factors + 1];
@@ -397,37 +420,31 @@ void DoDeltaCalibration(Parameters *params) {
           temp += derivativeMatrix[k][i] * derivativeMatrix[k][j];
         }
         normalMatrix[i][j] = temp;
+        Com::printFLN(PSTR("Temp1"), temp, 4);
       }
-      float temp = derivativeMatrix[0][i] * -(params->probePoints[0][2] + corrections[0]);
+      float temp = derivativeMatrix[0][i] * -1.0 * (params->probePoints[0][2] + corrections[0]);
       for (int k = 1; k < params->numPoints; ++k) {
-        temp += derivativeMatrix[k][i] * -(params->probePoints[k][2] + corrections[k]);
+        temp += derivativeMatrix[k][i] * -1.0 * (params->probePoints[k][2] + corrections[k]);
       }
+      Com::printFLN(PSTR("Temp2"), temp, 4);
       normalMatrix[i][params->numFactors] = temp;
     }
 
-    Com::printFLN(PSTR("normalMatrix"));
+    Com::printFLN(PSTR("----- normalMatrix -----"));
     for(int i=0; i < params->numFactors; ++i) {
-      for(int j = 0; j < num_Factors + 1; ++j) {
-        Com::printF(PSTR(", "), normalMatrix[i][j]);
+      for(int j = 0; j < params->numFactors + 1; ++j) {
+        Com::printF(PSTR(", "), normalMatrix[i][j], 4);
       }
       Com::printFLN(PSTR(""));
     }
 
-  //   DebugPrint(normalMatrix.Print("Normal matrix:"));
-
     float solution[params->numFactors];
     ArrayGaussJordan(normalMatrix, solution, params->numFactors);
     
-        Com::printFLN(PSTR("--------------------------------ArrayGaussJordan"));
-
+    Com::printFLN(PSTR("----- ArrayGaussJordan -----"));
     for (int i = 0; i < params->numFactors; ++i) {
-      // if (isNaN(solution[i])) {
-      // throw "Unable to calculate corrections. Please make sure the bed probe points are all distinct.";
-      // }
-      Com::printFLN(PSTR("solution "), solution[i]);
+      Com::printFLN(PSTR("solution"), solution[i], 4);
     }
-
-  //   DebugPrint(normalMatrix.Print("Solved matrix:"));
 
   //   if (debug) {
   //     DebugPrint(PrintVector("Solution", solution));
@@ -446,12 +463,9 @@ void DoDeltaCalibration(Parameters *params) {
 
     params->deltaParams.Adjust(params->numFactors, solution, params->normalise);
 
-    Com::printFLN(PSTR("--------------------------------Adjust"));
+    Com::printFLN(PSTR("----- Adjust -----"));
     for (int i = 0; i < params->numFactors; ++i) {
-      // if (isNaN(solution[i])) {
-      // throw "Unable to calculate corrections. Please make sure the bed probe points are all distinct.";
-      // }
-      Com::printFLN(PSTR("solution "), solution[i]);
+      Com::printFLN(PSTR("solution"), solution[i], 4);
     }
 
     // Calculate the expected probe heights using the new parameters
@@ -472,6 +486,11 @@ void DoDeltaCalibration(Parameters *params) {
       // DebugPrint(PrintVector("Expected probe error", expectedResiduals));
     }
 
+    Com::printFLN(PSTR("----- expectedProbeHeights -----"));
+    for (int i = 0; i < params->numPoints; ++i) {
+      Com::printFLN(PSTR("corrections"), corrections[i], 4);
+    }
+
     // Decide whether to do another iteration Two is slightly better than one, but three doesn't improve things.
     // Alternatively, we could stop when the expected RMS error is only slightly worse than the RMS of the residuals.
     ++iteration;
@@ -479,47 +498,52 @@ void DoDeltaCalibration(Parameters *params) {
       break; 
     }
   }
-
-  // return "Calibrated " + numFactors + " factors using " + numPoints + " points, deviation before " + Math.sqrt(initialSumOfSquares/numPoints).toFixed(2)
-  //     + " after " + expectedRmsError.toFixed(2);
 }
 
 void leastSquaresCalibration() {
 
   Parameters params;
 
-  Printer::homeAxis(true, true, true);
+  // Printer::homeAxis(true, true, true);
   // Printer::resetTransformationMatrix(false);
   // Printer::distortion.resetCorrection();
 
   calcProbePoints(&params);
 
-  for (int i = 0; i <= 9; ++i) {
-      Com::printF(PSTR("X"), params.probePoints[i][0]);
-      Com::printFLN(PSTR("Y"), params.probePoints[i][1]);
+  params.probePoints[0][2] = -0.02;
+  params.probePoints[1][2] = 0.03;
+  params.probePoints[2][2] = 0.0;
+  params.probePoints[3][2] = -0.05;
+  params.probePoints[4][2] = -0.08;
+  params.probePoints[5][2] = -0.3;
+  params.probePoints[6][2] = -0.08;
+  params.probePoints[7][2] = -0.06;
+  params.probePoints[8][2] = -0.11;
+  params.probePoints[9][2] = -0.13;
 
-      Printer::moveToReal(params.probePoints[i][0], params.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000);
-      GCode::executeFString(PSTR("G30"));
-      float zCorr = Printer::distortion.correct(Printer::currentPositionSteps[X_AXIS], Printer::currentPositionSteps[Y_AXIS], Printer::zMinSteps) * Printer::invAxisStepsPerMM[Z_AXIS];
-      
-      params.probePoints[i][2] = zCorr;
+  Com::printF(PSTR("Probe points:"));
+  for (int i = 0; i <= 9; ++i) {
+    Com::printF(PSTR("Point"), i);
+    Com::printF(PSTR(": X="), params.probePoints[i][0]);
+    Com::printF(PSTR(" Y="), params.probePoints[i][1]);
+    Com::printFLN(PSTR(" zCorr="), params.probePoints[i][2]);
   }
 
-  // getParameters();
+  for (int i = 0; i <= 9; ++i) {
+    params.probePoints[i][2] = -1.0 * params.probePoints[i][2];
+  }
+
+  //for (int i = 0; i <= 9; ++i) {
+  //  Printer::moveToReal(params.probePoints[i][0], params.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000);
+
+  //  GCode::executeFString(PSTR("G30"));
+      
+  //  params.probePoints[i][2] = Printer::distortion.correct(Printer::currentPositionSteps[X_AXIS], Printer::currentPositionSteps[Y_AXIS], Printer::zMinSteps) * Printer::invAxisStepsPerMM[Z_AXIS];
+  //}
+
   convertIncomingEndstops(&params);
   DoDeltaCalibration(&params);
   convertOutgoingEndstops(&params);
-  //setNewParameters();
-  //generateCommands();
-
-  Printer::homeAxis(true, true, true);
-
-  for (int i = 0; i <= 9; ++i) {
-      Com::printF(PSTR("Point"), i);
-      Com::printF(PSTR(": X="), params.probePoints[i][0]);
-      Com::printF(PSTR(" Y="), params.probePoints[i][1]);
-      Com::printFLN(PSTR(" zCorr="), params.probePoints[i][2]);
-  }
 
   Com::printF(PSTR("New endstop corrections: "));
   Com::printF(PSTR("X="), params.deltaParams.xstop);
@@ -534,6 +558,8 @@ void leastSquaresCalibration() {
   Com::printF(PSTR("X="), params.deltaParams.xadj);
   Com::printF(PSTR(" Y="), params.deltaParams.yadj);
   Com::printFLN(PSTR(" Z="), params.deltaParams.zadj);
+
+  // Printer::homeAxis(true, true, true);
 }
 
 #endif // DELTA_AUTO_CALIBRATION
