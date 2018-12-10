@@ -457,6 +457,24 @@ static inline void setTowerZFloor(float newZ) {
         EEPROM::updateChecksum();
 #endif
     }
+    static inline float setDeltaAlphaA(float angle) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_ALPHA_A, angle);
+        EEPROM::updateChecksum();
+#endif
+    }
+    static inline float setDeltaAlphaB(float angle) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_ALPHA_B, angle);
+        EEPROM::updateChecksum();
+#endif
+    }
+    static inline float setDeltaAlphaC(float angle) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_ALPHA_C, angle);
+        EEPROM::updateChecksum();
+#endif
+    }
     static inline float deltaAlphaA() {
 #if EEPROM_MODE != 0
         return HAL::eprGetFloat(EPR_DELTA_ALPHA_A);

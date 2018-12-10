@@ -1,24 +1,24 @@
 /**
- * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- *
- * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+   Marlin 3D Printer Firmware
+   Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+
+   Based on Sprinter and grbl.
+   Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "Repetier.h"
 #include "Configuration.h"
@@ -33,128 +33,134 @@
 #define min(a,b) ((a)<(b)?(a):(b))
 #define num_Factors 6
 
-void ArraySwapRows(float ar[][num_Factors + 1], int i, int j, int numCols) {
+
+void MatrixSwapRows(float matrix[][num_Factors + 1], int i, int j, int numCols) {
   if (i != j) {
     for (int k = 0; k < numCols; ++k) {
-      float temp = ar[i][k];
-      ar[i][k] = ar[j][k];
-      ar[j][k] = temp;
+      float temp = matrix[i][k];
+      matrix[i][k] = matrix[j][k];
+      matrix[j][k] = temp;
     }
   }
 }
 
 // Perform Gauus-Jordan elimination on a matrix with numRows rows and (njumRows + 1) columns
-void ArrayGaussJordan(float ar[][num_Factors + 1], float solution[], int numRows) {
+void MatrixGaussJordan(float matrix[][num_Factors + 1], float solution[], int numRows) {
   for (int i = 0; i < numRows; ++i) {
     // Swap the rows around for stable Gauss-Jordan elimination
-    float vmax = abs(ar[i][i]);
+    float vmax = abs(matrix[i][i]);
     for (int j = i + 1; j < numRows; ++j) {
-      float rmax = abs(ar[j][i]);
+      float rmax = abs(matrix[j][i]);
       if (rmax > vmax) {
-        ArraySwapRows(ar, i, j, numRows + 1);
+        MatrixSwapRows(matrix, i, j, numRows + 1);
         vmax = rmax;
       }
     }
 
-    Com::printFLN(PSTR("----- ArrayGaussJordan 1 -----"));
-    for(int i=0; i < 6; ++i) {
-      for(int j = 0; j < 7; ++j) {
-        Com::printF(PSTR(", "), ar[i][j], 4);
-      }
-      Com::printFLN(PSTR(""));
-    }
-
     // Use row i to eliminate the ith element from previous and subsequent rows
-    float v = ar[i][i];
+    float v = matrix[i][i];
     for (int j = 0; j < i; ++j) {
-      float factor = ar[j][i]/v;
-      ar[j][i] = 0.0;
+      float factor = matrix[j][i] / v;
+      matrix[j][i] = 0.0;
       for (int k = i + 1; k <= numRows; ++k) {
-        ar[j][k] -= ar[i][k] * factor;
+        matrix[j][k] -= matrix[i][k] * factor;
       }
-    }
-
-    Com::printFLN(PSTR("----- ArrayGaussJordan 2 -----"));
-    for(int i=0; i < 6; ++i) {
-      for(int j = 0; j < 7; ++j) {
-        Com::printF(PSTR(", "), ar[i][j], 4);
-      }
-      Com::printFLN(PSTR(""));
     }
 
     for (int j = i + 1; j < numRows; ++j) {
-      float factor = ar[j][i]/v;
-      ar[j][i] = 0.0;
+      float factor = matrix[j][i] / v;
+      matrix[j][i] = 0.0;
       for (int k = i + 1; k <= numRows; ++k) {
-        ar[j][k] -= ar[i][k] * factor;
+        matrix[j][k] -= matrix[i][k] * factor;
       }
-    }
-
-    Com::printFLN(PSTR("----- ArrayGaussJordan 3 -----"));
-    for(int i=0; i < 6; ++i) {
-      for(int j = 0; j < 7; ++j) {
-        Com::printF(PSTR(", "), ar[i][j], 4);
-      }
-      Com::printFLN(PSTR(""));
     }
   }
 
   for (int i = 0; i < numRows; ++i) {
-    solution[i] = (ar[i][numRows] / ar[i][i]);
+    solution[i] = (matrix[i][numRows] / matrix[i][i]);
   }
 }
 
+
 class DeltaParameters {
-public:
-  float diagonal;
-  float radius;
-  float homedHeight;
-  float xstop;
-  float ystop;
-  float zstop;
-  float xadj;
-  float yadj;
-  float zadj; 
+  public:
+    float diagonal;
+    float radius;
+    float homedHeight;
+    float xstop;
+    float ystop;
+    float zstop;
+    float xadj;
+    float yadj;
+    float zadj;
 
-  float towerX[3];
-  float towerY[3];
+    float towerX[3];
+    float towerY[3];
 
-  float Xbc;
-  float Xca;
-  float Xab;
-  float Ybc;
-  float Yca;
-  float Yab;
-  float coreFa;
-  float coreFb;
-  float coreFc;
-  float Q;
-  float Q2;
-  float D2;
+    float Xbc;
+    float Xca;
+    float Xab;
+    float Ybc;
+    float Yca;
+    float Yab;
+    float coreFa;
+    float coreFb;
+    float coreFc;
+    float Q;
+    float Q2;
+    float D2;
 
-  float homedCarriageHeight;
-public:
-  DeltaParameters(float adiagonal, float aradius, float aheight, float axstop, float aystop, float azstop, float axadj, float ayadj, float azadj);
+    float homedCarriageHeight;
+  public:
+    DeltaParameters(float adiagonal, float aradius, float aheight, float axstop, float aystop, float azstop, float axadj, float ayadj, float azadj);
 
-  void Recalc();
-  float Transform(float machinePos[], int axis);
-  float InverseTransform(float Ha, float Hb, float Hc);
-  float ComputeDerivative(int deriv, float ha, float hb, float hc);
-  void NormaliseEndstopAdjustments();
-  void Adjust(int numFactors, float v[], bool norm);
+    void Recalc();
+
+    float Transform(float machinePos[], int axis);
+    float InverseTransform(float Ha, float Hb, float Hc);
+    float ComputeDerivative(int deriv, float ha, float hb, float hc);
+    void NormaliseEndstopAdjustments();
+    void Adjust(int numFactors, float v[], bool norm);
 };
 
-DeltaParameters::DeltaParameters(float adiagonal, float aradius, float aheight, float axstop, float aystop, float azstop, float axadj, float ayadj, float azadj) {
-  diagonal = adiagonal;
-  radius = aradius;
-  homedHeight = aheight;
-  xstop = axstop;
-  ystop = aystop;
-  zstop = azstop;
-  xadj = axadj;
-  yadj = ayadj;
-  zadj = azadj;
+DeltaParameters::DeltaParameters(float aDiagonal, float aRadius, float aHeight, float aXStop, float aYStop, float aZStop, float aXAdj, float aYAdj, float aZAdj) {
+  diagonal = aDiagonal;
+  radius = aRadius;
+  homedHeight = aHeight;
+  xstop = aXStop;
+  ystop = aYStop;
+  zstop = aZStop;
+  xadj = aXAdj;
+  yadj = aYAdj;
+  zadj = aZAdj;
+
   Recalc();
+}
+
+void DeltaParameters::Recalc() {
+  towerX[0] = (-(radius * cos((30.0 + xadj) * degreesToRadians)));
+  towerY[0] = (-(radius * sin((30.0 + xadj) * degreesToRadians)));
+  towerX[1] = (+(radius * cos((30.0 - yadj) * degreesToRadians)));
+  towerY[1] = (-(radius * sin((30.0 - yadj) * degreesToRadians)));
+  towerX[2] = (-(radius * sin(zadj * degreesToRadians)));
+  towerY[2] = (+(radius * cos(zadj * degreesToRadians)));
+
+  Xbc = towerX[2] - towerX[1];
+  Xca = towerX[0] - towerX[2];
+  Xab = towerX[1] - towerX[0];
+  Ybc = towerY[2] - towerY[1];
+  Yca = towerY[0] - towerY[2];
+  Yab = towerY[1] - towerY[0];
+  coreFa = sq(towerX[0]) + sq(towerY[0]);
+  coreFb = sq(towerX[1]) + sq(towerY[1]);
+  coreFc = sq(towerX[2]) + sq(towerY[2]);
+  Q = 2 * (Xca * Yab - Xab * Yca);
+  Q2 = sq(Q);
+  D2 = sq(diagonal);
+
+  // Calculate the base carriage height when the printer is homed.
+  float tempHeight = diagonal;   // any sensible height will do here, probably even zero
+  homedCarriageHeight = homedHeight + tempHeight - InverseTransform(tempHeight, tempHeight, tempHeight);
 }
 
 float DeltaParameters::Transform(float machinePos[], int axis) {
@@ -185,62 +191,36 @@ float DeltaParameters::InverseTransform(float Ha, float Hb, float Hc) {
   return rslt;
 }
 
-void DeltaParameters::Recalc(){
-  towerX[0] = (-(radius * cos((30.0 + xadj) * degreesToRadians)));
-  towerY[0] = (-(radius * sin((30.0 + xadj) * degreesToRadians)));
-  towerX[1] = (+(radius * cos((30.0 - yadj) * degreesToRadians)));
-  towerY[1] = (-(radius * sin((30.0 - yadj) * degreesToRadians)));
-  towerX[2] = (-(radius * sin(zadj * degreesToRadians)));
-  towerY[2] = (+(radius * cos(zadj * degreesToRadians)));
-
-  Xbc = towerX[2] - towerX[1];
-  Xca = towerX[0] - towerX[2];
-  Xab = towerX[1] - towerX[0];
-  Ybc = towerY[2] - towerY[1];
-  Yca = towerY[0] - towerY[2];
-  Yab = towerY[1] - towerY[0];
-  coreFa = sq(towerX[0]) + sq(towerY[0]);
-  coreFb = sq(towerX[1]) + sq(towerY[1]);
-  coreFc = sq(towerX[2]) + sq(towerY[2]);
-  Q = 2 * (Xca * Yab - Xab * Yca);
-  Q2 = sq(Q);
-  D2 = sq(diagonal);
-
-  // Calculate the base carriage height when the printer is homed.
-  float tempHeight = diagonal;   // any sensible height will do here, probably even zero
-  homedCarriageHeight = homedHeight + tempHeight - InverseTransform(tempHeight, tempHeight, tempHeight);
-}
-
 float DeltaParameters::ComputeDerivative(int deriv, float ha, float hb, float hc) {
   float perturb = 0.2;      // perturbation amount in mm or degrees
   DeltaParameters hiParams(diagonal, radius, homedHeight, xstop, ystop, zstop, xadj, yadj, zadj);
   DeltaParameters loParams(diagonal, radius, homedHeight, xstop, ystop, zstop, xadj, yadj, zadj);
-  switch(deriv)
+  switch (deriv)
   {
-  case 0:
-  case 1:
-  case 2:
-    break;
+    case 0:
+    case 1:
+    case 2:
+      break;
 
-  case 3:
-    hiParams.radius += perturb;
-    loParams.radius -= perturb;
-    break;
+    case 3:
+      hiParams.radius += perturb;
+      loParams.radius -= perturb;
+      break;
 
-  case 4:
-    hiParams.xadj += perturb;
-    loParams.xadj -= perturb;
-    break;
+    case 4:
+      hiParams.xadj += perturb;
+      loParams.xadj -= perturb;
+      break;
 
-  case 5:
-    hiParams.yadj += perturb;
-    loParams.yadj -= perturb;
-    break;
+    case 5:
+      hiParams.yadj += perturb;
+      loParams.yadj -= perturb;
+      break;
 
-  case 6:
-    hiParams.diagonal += perturb;
-    loParams.diagonal -= perturb;
-    break;
+    case 6:
+      hiParams.diagonal += perturb;
+      loParams.diagonal -= perturb;
+      break;
   }
 
   hiParams.Recalc();
@@ -249,7 +229,7 @@ float DeltaParameters::ComputeDerivative(int deriv, float ha, float hb, float hc
   float zHi = hiParams.InverseTransform((deriv == 0) ? ha + perturb : ha, (deriv == 1) ? hb + perturb : hb, (deriv == 2) ? hc + perturb : hc);
   float zLo = loParams.InverseTransform((deriv == 0) ? ha - perturb : ha, (deriv == 1) ? hb - perturb : hb, (deriv == 2) ? hc - perturb : hc);
 
-  return (zHi - zLo)/(2 * perturb);
+  return (zHi - zLo) / (2 * perturb);
 }
 
 // Make the average of the endstop adjustments zero, or make all emndstop corrections negative, without changing the individual homed carriage heights
@@ -277,6 +257,7 @@ void DeltaParameters::Adjust(int numFactors, float v[], bool norm) {
   xstop += v[0];
   ystop += v[1];
   zstop += v[2];
+
   if (norm) {
     NormaliseEndstopAdjustments();
   }
@@ -303,35 +284,37 @@ void DeltaParameters::Adjust(int numFactors, float v[], bool norm) {
   homedCarriageHeight -= heightError;
 }
 
-class Parameters {
-public:
-  // firmware = "Repetier";
-  bool normalise = true;
-  DeltaParameters deltaParams;
-  float bedRadius = 100.0;
-  int numPoints = 10;
-  int numFactors = 6;
-  float probePoints[10][3];
-  int endstopFactor = 1.0/100; // Repetier
 
-  Parameters();
+class Parameters {
+  public:
+    DeltaParameters deltaParams;
+
+    float bedRadius = 100.0;
+    int numPoints = 10;
+    int numFactors = 6;
+    bool normalise = true;
+
+    float probePoints[10][3];
+    float endstopFactor = 1.0 / 100.0; // Repetier
+
+    Parameters();
 };
 
 Parameters::Parameters(): deltaParams(299.5, 150.0, 300.0, 50.0, 50.0, 50.0, 0.0, 0.0, 0.0) {
- 
+
 }
 
 void calcProbePoints(Parameters *params) {
   if (params->numPoints >= 7) {
     for (int i = 0; i < 6; ++i) {
-      params->probePoints[i][0] = round(100 * params->bedRadius * sin((2.0 * PI * float(i))/6.0))/100.0;
-      params->probePoints[i][1] = round(100 * params->bedRadius * cos((2.0 * PI * float(i))/6.0))/100.0;
+      params->probePoints[i][0] = round(100 * params->bedRadius * sin((2.0 * PI * float(i)) / 6.0)) / 100.0;
+      params->probePoints[i][1] = round(100 * params->bedRadius * cos((2.0 * PI * float(i)) / 6.0)) / 100.0;
     }
   }
   if (params->numPoints >= 10) {
     for (int i = 6; i < 9; ++i) {
-      params->probePoints[i][0] = round(100 * params->bedRadius/2.0 * sin((2.0 * PI * float(i - 6))/3.0))/100.0;
-      params->probePoints[i][1] = round(100 * params->bedRadius/2.0 * cos((2.0 * PI * float(i - 6))/3.0))/100.0;
+      params->probePoints[i][0] = round(100 * params->bedRadius / 2.0 * sin((2.0 * PI * float(i - 6)) / 3.0)) / 100.0;
+      params->probePoints[i][1] = round(100 * params->bedRadius / 2.0 * cos((2.0 * PI * float(i - 6)) / 3.0)) / 100.0;
     }
     params->probePoints[9][0] = 0.0;
     params->probePoints[9][1] = 0.0;
@@ -353,13 +336,15 @@ void convertOutgoingEndstops(Parameters *params) {
 
 
 
-void DoDeltaCalibration(Parameters *params) {
-  // if (numFactors != 3 && numFactors != 4 && numFactors != 6 && numFactors != 7) {
-  //   return "Error: " + numFactors + " factors requested but only 3, 4, 6 and 7 supported";
-  // }
-  // if (numFactors > numPoints) {
-  //   return "Error: need at least as many points as factors you want to calibrate";
-  // }
+float DoDeltaCalibration(Parameters *params) {
+  if (params->numFactors != 3 && params->numFactors != 4 && params->numFactors != 6 && params->numFactors != 7) {
+    Com::printErrorFLN(PSTR("Only 3, 4, 6 and 7 factors supported"));
+    return;
+  }
+  if (params->numFactors > params->numPoints) {
+    Com::printErrorFLN(PSTR("Need at least as many points as factors you want to calibrate"));
+    return;
+  }
 
   // // Transform the probing points to motor endpoints and store them in a matrix, so that we can do multiple iterations using the same data
   float probeMotorPositions[params->numPoints][3];
@@ -379,36 +364,16 @@ void DoDeltaCalibration(Parameters *params) {
     initialSumOfSquares += sq(params->probePoints[i][2]);
   }
 
-  Com::printFLN(PSTR("----- probeMotorPositions -----"));
-  for(int i=0; i < params->numPoints; ++i) {
-    Com::printF(PSTR("X="), probeMotorPositions[i][0], 4);
-    Com::printF(PSTR(", Y="), probeMotorPositions[i][1], 4);
-    Com::printFLN(PSTR(", Z="), probeMotorPositions[i][2], 4);
-  }
-  Com::printFLN(PSTR("initialSumOfSquares"), initialSumOfSquares, 4);
-
-
-  Com::printFLN(PSTR("---------- Newton-Raphson iterations ----------"));
-  // // // Do 1 or more Newton-Raphson iterations
+  // Do 1 or more Newton-Raphson iterations
   int iteration = 0;
-  bool expectedRmsError;
+  float expectedRmsError;
   for (;;) {
-    Com::printFLN(PSTR("iteration "), iteration);
-
     // Build a Nx7 matrix of derivatives with respect to xa, xb, yc, za, zb, zc, diagonal.
     float derivativeMatrix[params->numPoints][params->numFactors];
     for (int i = 0; i < params->numPoints; ++i) {
       for (int j = 0; j < params->numFactors; ++j) {
         derivativeMatrix[i][j] = params->deltaParams.ComputeDerivative(j, probeMotorPositions[i][0], probeMotorPositions[i][1], probeMotorPositions[i][2]);
       }
-    }
-
-    Com::printFLN(PSTR("----- derivativeMatrix -----"));
-    for(int i=0; i < params->numPoints; ++i) {
-      for(int j = 0; j < params->numFactors; ++j) {
-        Com::printF(PSTR(", "), derivativeMatrix[i][j], 4);
-      }
-      Com::printFLN(PSTR(""));
     }
 
     // Now build the normal equations for least squares fitting
@@ -420,53 +385,18 @@ void DoDeltaCalibration(Parameters *params) {
           temp += derivativeMatrix[k][i] * derivativeMatrix[k][j];
         }
         normalMatrix[i][j] = temp;
-        Com::printFLN(PSTR("Temp1"), temp, 4);
       }
       float temp = derivativeMatrix[0][i] * -1.0 * (params->probePoints[0][2] + corrections[0]);
       for (int k = 1; k < params->numPoints; ++k) {
         temp += derivativeMatrix[k][i] * -1.0 * (params->probePoints[k][2] + corrections[k]);
       }
-      Com::printFLN(PSTR("Temp2"), temp, 4);
       normalMatrix[i][params->numFactors] = temp;
     }
 
-    Com::printFLN(PSTR("----- normalMatrix -----"));
-    for(int i=0; i < params->numFactors; ++i) {
-      for(int j = 0; j < params->numFactors + 1; ++j) {
-        Com::printF(PSTR(", "), normalMatrix[i][j], 4);
-      }
-      Com::printFLN(PSTR(""));
-    }
-
     float solution[params->numFactors];
-    ArrayGaussJordan(normalMatrix, solution, params->numFactors);
-    
-    Com::printFLN(PSTR("----- ArrayGaussJordan -----"));
-    for (int i = 0; i < params->numFactors; ++i) {
-      Com::printFLN(PSTR("solution"), solution[i], 4);
-    }
-
-  //   if (debug) {
-  //     DebugPrint(PrintVector("Solution", solution));
-
-  //     // Calculate and display the residuals
-  //     var residuals = [];
-  //     for (var i = 0; i < numPoints; ++i) {
-  //       var r = zBedProbePoints[i];
-  //       for (var j = 0; j < numFactors; ++j) {
-  //         r += solution[j] * derivativeMatrix.data[i][j];
-  //       }
-  //       residuals.push(r);
-  //     }
-  //     DebugPrint(PrintVector("Residuals", residuals));
-  //   }
+    MatrixGaussJordan(normalMatrix, solution, params->numFactors);
 
     params->deltaParams.Adjust(params->numFactors, solution, params->normalise);
-
-    Com::printFLN(PSTR("----- Adjust -----"));
-    for (int i = 0; i < params->numFactors; ++i) {
-      Com::printFLN(PSTR("solution"), solution[i], 4);
-    }
 
     // Calculate the expected probe heights using the new parameters
     {
@@ -478,72 +408,93 @@ void DoDeltaCalibration(Parameters *params) {
         }
         float newZ = params->deltaParams.InverseTransform(probeMotorPositions[i][0], probeMotorPositions[i][1], probeMotorPositions[i][2]);
         corrections[i] = newZ;
-        expectedResiduals[i] = params->probePoints[i][3] + newZ;
+        expectedResiduals[i] = params->probePoints[i][2] + newZ;
         sumOfSquares += sq(expectedResiduals[i]);
       }
 
-      expectedRmsError = sqrt(sumOfSquares/params->numPoints);
-      // DebugPrint(PrintVector("Expected probe error", expectedResiduals));
-    }
-
-    Com::printFLN(PSTR("----- expectedProbeHeights -----"));
-    for (int i = 0; i < params->numPoints; ++i) {
-      Com::printFLN(PSTR("corrections"), corrections[i], 4);
+      expectedRmsError = sqrt(sumOfSquares / params->numPoints);
     }
 
     // Decide whether to do another iteration Two is slightly better than one, but three doesn't improve things.
     // Alternatively, we could stop when the expected RMS error is only slightly worse than the RMS of the residuals.
     ++iteration;
-    if (iteration >= 2) { 
-      break; 
+    if (iteration >= 2) {
+      break;
     }
   }
+  return expectedRmsError;
 }
 
 void leastSquaresCalibration() {
 
   Parameters params;
 
-  // Printer::homeAxis(true, true, true);
-  // Printer::resetTransformationMatrix(false);
-  // Printer::distortion.resetCorrection();
+  params.deltaParams.xstop = EEPROM::deltaTowerXOffsetSteps();
+  params.deltaParams.ystop = EEPROM::deltaTowerYOffsetSteps();
+  params.deltaParams.zstop = EEPROM::deltaTowerZOffsetSteps();
+  params.deltaParams.radius = EEPROM::deltaHorizontalRadius();
+  params.deltaParams.xadj = EEPROM::deltaAlphaA() - 210.0;
+  params.deltaParams.yadj = EEPROM::deltaAlphaB() - 330.0;
+  params.deltaParams.zadj = EEPROM::deltaAlphaC() - 90.0;
+  params.deltaParams.Recalc();
+
+  Com::printFLN(PSTR("xstop="), params.deltaParams.xstop);
+  Com::printFLN(PSTR("ystop="), params.deltaParams.ystop);
+  Com::printFLN(PSTR("zstop="), params.deltaParams.zstop);
+  Com::printFLN(PSTR("radius="), params.deltaParams.radius);
+  Com::printFLN(PSTR("xadj="), params.deltaParams.xadj);
+  Com::printFLN(PSTR("yadj="), params.deltaParams.yadj);
+  Com::printFLN(PSTR("zadj="), params.deltaParams.zadj);
+
+  Printer::homeAxis(true, true, true);
+  Printer::resetTransformationMatrix(false);
+  Printer::distortion.resetCorrection();
 
   calcProbePoints(&params);
 
-  params.probePoints[0][2] = -0.02;
-  params.probePoints[1][2] = 0.03;
-  params.probePoints[2][2] = 0.0;
-  params.probePoints[3][2] = -0.05;
-  params.probePoints[4][2] = -0.08;
-  params.probePoints[5][2] = -0.3;
-  params.probePoints[6][2] = -0.08;
-  params.probePoints[7][2] = -0.06;
-  params.probePoints[8][2] = -0.11;
-  params.probePoints[9][2] = -0.13;
+  // params.probePoints[0][2] = -0.02;
+  // params.probePoints[1][2] = 0.03;
+  // params.probePoints[2][2] = 0.0;
+  // params.probePoints[3][2] = -0.05;
+  // params.probePoints[4][2] = -0.08;
+  // params.probePoints[5][2] = -0.3;
+  // params.probePoints[6][2] = -0.08;
+  // params.probePoints[7][2] = -0.06;
+  // params.probePoints[8][2] = -0.11;
+  // params.probePoints[9][2] = -0.13;
 
-  Com::printF(PSTR("Probe points:"));
+  for (int i = 0; i <= 9; ++i) {
+    Printer::moveToReal(params.probePoints[i][0], params.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000);
+
+    float z = Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false);
+    params.probePoints[i][2] = z;
+  }
+
+  Com::printFLN(PSTR("Probe points:"));
   for (int i = 0; i <= 9; ++i) {
     Com::printF(PSTR("Point"), i);
     Com::printF(PSTR(": X="), params.probePoints[i][0]);
     Com::printF(PSTR(" Y="), params.probePoints[i][1]);
-    Com::printFLN(PSTR(" zCorr="), params.probePoints[i][2]);
+    Com::printFLN(PSTR(" Z="), params.probePoints[i][2]);
   }
 
   for (int i = 0; i <= 9; ++i) {
     params.probePoints[i][2] = -1.0 * params.probePoints[i][2];
   }
 
-  //for (int i = 0; i <= 9; ++i) {
-  //  Printer::moveToReal(params.probePoints[i][0], params.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000);
-
-  //  GCode::executeFString(PSTR("G30"));
-      
-  //  params.probePoints[i][2] = Printer::distortion.correct(Printer::currentPositionSteps[X_AXIS], Printer::currentPositionSteps[Y_AXIS], Printer::zMinSteps) * Printer::invAxisStepsPerMM[Z_AXIS];
-  //}
-
   convertIncomingEndstops(&params);
-  DoDeltaCalibration(&params);
+  float expectedRmsError = DoDeltaCalibration(&params);
   convertOutgoingEndstops(&params);
+
+  EEPROM::setDeltaTowerXOffsetSteps(params.deltaParams.xstop);
+  EEPROM::setDeltaTowerYOffsetSteps(params.deltaParams.ystop);
+  EEPROM::setDeltaTowerZOffsetSteps(params.deltaParams.zstop);
+  EEPROM::setRodRadius(params.deltaParams.radius);
+  EEPROM::setDeltaAlphaA(210.0 + params.deltaParams.xadj);
+  EEPROM::setDeltaAlphaB(330.0 + params.deltaParams.yadj);
+  EEPROM::setDeltaAlphaC(90.0 + params.deltaParams.zadj);
+
+  Com::printFLN(PSTR("Deviation"), expectedRmsError, 4);
 
   Com::printF(PSTR("New endstop corrections: "));
   Com::printF(PSTR("X="), params.deltaParams.xstop);
@@ -559,7 +510,7 @@ void leastSquaresCalibration() {
   Com::printF(PSTR(" Y="), params.deltaParams.yadj);
   Com::printFLN(PSTR(" Z="), params.deltaParams.zadj);
 
-  // Printer::homeAxis(true, true, true);
+  Printer::homeAxis(true, true, true);
 }
 
 #endif // DELTA_AUTO_CALIBRATION

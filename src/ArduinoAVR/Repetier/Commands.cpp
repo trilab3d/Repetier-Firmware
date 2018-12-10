@@ -20,6 +20,7 @@ which based on Tonokip RepRap firmware rewrite based off of Hydra-mmm firmware.
 */
 
 #include "Repetier.h"
+#include "LastSquareCalib.h"
 
 const int8_t sensitive_pins[] PROGMEM = SENSITIVE_PINS; // Sensitive pin list for M42
 int Commands::lowestRAMValue = MAX_RAM;
@@ -1294,6 +1295,9 @@ void Commands::processGCode(GCode *com) {
     break;
 #endif
 #endif
+    case 34: // G34
+        leastSquaresCalibration();
+        break;
     case 90: // G90
         Printer::relativeCoordinateMode = false;
         if(com->internalCommand)
