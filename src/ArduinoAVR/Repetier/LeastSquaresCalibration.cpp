@@ -319,6 +319,7 @@ LeastSquaresCalibration::LeastSquaresCalibration(int aNumPoints, int aNumFactors
 }
 
 void LeastSquaresCalibration::readFromEeprom() {
+  deltaParameters.diagonal = EEPROM::deltaDiagonalRodLength();
   deltaParameters.radius = EEPROM::deltaHorizontalRadius();
 
   deltaParameters.xStop = EEPROM::deltaTowerXOffsetSteps() / float(XAXIS_STEPS_PER_MM);
@@ -470,7 +471,7 @@ void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableS
   Com::printFLN(PSTR("========== Least squares calibration =========="));
   for(int p=0; p<aMaxIteration; p++) {
     Com::printF(PSTR("===== "));
-    Com::printF(PSTR("Pass "), p);
+    Com::printF(PSTR("Pass "), p + 1);
     Com::printFLN(PSTR(" ====="));
 
     Printer::homeAxis(true, true, true);
@@ -482,7 +483,7 @@ void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableS
 
     float zMin=999.9, zMax=-999.9;
     for (int i = 0; i < calib.numPoints; ++i) {
-      Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000);
+      Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
 
       float z = -1.0 * Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false); 
       calib.probePoints[i][2] = z;
