@@ -19,6 +19,6 @@
 #ifndef _LSC_H
 #define _LSC_H
 
-void leastSquaresCalibration();
+void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableSaveAngularCorr);
  
 #endif

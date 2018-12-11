@@ -430,7 +430,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DELTA_FLOOR_SAFETY_MARGIN_MM 15
 //#define SOFTWARE_LEVELING
 
-#define DELTASEGMENTS_PER_PRINTLINE 14
+#define DELTASEGMENTS_PER_PRINTLINE 16 // 16
 #define STEPPER_INACTIVE_TIME 360L
 #define MAX_INACTIVE_TIME 0L
 #define MAX_FEEDRATE_X 200

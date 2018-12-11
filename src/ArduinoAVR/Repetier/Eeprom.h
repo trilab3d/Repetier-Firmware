@@ -351,6 +351,11 @@ static inline void setZProbeHeight(float mm) {
         return DELTA_DIAGONAL_ROD;
 #endif
     }
+    static inline void setDeltaDiagonalRodLength(float length) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_DIAGONAL_ROD_LENGTH, length);
+#endif
+    }
     static inline int16_t deltaSegmentsPerSecondPrint() {
 #if EEPROM_MODE != 0
         return HAL::eprGetInt16(EPR_DELTA_SEGMENTS_PER_SECOND_PRINT);

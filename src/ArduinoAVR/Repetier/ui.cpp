@@ -39,7 +39,7 @@ extern const int8_t encoder_table[16] PROGMEM ;
 #include <inttypes.h>
 #include <ctype.h>
 
-#include "LastSquareCalib.h"
+#include "LeastSquaresCalibration.h"
 
 #if FEATURE_SERVO > 0 && UI_SERVO_CONTROL > 0
 #if   UI_SERVO_CONTROL == 1 && defined(SERVO0_NEUTRAL_POS)
@@ -1852,6 +1852,12 @@ void UIDisplay::parse(const char *txt, bool ram) {
                 addFloat(Printer::wizardStack[1].f, 0, 1);
             }
             break;
+        case '@':
+            if(c2 == 'R') {
+                addFloat(EEPROM::deltaDiagonalRodLength(), 2, 2);
+                break;
+            }
+            break;
         }
     }
     uid.printCols[col] = 0;
@@ -3174,6 +3180,12 @@ ZPOS2:
         popMenu(true);
         break;
 #endif
+    case UI_ACTION_DIAGONAL_ROD_LENGTH: {
+        float diagonalRodLength = EEPROM::deltaDiagonalRodLength();
+        INCREMENT_MIN_MAX(diagonalRodLength, 0.01, 1.0, 1000.0);
+        EEPROM::setDeltaDiagonalRodLength(diagonalRodLength);
+        break;
+    }
     default:
         EVENT_UI_NEXTPREVIOUS(action, allowMoves, increment);
         break;
@@ -4002,7 +4014,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #endif
 
         case UI_ACTION_LEAST_SQUARES_CALIB:
-            leastSquaresCalibration();
+            leastSquaresCalibration(0.1, 31, false);
             break;
 
         default:

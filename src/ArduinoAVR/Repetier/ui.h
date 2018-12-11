@@ -254,6 +254,7 @@
 #define UI_ACTION_TOGGLE_JAMCONTROL     1242
 
 #define UI_ACTION_LEAST_SQUARES_CALIB   1243
+#define UI_ACTION_DIAGONAL_ROD_LENGTH   1244
 
 // 1500-1699 reserved for custom actions
 
