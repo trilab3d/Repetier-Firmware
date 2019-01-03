@@ -2644,6 +2644,11 @@ int UIDisplay::okAction(bool allowMoves) {
                 uid.popMenu(true);
                 break;
 #endif
+            case UI_ACTION_CAL_RESULT:
+                popMenu(false);
+                pushMenu(&ui_msg_cal_full_calibration_result, true);
+                break;
+
             default:
                 EVENT_UI_OK_WIZARD(action);
                 break;
@@ -4134,10 +4139,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 
             EEPROM::setDeltaDiagonalRodLength(float(DELTA_DIAGONAL_ROD));
             break; 
-
-        case UI_ACTION_CAL_RESULT:
-            pushMenu(&ui_msg_cal_full_calibration_result, true);
-            break;
 
         default:
             EVENT_UI_EXECUTE(action, allowMoves);

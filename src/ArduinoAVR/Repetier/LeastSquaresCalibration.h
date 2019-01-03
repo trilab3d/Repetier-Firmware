@@ -21,7 +21,7 @@
 
 extern float probeHeight[10];
 
-void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableSaveAngularCorr);
+void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr);
 
 void plainProbing();
 

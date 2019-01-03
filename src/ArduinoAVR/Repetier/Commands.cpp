@@ -1296,7 +1296,7 @@ void Commands::processGCode(GCode *com) {
 #endif
 #endif
     case 34: // G34
-        leastSquaresCalibration(com->hasC() ? com->C : 0.1, com->hasF() ? com->F : 31, com->hasT());
+        leastSquaresCalibration(com->hasF() ? com->F : 5, com->hasT());
         break;
     case 90: // G90
         Printer::relativeCoordinateMode = false;

@@ -509,7 +509,7 @@ void autolevelProbing() {
   Printer::homeAxis(true, true, true);
 }
 
-void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableSaveAngularCorr) {
+void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
   LeastSquaresCalibration calib(10, 6, true);
 
   Com::printFLN(PSTR("========== Least squares calibration =========="));
@@ -526,7 +526,7 @@ void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableS
     calib.genProbePoints();
     resetMeasuredProbeHeight();
 
-    float zMin=999.9, zMax=-999.9;
+    float zMin=999.9, zMax=-999.9, lastDeviation=999.9;
     for (int i = 0; i < calib.numPoints; ++i) {
       Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
 
@@ -543,13 +543,15 @@ void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableS
     }
 
     float deviation = abs(zMax - zMin);
-    if (deviation <= aTolerance) {
-      Com::printFLN(PSTR("Calibration finished with tolerance: "), deviation, 3);
+    if (deviation > lastDeviation) {
+
+      Com::printFLN(PSTR("Calibration finished with tolerance: "), lastDeviation, 3);
       break; 
     } 
     else {
+      lastDeviation = deviation;
+
       Com::printF(PSTR("Calibration out of tolerance - deviation: "), deviation, 3);
-      Com::printF(PSTR(" (tolerance: "), aTolerance, 2);
       Com::printFLN(PSTR(")"));
 
       calib.calcCalibration();
