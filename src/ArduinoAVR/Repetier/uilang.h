@@ -98,7 +98,7 @@
 #define LANGUAGE_FI_ID 11
 
 #define NUM_LANGUAGES_KNOWN 12 //12
-#define NUM_TRANSLATED_WORDS 329 //322
+#define NUM_TRANSLATED_WORDS 346 //322
 
 // For selectable translations we refer to each text by a id which gets
 // defined here. The list starts at 0 and defines the position in the
@@ -439,10 +439,25 @@
 #define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_1_ID 327 // "Use tower angle"
 #define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_2_ID 328 // "correction ?"
 
-//#define UI_TEXT_LEAST_SQUARES_CALIB_ID 323 // "Least-squares calib."
-//#define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 324 // "Diagonal rod length"
+#define UI_TEXT_CAL_PROBING_RESULT_ID 329 // "Probing result"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L1_ID 330 // "Probe height L1"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L2_ID 331 // "Probe height L2"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L3_ID 332 // "Probe height L3"
 
+#define UI_TEXT_CAL_RESULT_1_ID 333
+#define UI_TEXT_CAL_RESULT_2_ID 334
+#define UI_TEXT_CAL_RESULT_3_ID 335
+#define UI_TEXT_CAL_RESULT_4_ID 336
 
+#define UI_TEXT_X_ENDSTOP_OFFSET_ID 337 // "X endstop offset %@x"
+#define UI_TEXT_Y_ENDSTOP_OFFSET_ID 338 // "Y endstop offset %@y"
+#define UI_TEXT_Z_ENDSTOP_OFFSET_ID 339 // "Z endstop offset %@z"
+#define UI_TEXT_DELTA_RADIUS_ID 340 // "Delta radius %@r"
+#define UI_TEXT_X_TOWER_ANGLE_ID 341 // "X tower angle %@a"
+#define UI_TEXT_Y_TOWER_ANGLE_ID 342 // "Y tower angle %@b"
+#define UI_TEXT_Z_TOWER_ANGLE_ID 343 // "Z tower angle %@c"
+#define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 344 // "Diagonal rod %@l"
+#define UI_TEXT_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
 
 // Universal definitions
 
@@ -802,14 +817,31 @@
 #define UI_TEXT_SERVICE_CAL_EN "Calibration"
 #define UI_TEXT_CAL_PLAIN_PROBING_EN "Plain probing"
 #define UI_TEXT_CAL_AUTOLEVEL_PROBING_EN "Autolevel probing"
-#define UI_TEXT_CAL_RUN_FULL_CALIBRATION_EN "Run full calibration"
+#define UI_TEXT_CAL_RUN_FULL_CALIBRATION_EN "Full calibration"
 #define UI_TEXT_CAL_MANUAL_ADJUST_EN "Manual adjust"
 
 #define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_1_EN "Use tower angle"
 #define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_2_EN "correction ?"
 
-// #define UI_TEXT_LEAST_SQUARES_CALIB_EN "Least squares calib."
-// #define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Rod length :%@Rmm"
+#define UI_TEXT_CAL_PROBING_RESULT_EN "Probing result"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L1_EN "%@5 %@0 %@1"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L2_EN "%@8 %@6 %@7 %@9"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L3_EN "%@4 %@3 %@2"
+
+#define UI_TEXT_CAL_RESULT_1_EN "Xe %@i Xa %@l"
+#define UI_TEXT_CAL_RESULT_2_EN "Ye %@j Ya %@m"
+#define UI_TEXT_CAL_RESULT_3_EN "Ze %@k Za %@n"
+#define UI_TEXT_CAL_RESULT_4_EN "DR %@o Dev %@p"
+
+#define UI_TEXT_X_ENDSTOP_OFFSET_EN "X endstop offst %@x"
+#define UI_TEXT_Y_ENDSTOP_OFFSET_EN "Y endstop offst %@y"
+#define UI_TEXT_Z_ENDSTOP_OFFSET_EN "Z endstop offst %@z"
+#define UI_TEXT_DELTA_RADIUS_EN "Delta radius %@r"
+#define UI_TEXT_X_TOWER_ANGLE_EN "X tower angl %@a"
+#define UI_TEXT_Y_TOWER_ANGLE_EN "Y tower angl %@b"
+#define UI_TEXT_Z_TOWER_ANGLE_EN "Z tower angl %@c"
+#define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Diagonal rod %@l"
+#define UI_TEXT_RESET_TO_DEFAULTS_EN "Reset to defaults"
 
 // *************** German translation ****************
 

@@ -19,6 +19,12 @@
 #ifndef _LSC_H
 #define _LSC_H
 
+extern float probeHeight[10];
+
 void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableSaveAngularCorr);
+
+void plainProbing();
+
+void autolevelProbing();
  
 #endif

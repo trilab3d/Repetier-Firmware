@@ -1853,9 +1853,42 @@ void UIDisplay::parse(const char *txt, bool ram) {
             }
             break;
         case '@':
-            if(c2 == 'R') {
-                addFloat(EEPROM::deltaDiagonalRodLength(), 2, 2);
-                break;
+            if(c2 == '0') {
+                addFloat(probeHeight[0], 1, 2);
+            } else if(c2 == '1') {
+                addFloat(probeHeight[1], 1, 2);
+            } else if(c2 == '2') {
+                addFloat(probeHeight[2], 1, 2);
+            } else if(c2 == '3') {
+                addFloat(probeHeight[3], 1, 2);
+            } else if(c2 == '4') {
+                addFloat(probeHeight[4], 1, 2);
+            } else if(c2 == '5') {
+                addFloat(probeHeight[5], 1, 2);
+            } else if(c2 == '6') {
+                addFloat(probeHeight[6], 1, 2);
+            } else if(c2 == '7') {
+                addFloat(probeHeight[7], 1, 2);
+            } else if(c2 == '8') {
+                addFloat(probeHeight[8], 1, 2);
+            } else if(c2 == '9') {
+                addFloat(probeHeight[9], 1, 2);
+            } else if(c2 == 'x') {
+                addInt(EEPROM::deltaTowerXOffsetSteps(), 3);
+            } else if(c2 == 'y') {
+                addInt(EEPROM::deltaTowerYOffsetSteps(), 3);
+            } else if(c2 == 'z') {
+                addInt(EEPROM::deltaTowerZOffsetSteps(), 3);
+            } else if(c2 == 'r') {
+                addFloat(EEPROM::deltaHorizontalRadius(), 3, 2);
+            } else if(c2 == 'a') {
+                addFloat(EEPROM::deltaAlphaA(), 3, 2);
+            } else if(c2 == 'b') {
+                addFloat(EEPROM::deltaAlphaB(), 3, 2);
+            } else if(c2 == 'c') {
+                addFloat(EEPROM::deltaAlphaC(), 3, 2);
+            } else if(c2 == 'l') {
+                addFloat(EEPROM::deltaDiagonalRodLength(), 3, 2);
             }
             break;
         }
@@ -3180,12 +3213,61 @@ ZPOS2:
         popMenu(true);
         break;
 #endif
-    //case UI_ACTION_DIAGONAL_ROD_LENGTH: {
-    //    float diagonalRodLength = EEPROM::deltaDiagonalRodLength();
-    //    INCREMENT_MIN_MAX(diagonalRodLength, 0.01, 1.0, 1000.0);
-    //    EEPROM::setDeltaDiagonalRodLength(diagonalRodLength);
-    //    break;
-    //}
+    case UI_ACTION_X_ENDSTOP_OFFSET: {
+            int16_t value = EEPROM::deltaTowerXOffsetSteps();
+            INCREMENT_MIN_MAX(value, 1, 0, 500);
+            EEPROM::setDeltaTowerXOffsetSteps(value);
+        }
+        break; 
+    case UI_ACTION_Y_ENDSTOP_OFFSET: {
+            int16_t value = EEPROM::deltaTowerYOffsetSteps();
+            INCREMENT_MIN_MAX(value, 1, 0, 500);
+            EEPROM::setDeltaTowerYOffsetSteps(value);
+        }
+        break; 
+
+    case UI_ACTION_Z_ENDSTOP_OFFSET: {
+            int16_t value = EEPROM::deltaTowerZOffsetSteps();
+            INCREMENT_MIN_MAX(value, 1, 0, 500);
+            EEPROM::setDeltaTowerZOffsetSteps(value);
+        }
+        break; 
+
+    case UI_ACTION_DELTA_RADIUS: {
+            float value = EEPROM::deltaHorizontalRadius();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setRodRadius(value);
+        }
+        break; 
+
+    case UI_ACTION_X_TOWER_ANGLE: {
+            float value = EEPROM::deltaAlphaA();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaAlphaA(value);
+        }
+        break; 
+
+    case UI_ACTION_Y_TOWER_ANGLE: {
+            float value = EEPROM::deltaAlphaB();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaAlphaB(value);
+        }
+        break; 
+
+    case UI_ACTION_Z_TOWER_ANGLE: {
+            float value = EEPROM::deltaAlphaC();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaAlphaC(value);
+        }
+        break; 
+
+    case UI_ACTION_DIAGONAL_ROD_LENGTH: {
+            float value = EEPROM::deltaDiagonalRodLength();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaDiagonalRodLength(value);
+        }
+        break; 
+
     default:
         EVENT_UI_NEXTPREVIOUS(action, allowMoves, increment);
         break;
@@ -4014,20 +4096,47 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #endif
 
         case UI_ACTION_CAL_PLAIN_PROBING:
-            //leastSquaresCalibration(0.1, 31, false);
+            pushMenu(&ui_msg_cal_plain_probing_result, true);
+
+            plainProbing();
             break;
 
         case UI_ACTION_CAL_AUTOLEVEL_PROBING:
-            //leastSquaresCalibration(0.1, 31, false);
+            pushMenu(&ui_msg_cal_autolevel_probing_result, true);
+
+            autolevelProbing();
             break;
 
         case UI_ACTION_CAL_RUN_FULL_CALIBRATION:
-            //leastSquaresCalibration(0.1, 31, false);
             pushMenu(&ui_menu_cal_ask_use_tower_angle_corr, true);
             break;
 
-        case UI_ACTION_CAL_MANUAL_ADJUST:
-            //leastSquaresCalibration(0.1, 31, false);
+        case UI_ACTION_CAL_RUN_FULL_CALIBRATION_WITH_TOWER_ANGLE_CORR:
+            menuLevel = menuLevel - 1;
+            pushMenu(&ui_msg_cal_full_calibration_probing_result, true);
+            break;
+
+        case UI_ACTION_CAL_RUN_FULL_CALIBRATION_WITHOUT_TOWER_ANGLE_CORR:
+            menuLevel = menuLevel - 1;
+            pushMenu(&ui_msg_cal_full_calibration_probing_result, true);
+            break;  
+
+        case UI_ACTION_RESET_TO_DEFAULTS:
+            EEPROM::setDeltaTowerXOffsetSteps(DELTA_X_ENDSTOP_OFFSET_STEPS);
+            EEPROM::setDeltaTowerYOffsetSteps(DELTA_Y_ENDSTOP_OFFSET_STEPS);
+            EEPROM::setDeltaTowerZOffsetSteps(DELTA_Z_ENDSTOP_OFFSET_STEPS);
+
+            EEPROM::setRodRadius(float(ROD_RADIUS));
+
+            EEPROM::setDeltaAlphaA(float(DELTA_ALPHA_A));
+            EEPROM::setDeltaAlphaB(float(DELTA_ALPHA_B));
+            EEPROM::setDeltaAlphaC(float(DELTA_ALPHA_C));
+
+            EEPROM::setDeltaDiagonalRodLength(float(DELTA_DIAGONAL_ROD));
+            break; 
+
+        case UI_ACTION_CAL_RESULT:
+            pushMenu(&ui_msg_cal_full_calibration_result, true);
             break;
 
         default:

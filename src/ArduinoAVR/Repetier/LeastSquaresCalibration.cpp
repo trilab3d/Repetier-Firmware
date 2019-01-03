@@ -27,7 +27,7 @@
 
 #if defined(DELTA_AUTO_CALIBRATION)
 
-#define DEBUG_AUTO_CALIBRATION
+float probeHeight[10];
 
 #define degreesToRadians PI / 180.0
 #define min(a,b) ((a)<(b)?(a):(b))
@@ -298,7 +298,7 @@ class LeastSquaresCalibration {
 
     DeltaParameters deltaParameters;
 
-    float probePoints[10][3];
+    float probePoints[10][2];
 
     float expectedRmsError;
   public:
@@ -403,7 +403,7 @@ void LeastSquaresCalibration::calcCalibration() {
     probeMotorPositions[i][1] = deltaParameters.transform(machinePos, 1);
     probeMotorPositions[i][2] = deltaParameters.transform(machinePos, 2);
 
-    initialSumOfSquares += sq(probePoints[i][2]);
+    initialSumOfSquares += sq(probeHeight[i]);
   }
 
   // Do 1 or more Newton-Raphson iterations
@@ -427,9 +427,9 @@ void LeastSquaresCalibration::calcCalibration() {
         }
         normalMatrix[i][j] = temp;
       }
-      float temp = derivativeMatrix[0][i] * -1.0 * (probePoints[0][2] + corrections[0]);
+      float temp = derivativeMatrix[0][i] * -1.0 * (probeHeight[0] + corrections[0]);
       for (int k = 1; k < numPoints; ++k) {
-        temp += derivativeMatrix[k][i] * -1.0 * (probePoints[k][2] + corrections[k]);
+        temp += derivativeMatrix[k][i] * -1.0 * (probeHeight[k] + corrections[k]);
       }
       normalMatrix[i][numFactors] = temp;
     }
@@ -449,7 +449,7 @@ void LeastSquaresCalibration::calcCalibration() {
         }
         float newZ = deltaParameters.inverseTransform(probeMotorPositions[i][0], probeMotorPositions[i][1], probeMotorPositions[i][2]);
         corrections[i] = newZ;
-        expectedResiduals[i] = probePoints[i][2] + newZ;
+        expectedResiduals[i] = probeHeight[i] + newZ;
         sumOfSquares += sq(expectedResiduals[i]);
       }
 
@@ -463,6 +463,50 @@ void LeastSquaresCalibration::calcCalibration() {
       break;
     }
   }
+}
+
+void resetMeasuredProbeHeight() {
+  for (int i = 0; i < 10; ++i) {
+    probeHeight[i] = 0.0;
+  }
+}
+
+void plainProbing() {
+  LeastSquaresCalibration calib(10, 6, true);
+
+  Printer::homeAxis(true, true, true);
+  Printer::resetTransformationMatrix(false);
+  Printer::distortion.resetCorrection();
+
+  calib.genProbePoints();
+  resetMeasuredProbeHeight();
+
+  for (int i = 0; i < calib.numPoints; ++i) {
+    Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
+
+    probeHeight[i] = Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false);
+    uid.refreshPage();
+  }
+  Printer::homeAxis(true, true, true);
+}
+
+void autolevelProbing() {
+  LeastSquaresCalibration calib(10, 6, true);
+
+  Printer::homeAxis(true, true, true);
+  Printer::resetTransformationMatrix(false);
+  Printer::measureDistortion();
+
+  calib.genProbePoints();
+  resetMeasuredProbeHeight();
+
+  for (int i = 0; i < calib.numPoints; ++i) {
+    Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
+
+    probeHeight[i] = Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false);
+    uid.refreshPage();
+  }
+  Printer::homeAxis(true, true, true);
 }
 
 void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableSaveAngularCorr) {
@@ -480,13 +524,14 @@ void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableS
 
     calib.readFromEeprom();
     calib.genProbePoints();
+    resetMeasuredProbeHeight();
 
     float zMin=999.9, zMax=-999.9;
     for (int i = 0; i < calib.numPoints; ++i) {
       Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
 
       float z = -1.0 * Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false); 
-      calib.probePoints[i][2] = z;
+      probeHeight[i] = z;
 
       if(z < zMin) {
         zMin = z;
@@ -494,6 +539,7 @@ void leastSquaresCalibration(float aTolerance, int aMaxIteration, bool aDisableS
       if (z > zMax) {
         zMax = z;
       }
+      uid.refreshPage();
     }
 
     float deviation = abs(zMax - zMin);
