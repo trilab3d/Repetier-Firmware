@@ -98,7 +98,7 @@
 #define LANGUAGE_FI_ID 11
 
 #define NUM_LANGUAGES_KNOWN 12 //12
-#define NUM_TRANSLATED_WORDS 324 //322
+#define NUM_TRANSLATED_WORDS 325 //322
 
 // For selectable translations we refer to each text by a id which gets
 // defined here. The list starts at 0 and defines the position in the
@@ -429,8 +429,10 @@
 #define SERVICE_MENU_ITEM3_ID 319
 #define SERVICE_MENU_ITEM4_ID 320
 #define SERVICE_MENU_ITEM5_ID 321
-#define UI_TEXT_LEAST_SQUARES_CALIB_ID 322 // "Least-squares calib."
-#define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 323 // "Diagonal rod length"
+
+#define UI_TEXT_SERVICE_CAL_ID 322
+#define UI_TEXT_LEAST_SQUARES_CALIB_ID 323 // "Least-squares calib."
+#define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 324 // "Diagonal rod length"
 
 
 
@@ -789,8 +791,11 @@
 #define UI_TEXT_SERVICE_MENU_ITEM4_EN "SERVICE_MENU_ITEM4_TEXT"
 #define UI_TEXT_SERVICE_MENU_ITEM5_EN "SERVICE_MENU_ITEM5_TEXT"
 
+#define UI_TEXT_SERVICE_CAL "Autocalibration"
 #define UI_TEXT_LEAST_SQUARES_CALIB_EN "Least squares calib."
 #define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Rod length :%@Rmm"
+#define UI_TEXT_USE_TOWER_ANGLE_CORR_1_EN "Use tower angle"
+#define UI_TEXT_USE_TOWER_ANGLE_CORR_2_EN "correction ?"
 
 // *************** German translation ****************
 
