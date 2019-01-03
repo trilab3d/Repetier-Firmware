@@ -3180,12 +3180,12 @@ ZPOS2:
         popMenu(true);
         break;
 #endif
-    case UI_ACTION_DIAGONAL_ROD_LENGTH: {
-        float diagonalRodLength = EEPROM::deltaDiagonalRodLength();
-        INCREMENT_MIN_MAX(diagonalRodLength, 0.01, 1.0, 1000.0);
-        EEPROM::setDeltaDiagonalRodLength(diagonalRodLength);
-        break;
-    }
+    //case UI_ACTION_DIAGONAL_ROD_LENGTH: {
+    //    float diagonalRodLength = EEPROM::deltaDiagonalRodLength();
+    //    INCREMENT_MIN_MAX(diagonalRodLength, 0.01, 1.0, 1000.0);
+    //    EEPROM::setDeltaDiagonalRodLength(diagonalRodLength);
+    //    break;
+    //}
     default:
         EVENT_UI_NEXTPREVIOUS(action, allowMoves, increment);
         break;
@@ -4013,14 +4013,28 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             break;
 #endif
 
-        case UI_ACTION_LEAST_SQUARES_CALIB:
-            leastSquaresCalibration(0.1, 31, false);
+        case UI_ACTION_CAL_PLAIN_PROBING:
+            //leastSquaresCalibration(0.1, 31, false);
+            break;
+
+        case UI_ACTION_CAL_AUTOLEVEL_PROBING:
+            //leastSquaresCalibration(0.1, 31, false);
+            break;
+
+        case UI_ACTION_CAL_RUN_FULL_CALIBRATION:
+            //leastSquaresCalibration(0.1, 31, false);
+            pushMenu(&ui_menu_cal_ask_use_tower_angle_corr, true);
+            break;
+
+        case UI_ACTION_CAL_MANUAL_ADJUST:
+            //leastSquaresCalibration(0.1, 31, false);
             break;
 
         default:
             EVENT_UI_EXECUTE(action, allowMoves);
             break;
         }
+
     refreshPage();
 #if UI_AUTORETURN_TO_MENU_AFTER!=0
     ui_autoreturn_time = HAL::timeInMilliseconds() + UI_AUTORETURN_TO_MENU_AFTER;
