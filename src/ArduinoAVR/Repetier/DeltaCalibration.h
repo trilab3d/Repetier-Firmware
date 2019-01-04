@@ -16,15 +16,32 @@
 
 */
 
-#ifndef _LSC_H
-#define _LSC_H
+#ifndef _DC_H
+#define _DC_H
 
-extern float probeHeight[10];
+class DeltaCalibration {
+  public:
+    float probeHeight[10];
 
-void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr);
+    float xStop;
+    float yStop;
+    float zStop;
+    float radius;
 
-void plainProbing();
+    float xAdj;
+    float yAdj;
+    float zAdj;
+    float diagonal;
 
-void autolevelProbing();
- 
+    float deviation=999.9;
+  private:
+    void resetProbeHeight();
+  public:
+    void plainProbing();
+    void autolevelProbing();
+    void fullCalibration(int aMaxIteration, bool aDisableSaveAngularCorr);
+};
+
+extern DeltaCalibration deltaCalibration;
+
 #endif

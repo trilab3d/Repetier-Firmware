@@ -39,7 +39,7 @@ extern const int8_t encoder_table[16] PROGMEM ;
 #include <inttypes.h>
 #include <ctype.h>
 
-#include "LeastSquaresCalibration.h"
+#include "DeltaCalibration.h"
 
 #if FEATURE_SERVO > 0 && UI_SERVO_CONTROL > 0
 #if   UI_SERVO_CONTROL == 1 && defined(SERVO0_NEUTRAL_POS)
@@ -1854,25 +1854,41 @@ void UIDisplay::parse(const char *txt, bool ram) {
             break;
         case '@':
             if(c2 == '0') {
-                addFloat(probeHeight[0], 1, 2);
+                addFloat(deltaCalibration.probeHeight[0], 1, 2);
             } else if(c2 == '1') {
-                addFloat(probeHeight[1], 1, 2);
+                addFloat(deltaCalibration.probeHeight[1], 1, 2);
             } else if(c2 == '2') {
-                addFloat(probeHeight[2], 1, 2);
+                addFloat(deltaCalibration.probeHeight[2], 1, 2);
             } else if(c2 == '3') {
-                addFloat(probeHeight[3], 1, 2);
+                addFloat(deltaCalibration.probeHeight[3], 1, 2);
             } else if(c2 == '4') {
-                addFloat(probeHeight[4], 1, 2);
+                addFloat(deltaCalibration.probeHeight[4], 1, 2);
             } else if(c2 == '5') {
-                addFloat(probeHeight[5], 1, 2);
+                addFloat(deltaCalibration.probeHeight[5], 1, 2);
             } else if(c2 == '6') {
-                addFloat(probeHeight[6], 1, 2);
+                addFloat(deltaCalibration.probeHeight[6], 1, 2);
             } else if(c2 == '7') {
-                addFloat(probeHeight[7], 1, 2);
+                addFloat(deltaCalibration.probeHeight[7], 1, 2);
             } else if(c2 == '8') {
-                addFloat(probeHeight[8], 1, 2);
+                addFloat(deltaCalibration.probeHeight[8], 1, 2);
             } else if(c2 == '9') {
-                addFloat(probeHeight[9], 1, 2);
+                addFloat(deltaCalibration.probeHeight[9], 1, 2);
+            } else if(c2 == 'i') {
+                addFloat(deltaCalibration.xStop, 1, 2);
+            } else if(c2 == 'j') {
+                addFloat(deltaCalibration.yStop, 1, 2);
+            } else if(c2 == 'k') {
+                addFloat(deltaCalibration.zStop, 1, 2);
+            } else if(c2 == 'm') {
+                addFloat(deltaCalibration.xAdj, 1, 2);
+            } else if(c2 == 'n') {
+                addFloat(deltaCalibration.yAdj, 1, 2);
+            } else if(c2 == 'o') {
+                addFloat(deltaCalibration.zAdj, 1, 2);
+            } else if(c2 == 'p') {
+                addFloat(deltaCalibration.radius, 1, 2);
+            } else if(c2 == 'q') {
+                addFloat(deltaCalibration.deviation, 1, 2);    
             } else if(c2 == 'x') {
                 addInt(EEPROM::deltaTowerXOffsetSteps(), 3);
             } else if(c2 == 'y') {
@@ -4103,13 +4119,13 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         case UI_ACTION_CAL_PLAIN_PROBING:
             pushMenu(&ui_msg_cal_plain_probing_result, true);
 
-            plainProbing();
+            deltaCalibration.plainProbing();
             break;
 
         case UI_ACTION_CAL_AUTOLEVEL_PROBING:
             pushMenu(&ui_msg_cal_autolevel_probing_result, true);
 
-            autolevelProbing();
+            deltaCalibration.autolevelProbing();
             break;
 
         case UI_ACTION_CAL_RUN_FULL_CALIBRATION:
@@ -4119,11 +4135,13 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         case UI_ACTION_CAL_RUN_FULL_CALIBRATION_WITH_TOWER_ANGLE_CORR:
             menuLevel = menuLevel - 1;
             pushMenu(&ui_msg_cal_full_calibration_probing_result, true);
+            deltaCalibration.fullCalibration(5, false);
             break;
 
         case UI_ACTION_CAL_RUN_FULL_CALIBRATION_WITHOUT_TOWER_ANGLE_CORR:
             menuLevel = menuLevel - 1;
             pushMenu(&ui_msg_cal_full_calibration_probing_result, true);
+            deltaCalibration.fullCalibration(5, true);
             break;  
 
         case UI_ACTION_RESET_TO_DEFAULTS:

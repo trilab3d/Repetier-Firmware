@@ -22,16 +22,12 @@
 
 #include "Repetier.h"
 #include "Configuration.h"
-
-#define DELTA_AUTO_CALIBRATION
-
-#if defined(DELTA_AUTO_CALIBRATION)
-
-float probeHeight[10];
+#include "DeltaCalibration.h"
 
 #define degreesToRadians PI / 180.0
 #define min(a,b) ((a)<(b)?(a):(b))
 
+DeltaCalibration deltaCalibration;
 
 void MatrixSwapRows(float* matrix, int cols, int i, int j) {
   if (i != j) {
@@ -403,7 +399,7 @@ void LeastSquaresCalibration::calcCalibration() {
     probeMotorPositions[i][1] = deltaParameters.transform(machinePos, 1);
     probeMotorPositions[i][2] = deltaParameters.transform(machinePos, 2);
 
-    initialSumOfSquares += sq(probeHeight[i]);
+    initialSumOfSquares += sq(deltaCalibration.probeHeight[i]);
   }
 
   // Do 1 or more Newton-Raphson iterations
@@ -427,9 +423,9 @@ void LeastSquaresCalibration::calcCalibration() {
         }
         normalMatrix[i][j] = temp;
       }
-      float temp = derivativeMatrix[0][i] * -1.0 * (probeHeight[0] + corrections[0]);
+      float temp = derivativeMatrix[0][i] * -1.0 * (deltaCalibration.probeHeight[0] + corrections[0]);
       for (int k = 1; k < numPoints; ++k) {
-        temp += derivativeMatrix[k][i] * -1.0 * (probeHeight[k] + corrections[k]);
+        temp += derivativeMatrix[k][i] * -1.0 * (deltaCalibration.probeHeight[k] + corrections[k]);
       }
       normalMatrix[i][numFactors] = temp;
     }
@@ -449,7 +445,7 @@ void LeastSquaresCalibration::calcCalibration() {
         }
         float newZ = deltaParameters.inverseTransform(probeMotorPositions[i][0], probeMotorPositions[i][1], probeMotorPositions[i][2]);
         corrections[i] = newZ;
-        expectedResiduals[i] = probeHeight[i] + newZ;
+        expectedResiduals[i] = deltaCalibration.probeHeight[i] + newZ;
         sumOfSquares += sq(expectedResiduals[i]);
       }
 
@@ -465,13 +461,13 @@ void LeastSquaresCalibration::calcCalibration() {
   }
 }
 
-void resetMeasuredProbeHeight() {
+void DeltaCalibration::resetProbeHeight() {
   for (int i = 0; i < 10; ++i) {
     probeHeight[i] = 0.0;
   }
 }
 
-void plainProbing() {
+void DeltaCalibration::plainProbing() {
   LeastSquaresCalibration calib(10, 6, true);
 
   Printer::homeAxis(true, true, true);
@@ -479,7 +475,7 @@ void plainProbing() {
   Printer::distortion.resetCorrection();
 
   calib.genProbePoints();
-  resetMeasuredProbeHeight();
+  resetProbeHeight();
 
   for (int i = 0; i < calib.numPoints; ++i) {
     Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
@@ -490,7 +486,7 @@ void plainProbing() {
   Printer::homeAxis(true, true, true);
 }
 
-void autolevelProbing() {
+void DeltaCalibration::autolevelProbing() {
   LeastSquaresCalibration calib(10, 6, true);
 
   Printer::homeAxis(true, true, true);
@@ -498,7 +494,7 @@ void autolevelProbing() {
   Printer::measureDistortion();
 
   calib.genProbePoints();
-  resetMeasuredProbeHeight();
+  resetProbeHeight();
 
   for (int i = 0; i < calib.numPoints; ++i) {
     Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
@@ -509,7 +505,7 @@ void autolevelProbing() {
   Printer::homeAxis(true, true, true);
 }
 
-void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
+void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
   LeastSquaresCalibration calib(10, 6, true);
 
   Com::printFLN(PSTR("========== Least squares calibration =========="));
@@ -524,9 +520,9 @@ void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
 
     calib.readFromEeprom();
     calib.genProbePoints();
-    resetMeasuredProbeHeight();
+    resetProbeHeight();
 
-    float zMin=999.9, zMax=-999.9, lastDeviation=999.9;
+    float zMin=999.9, zMax=-999.9;
     for (int i = 0; i < calib.numPoints; ++i) {
       Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
 
@@ -542,16 +538,36 @@ void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
       uid.refreshPage();
     }
 
-    float deviation = abs(zMax - zMin);
-    if (deviation > lastDeviation) {
+    float measDeviation = abs(zMax - zMin);
+    if (measDeviation > deviation) {
 
-      Com::printFLN(PSTR("Calibration finished with tolerance: "), lastDeviation, 3);
+      calib.deltaParameters.xStop = xStop;
+      calib.deltaParameters.yStop = yStop;
+      calib.deltaParameters.zStop = zStop;
+      calib.deltaParameters.radius = radius;
+      calib.deltaParameters.xAdj = xAdj;
+      calib.deltaParameters.yAdj = yAdj;
+      calib.deltaParameters.zAdj = zAdj;
+      calib.deltaParameters.diagonal = diagonal;
+
+      calib.writeToEeprom(!aDisableSaveAngularCorr);
+
+      Com::printFLN(PSTR("Calibration finished with tolerance: "), deviation, 3);
       break; 
     } 
     else {
-      lastDeviation = deviation;
+      deviation = measDeviation;
 
-      Com::printF(PSTR("Calibration out of tolerance - deviation: "), deviation, 3);
+      xStop = calib.deltaParameters.xStop;
+      yStop = calib.deltaParameters.yStop;
+      zStop = calib.deltaParameters.zStop;
+      radius = calib.deltaParameters.radius;
+      xAdj = calib.deltaParameters.xAdj;
+      yAdj = calib.deltaParameters.yAdj;
+      zAdj = calib.deltaParameters.zAdj;
+      diagonal = calib.deltaParameters.diagonal;
+
+      Com::printF(PSTR("Calibration out of tolerance - deviation: "), measDeviation, 3);
       Com::printFLN(PSTR(")"));
 
       calib.calcCalibration();
@@ -576,5 +592,3 @@ void leastSquaresCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
 
   Printer::homeAxis(true, true, true);
 }
-
-#endif // DELTA_AUTO_CALIBRATION

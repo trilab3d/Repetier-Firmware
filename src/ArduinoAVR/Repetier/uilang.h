@@ -828,10 +828,10 @@
 #define UI_TEXT_CAL_PROBE_HEIGHT_L2_EN "%@8 %@6 %@7 %@9"
 #define UI_TEXT_CAL_PROBE_HEIGHT_L3_EN "%@4 %@3 %@2"
 
-#define UI_TEXT_CAL_RESULT_1_EN "Xe %@i Xa %@l"
-#define UI_TEXT_CAL_RESULT_2_EN "Ye %@j Ya %@m"
-#define UI_TEXT_CAL_RESULT_3_EN "Ze %@k Za %@n"
-#define UI_TEXT_CAL_RESULT_4_EN "DR %@o Dev %@p"
+#define UI_TEXT_CAL_RESULT_1_EN "Xe %@i Xa %@m"
+#define UI_TEXT_CAL_RESULT_2_EN "Ye %@j Ya %@n"
+#define UI_TEXT_CAL_RESULT_3_EN "Ze %@k Za %@o"
+#define UI_TEXT_CAL_RESULT_4_EN "DR %@p Dev %@q"
 
 #define UI_TEXT_X_ENDSTOP_OFFSET_EN "X endstop offst %@x"
 #define UI_TEXT_Y_ENDSTOP_OFFSET_EN "Y endstop offst %@y"
