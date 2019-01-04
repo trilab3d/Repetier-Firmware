@@ -294,7 +294,7 @@ class LeastSquaresCalibration {
 
     DeltaParameters deltaParameters;
 
-    float probePoints[10][2];
+    float probePoints[10][3];
 
     float expectedRmsError;
   public:
@@ -399,7 +399,7 @@ void LeastSquaresCalibration::calcCalibration() {
     probeMotorPositions[i][1] = deltaParameters.transform(machinePos, 1);
     probeMotorPositions[i][2] = deltaParameters.transform(machinePos, 2);
 
-    initialSumOfSquares += sq(deltaCalibration.probeHeight[i]);
+    initialSumOfSquares += sq(probePoints[i][2]);
   }
 
   // Do 1 or more Newton-Raphson iterations
@@ -423,9 +423,9 @@ void LeastSquaresCalibration::calcCalibration() {
         }
         normalMatrix[i][j] = temp;
       }
-      float temp = derivativeMatrix[0][i] * -1.0 * (deltaCalibration.probeHeight[0] + corrections[0]);
+      float temp = derivativeMatrix[0][i] * -1.0 * (probePoints[0][2] + corrections[0]);
       for (int k = 1; k < numPoints; ++k) {
-        temp += derivativeMatrix[k][i] * -1.0 * (deltaCalibration.probeHeight[k] + corrections[k]);
+        temp += derivativeMatrix[k][i] * -1.0 * (probePoints[k][2] + corrections[k]);
       }
       normalMatrix[i][numFactors] = temp;
     }
@@ -445,7 +445,7 @@ void LeastSquaresCalibration::calcCalibration() {
         }
         float newZ = deltaParameters.inverseTransform(probeMotorPositions[i][0], probeMotorPositions[i][1], probeMotorPositions[i][2]);
         corrections[i] = newZ;
-        expectedResiduals[i] = deltaCalibration.probeHeight[i] + newZ;
+        expectedResiduals[i] = probePoints[i][2] + newZ;
         sumOfSquares += sq(expectedResiduals[i]);
       }
 
@@ -508,6 +508,9 @@ void DeltaCalibration::autolevelProbing() {
 void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngularCorr) {
   LeastSquaresCalibration calib(10, 6, true);
 
+  float lastProbeHeight[10];
+  float lastDeviation = 999.9;
+
   Com::printFLN(PSTR("========== Least squares calibration =========="));
   for(int p=0; p<aMaxIteration; p++) {
     Com::printF(PSTR("===== "));
@@ -526,7 +529,8 @@ void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngul
     for (int i = 0; i < calib.numPoints; ++i) {
       Printer::moveToReal(calib.probePoints[i][0], calib.probePoints[i][1], 5.0, IGNORE_COORDINATE, 5000.0 * Printer::feedrateMultiply * 0.00016666666f);
 
-      float z = -1.0 * Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false); 
+      float z = Printer::runZProbe(3 & 1, 3 & 2, Z_PROBE_REPETITIONS, true, false); 
+      calib.probePoints[i][2] = -1.0 * z;
       probeHeight[i] = z;
 
       if(z < zMin) {
@@ -538,8 +542,13 @@ void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngul
       uid.refreshPage();
     }
 
-    float measDeviation = abs(zMax - zMin);
-    if (measDeviation > deviation) {
+    float mesDeviation = abs(zMax - zMin);
+    if (mesDeviation > lastDeviation) {
+
+      deviation = lastDeviation;
+      for (int j = 0; j < 10; ++j) {
+        probeHeight[j] = lastProbeHeight[j];
+      }
 
       calib.deltaParameters.xStop = xStop;
       calib.deltaParameters.yStop = yStop;
@@ -549,14 +558,20 @@ void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngul
       calib.deltaParameters.yAdj = yAdj;
       calib.deltaParameters.zAdj = zAdj;
       calib.deltaParameters.diagonal = diagonal;
-
+      
       calib.writeToEeprom(!aDisableSaveAngularCorr);
 
       Com::printFLN(PSTR("Calibration finished with tolerance: "), deviation, 3);
+      uid.refreshPage();
+      
       break; 
     } 
     else {
-      deviation = measDeviation;
+      lastDeviation = mesDeviation;
+
+      for (int j = 0; j < 10; ++j) {
+        lastProbeHeight[j] = probeHeight[j];
+      }
 
       xStop = calib.deltaParameters.xStop;
       yStop = calib.deltaParameters.yStop;
@@ -567,7 +582,7 @@ void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngul
       zAdj = calib.deltaParameters.zAdj;
       diagonal = calib.deltaParameters.diagonal;
 
-      Com::printF(PSTR("Calibration out of tolerance - deviation: "), measDeviation, 3);
+      Com::printF(PSTR("Calibration out of tolerance - deviation: "), mesDeviation, 3);
       Com::printFLN(PSTR(")"));
 
       calib.calcCalibration();
