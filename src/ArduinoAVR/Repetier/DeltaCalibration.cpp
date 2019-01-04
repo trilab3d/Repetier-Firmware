@@ -589,17 +589,17 @@ void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngul
       calib.calcCalibration();
 
       Com::printF(PSTR("New endstop corrections: "));
-      Com::printF(PSTR("X="), xStop, 3);
-      Com::printF(PSTR(" Y="), yStop, 3);
-      Com::printFLN(PSTR(" Z="), zStop, 3);
+      Com::printF(PSTR("X="), calib.deltaParameters.xStop, 3);
+      Com::printF(PSTR(" Y="), calib.deltaParameters.yStop, 3);
+      Com::printFLN(PSTR(" Z="), calib.deltaParameters.zStop, 3);
 
-      Com::printFLN(PSTR("New diagonal rod length: "), diagonal, 3);
-      Com::printFLN(PSTR("New delta radius: "), radius, 3);
+      Com::printFLN(PSTR("New diagonal rod length: "), calib.deltaParameters.diagonal, 3);
+      Com::printFLN(PSTR("New delta radius: "), calib.deltaParameters.radius, 3);
 
       Com::printF(PSTR("New tower position angle corrections: "));
-      Com::printF(PSTR("X="), xAdj, 3);
-      Com::printF(PSTR(" Y="), yAdj, 3);
-      Com::printFLN(PSTR(" Z="), zAdj, 3);
+      Com::printF(PSTR("X="), calib.deltaParameters.xAdj, 3);
+      Com::printF(PSTR(" Y="), calib.deltaParameters.yAdj, 3);
+      Com::printFLN(PSTR(" Z="), calib.deltaParameters.zAdj, 3);
 
       readFromEeprom(); // Backup actual values
       calib.writeToEeprom(!aDisableSaveAngularCorr); // Write calibrated value
