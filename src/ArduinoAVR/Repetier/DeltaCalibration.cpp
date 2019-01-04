@@ -467,6 +467,33 @@ void DeltaCalibration::resetProbeHeight() {
   }
 }
 
+void DeltaCalibration::readFromEeprom() {
+  diagonal = EEPROM::deltaDiagonalRodLength();
+  radius = EEPROM::deltaHorizontalRadius();
+
+  xStop = float(EEPROM::deltaTowerXOffsetSteps()) / float(XAXIS_STEPS_PER_MM);
+  yStop = float(EEPROM::deltaTowerYOffsetSteps()) / float(YAXIS_STEPS_PER_MM);
+  zStop = float(EEPROM::deltaTowerZOffsetSteps()) / float(ZAXIS_STEPS_PER_MM);
+
+  xAdj = EEPROM::deltaAlphaA() - float(DELTA_ALPHA_A);
+  yAdj = EEPROM::deltaAlphaB() - float(DELTA_ALPHA_B);
+  zAdj = EEPROM::deltaAlphaC() - float(DELTA_ALPHA_C);
+}
+
+void DeltaCalibration::writeToEeprom(bool aAngularCorr) {
+  EEPROM::setRodRadius(radius);
+
+  EEPROM::setDeltaTowerXOffsetSteps(trunc(xStop * float(XAXIS_STEPS_PER_MM)));
+  EEPROM::setDeltaTowerYOffsetSteps(trunc(yStop * float(YAXIS_STEPS_PER_MM)));
+  EEPROM::setDeltaTowerZOffsetSteps(trunc(zStop * float(ZAXIS_STEPS_PER_MM)));
+
+  if (aAngularCorr) {
+    EEPROM::setDeltaAlphaA(float(DELTA_ALPHA_A) + xAdj);
+    EEPROM::setDeltaAlphaB(float(DELTA_ALPHA_B) + yAdj);
+    EEPROM::setDeltaAlphaC(float(DELTA_ALPHA_C) + zAdj);
+  }
+}
+
 void DeltaCalibration::plainProbing() {
   LeastSquaresCalibration calib(10, 6, true);
 
@@ -544,64 +571,43 @@ void DeltaCalibration::fullCalibration(int aMaxIteration, bool aDisableSaveAngul
 
     float mesDeviation = abs(zMax - zMin);
     if (mesDeviation > lastDeviation) {
-
       deviation = lastDeviation;
-      for (int j = 0; j < 10; ++j) {
-        probeHeight[j] = lastProbeHeight[j];
+      for (int i = 0; i < 10; ++i) {
+        probeHeight[i] = lastProbeHeight[i];
       }
-
-      calib.deltaParameters.xStop = xStop;
-      calib.deltaParameters.yStop = yStop;
-      calib.deltaParameters.zStop = zStop;
-      calib.deltaParameters.radius = radius;
-      calib.deltaParameters.xAdj = xAdj;
-      calib.deltaParameters.yAdj = yAdj;
-      calib.deltaParameters.zAdj = zAdj;
-      calib.deltaParameters.diagonal = diagonal;
       
-      calib.writeToEeprom(!aDisableSaveAngularCorr);
+      writeToEeprom(!aDisableSaveAngularCorr); // Restore previous values
 
       Com::printFLN(PSTR("Calibration finished with tolerance: "), deviation, 3);
       uid.refreshPage();
-      
       break; 
     } 
     else {
-      lastDeviation = mesDeviation;
-
-      for (int j = 0; j < 10; ++j) {
-        lastProbeHeight[j] = probeHeight[j];
-      }
-
-      xStop = calib.deltaParameters.xStop;
-      yStop = calib.deltaParameters.yStop;
-      zStop = calib.deltaParameters.zStop;
-      radius = calib.deltaParameters.radius;
-      xAdj = calib.deltaParameters.xAdj;
-      yAdj = calib.deltaParameters.yAdj;
-      zAdj = calib.deltaParameters.zAdj;
-      diagonal = calib.deltaParameters.diagonal;
-
       Com::printF(PSTR("Calibration out of tolerance - deviation: "), mesDeviation, 3);
       Com::printFLN(PSTR(")"));
 
       calib.calcCalibration();
 
       Com::printF(PSTR("New endstop corrections: "));
-      Com::printF(PSTR("X="), calib.deltaParameters.xStop, 3);
-      Com::printF(PSTR(" Y="), calib.deltaParameters.yStop, 3);
-      Com::printFLN(PSTR(" Z="), calib.deltaParameters.zStop, 3);
+      Com::printF(PSTR("X="), xStop, 3);
+      Com::printF(PSTR(" Y="), yStop, 3);
+      Com::printFLN(PSTR(" Z="), zStop, 3);
 
-      Com::printFLN(PSTR("New diagonal rod length: "), calib.deltaParameters.diagonal, 3);
-      Com::printFLN(PSTR("New delta radius: "), calib.deltaParameters.radius, 3);
-      Com::printFLN(PSTR("New homed height: "), calib.deltaParameters.homedHeight, 3);
+      Com::printFLN(PSTR("New diagonal rod length: "), diagonal, 3);
+      Com::printFLN(PSTR("New delta radius: "), radius, 3);
 
       Com::printF(PSTR("New tower position angle corrections: "));
-      Com::printF(PSTR("X="), calib.deltaParameters.xAdj, 3);
-      Com::printF(PSTR(" Y="), calib.deltaParameters.yAdj, 3);
-      Com::printFLN(PSTR(" Z="), calib.deltaParameters.zAdj, 3);
+      Com::printF(PSTR("X="), xAdj, 3);
+      Com::printF(PSTR(" Y="), yAdj, 3);
+      Com::printFLN(PSTR(" Z="), zAdj, 3);
 
-      calib.writeToEeprom(!aDisableSaveAngularCorr);
+      readFromEeprom(); // Backup actual values
+      calib.writeToEeprom(!aDisableSaveAngularCorr); // Write calibrated value
+    }
+
+    lastDeviation = mesDeviation;
+    for (int i = 0; i < 10; ++i) {
+      lastProbeHeight[i] = probeHeight[i];
     }
   }
 

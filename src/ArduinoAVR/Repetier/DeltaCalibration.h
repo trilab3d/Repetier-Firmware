@@ -16,8 +16,8 @@
 
 */
 
-#ifndef _DC_H
-#define _DC_H
+#ifndef _DELTACALIBRATION_H
+#define _DELTACALIBRATION_H
 
 class DeltaCalibration {
   public:
@@ -33,9 +33,11 @@ class DeltaCalibration {
     float zAdj;
     float diagonal;
 
-    float deviation=999.9;
+    float deviation;
   private:
     void resetProbeHeight();
+    void readFromEeprom();
+    void writeToEeprom(bool aAngularCorr=true);
   public:
     void plainProbing();
     void autolevelProbing();

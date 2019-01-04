@@ -1874,11 +1874,11 @@ void UIDisplay::parse(const char *txt, bool ram) {
             } else if(c2 == '9') {
                 addFloat(deltaCalibration.probeHeight[9], 1, 2);
             } else if(c2 == 'i') {
-                addFloat(deltaCalibration.xStop, 1, 2);
+                addFloat(deltaCalibration.xStop * float(XAXIS_STEPS_PER_MM), 1, 2);
             } else if(c2 == 'j') {
-                addFloat(deltaCalibration.yStop, 1, 2);
+                addFloat(deltaCalibration.yStop * float(YAXIS_STEPS_PER_MM), 1, 2);
             } else if(c2 == 'k') {
-                addFloat(deltaCalibration.zStop, 1, 2);
+                addFloat(deltaCalibration.zStop * float(ZAXIS_STEPS_PER_MM), 1, 2);
             } else if(c2 == 'm') {
                 addFloat(deltaCalibration.xAdj, 1, 2);
             } else if(c2 == 'n') {
