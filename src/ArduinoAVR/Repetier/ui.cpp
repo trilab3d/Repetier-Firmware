@@ -3258,6 +3258,8 @@ ZPOS2:
             float value = EEPROM::deltaHorizontalRadius();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setRodRadius(value);
+
+            Printer::updateDerivedParameter();
         }
         break; 
 
@@ -3265,6 +3267,8 @@ ZPOS2:
             float value = EEPROM::deltaAlphaA();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaA(value);
+
+            Printer::updateDerivedParameter();
         }
         break; 
 
@@ -3272,6 +3276,8 @@ ZPOS2:
             float value = EEPROM::deltaAlphaB();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaB(value);
+
+            Printer::updateDerivedParameter();
         }
         break; 
 
@@ -3279,6 +3285,8 @@ ZPOS2:
             float value = EEPROM::deltaAlphaC();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaC(value);
+
+            Printer::updateDerivedParameter();
         }
         break; 
 
@@ -3286,6 +3294,8 @@ ZPOS2:
             float value = EEPROM::deltaDiagonalRodLength();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaDiagonalRodLength(value);
+
+            Printer::updateDerivedParameter();
         }
         break; 
 
@@ -4144,6 +4154,10 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             deltaCalibration.fullCalibration(5, true);
             break;  
 
+        case UI_ACTION_CONFIRM_RESET_TO_DEFAULTS:
+            pushMenu(&ui_menu_confirm_reset_to_defaults, true);
+            break; 
+
         case UI_ACTION_RESET_TO_DEFAULTS:
             EEPROM::setDeltaTowerXOffsetSteps(DELTA_X_ENDSTOP_OFFSET_STEPS);
             EEPROM::setDeltaTowerYOffsetSteps(DELTA_Y_ENDSTOP_OFFSET_STEPS);
@@ -4156,6 +4170,8 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             EEPROM::setDeltaAlphaC(float(DELTA_ALPHA_C));
 
             EEPROM::setDeltaDiagonalRodLength(float(DELTA_DIAGONAL_ROD));
+
+            popMenu(true);
             break; 
 
         default:

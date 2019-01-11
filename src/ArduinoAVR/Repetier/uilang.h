@@ -98,7 +98,7 @@
 #define LANGUAGE_FI_ID 11
 
 #define NUM_LANGUAGES_KNOWN 12 //12
-#define NUM_TRANSLATED_WORDS 346 //322
+#define NUM_TRANSLATED_WORDS 347 //322
 
 // For selectable translations we refer to each text by a id which gets
 // defined here. The list starts at 0 and defines the position in the
@@ -458,6 +458,7 @@
 #define UI_TEXT_Z_TOWER_ANGLE_ID 343 // "Z tower angle %@c"
 #define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 344 // "Diagonal rod %@l"
 #define UI_TEXT_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
+#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_ID 346 // "Confirm reset ?"
 
 // Universal definitions
 
@@ -492,7 +493,7 @@
 #define UI_TEXT_HOME_X_EN           "Home X"
 #define UI_TEXT_HOME_Y_EN           "Home Y"
 #define UI_TEXT_HOME_Z_EN           "Home Z"
-#define UI_TEXT_PREHEAT_SINGLE_EN      "Preheat Single Extr."
+#define UI_TEXT_PREHEAT_SINGLE_EN   "Preheat Single Extr."
 #define UI_TEXT_PREHEAT_ALL_EN      "Preheat All Extr."
 #define UI_TEXT_LIGHTS_ONOFF_EN     "Lights:%lo"
 #define UI_TEXT_COOLDOWN_EN         "Cooldown"
@@ -842,6 +843,7 @@
 #define UI_TEXT_Z_TOWER_ANGLE_EN "Z tower angl %@c"
 #define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Diagonal rod %@l"
 #define UI_TEXT_RESET_TO_DEFAULTS_EN "Reset to defaults"
+#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_EN "Confirm reset ?"
 
 // *************** German translation ****************
 
