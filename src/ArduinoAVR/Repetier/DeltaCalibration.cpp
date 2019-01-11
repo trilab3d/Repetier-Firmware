@@ -326,10 +326,36 @@ void LeastSquaresCalibration::readFromEeprom() {
   deltaParameters.yAdj = EEPROM::deltaAlphaB() - float(DELTA_ALPHA_B);
   deltaParameters.zAdj = EEPROM::deltaAlphaC() - float(DELTA_ALPHA_C);
 
+  Com::printF(PSTR("LeastSquaresCalibration::readFromEeprom"));
+  Com::printF(PSTR("X="), deltaParameters.xStop, 3);
+  Com::printF(PSTR(" Y="), deltaParameters.yStop, 3);
+  Com::printFLN(PSTR(" Z="), deltaParameters.zStop, 3);
+
+  Com::printFLN(PSTR("diagonal: "), deltaParameters.diagonal, 3);
+  Com::printFLN(PSTR("radius: "), deltaParameters.radius, 3);
+
+  Com::printF(PSTR("angle corrections: "));
+  Com::printF(PSTR("X="), deltaParameters.xAdj, 3);
+  Com::printF(PSTR(" Y="), deltaParameters.yAdj, 3);
+  Com::printFLN(PSTR(" Z="), deltaParameters.zAdj, 3);
+
   deltaParameters.recalc();
 }
 
 void LeastSquaresCalibration::writeToEeprom(bool aAngularCorr) {
+  Com::printF(PSTR("LeastSquaresCalibration::writeToEeprom"));
+  Com::printF(PSTR("X="), deltaParameters.xStop, 3);
+  Com::printF(PSTR(" Y="), deltaParameters.yStop, 3);
+  Com::printFLN(PSTR(" Z="), deltaParameters.zStop, 3);
+
+  Com::printFLN(PSTR("diagonal: "), deltaParameters.diagonal, 3);
+  Com::printFLN(PSTR("radius: "), deltaParameters.radius, 3);
+
+  Com::printF(PSTR("angle corrections: "));
+  Com::printF(PSTR("X="), deltaParameters.xAdj, 3);
+  Com::printF(PSTR(" Y="), deltaParameters.yAdj, 3);
+  Com::printFLN(PSTR(" Z="), deltaParameters.zAdj, 3);
+
   EEPROM::setRodRadius(deltaParameters.radius);
 
   EEPROM::setDeltaTowerXOffsetSteps(deltaParameters.xStop * float(XAXIS_STEPS_PER_MM));
@@ -478,9 +504,35 @@ void DeltaCalibration::readFromEeprom() {
   xAdj = EEPROM::deltaAlphaA() - float(DELTA_ALPHA_A);
   yAdj = EEPROM::deltaAlphaB() - float(DELTA_ALPHA_B);
   zAdj = EEPROM::deltaAlphaC() - float(DELTA_ALPHA_C);
+
+  Com::printF(PSTR("DeltaCalibration::readFromEeprom"));
+  Com::printF(PSTR("X="), xStop, 3);
+  Com::printF(PSTR(" Y="), yStop, 3);
+  Com::printFLN(PSTR(" Z="), zStop, 3);
+
+  Com::printFLN(PSTR("diagonal: "), diagonal, 3);
+  Com::printFLN(PSTR("radius: "), radius, 3);
+
+  Com::printF(PSTR("angle corrections: "));
+  Com::printF(PSTR("X="), xAdj, 3);
+  Com::printF(PSTR(" Y="), yAdj, 3);
+  Com::printFLN(PSTR(" Z="), zAdj, 3);
 }
 
 void DeltaCalibration::writeToEeprom(bool aAngularCorr) {
+  Com::printF(PSTR("DeltaCalibration::writeToEeprom"));
+  Com::printF(PSTR("X="), xStop, 3);
+  Com::printF(PSTR(" Y="), yStop, 3);
+  Com::printFLN(PSTR(" Z="), zStop, 3);
+
+  Com::printFLN(PSTR("diagonal: "), diagonal, 3);
+  Com::printFLN(PSTR("radius: "), radius, 3);
+
+  Com::printF(PSTR("angle corrections: "));
+  Com::printF(PSTR("X="), xAdj, 3);
+  Com::printF(PSTR(" Y="), yAdj, 3);
+  Com::printFLN(PSTR(" Z="), zAdj, 3);
+
   EEPROM::setRodRadius(radius);
 
   EEPROM::setDeltaTowerXOffsetSteps(trunc(xStop * float(XAXIS_STEPS_PER_MM)));
