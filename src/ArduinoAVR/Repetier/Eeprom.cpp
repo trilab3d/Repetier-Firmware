@@ -1068,10 +1068,10 @@ writeFloat(EPR_X2AXIS_STEPS_PER_MM, Com::tEPRX2StepsPerMM, 4);
             Com::printFLN(PSTR("Weight "), (int)(v + 1));
         }
 #endif
+    }
 #if EXTRUDER_JAM_CONTROL
 	writeByte(EPR_EOF_CONTROL,Com::tEPREofControl);
 #endif 
-    }
 #else
     Com::printErrorF(Com::tNoEEPROMSupport);
 #endif
