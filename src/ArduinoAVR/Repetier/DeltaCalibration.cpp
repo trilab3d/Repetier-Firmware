@@ -287,7 +287,7 @@ void DeltaParameters::adjust(int numFactors, float v[], bool norm) {
 
 class LeastSquaresCalibration {
   public:
-    float bedRadius = 100;
+    float bedRadius = 65;
     int numPoints = 10;
     int numFactors = 6;
     bool normalise = true;
