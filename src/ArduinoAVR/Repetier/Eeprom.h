@@ -351,6 +351,11 @@ static inline void setZProbeHeight(float mm) {
         return DELTA_DIAGONAL_ROD;
 #endif
     }
+    static inline void setDeltaDiagonalRodLength(float length) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_DIAGONAL_ROD_LENGTH, length);
+#endif
+    }
     static inline int16_t deltaSegmentsPerSecondPrint() {
 #if EEPROM_MODE != 0
         return HAL::eprGetInt16(EPR_DELTA_SEGMENTS_PER_SECOND_PRINT);
@@ -454,6 +459,24 @@ static inline void setTowerZFloor(float newZ) {
     static inline void setDeltaTowerZOffsetSteps(int16_t steps) {
 #if EEPROM_MODE != 0
         HAL::eprSetInt16(EPR_DELTA_TOWERZ_OFFSET_STEPS,steps);
+        EEPROM::updateChecksum();
+#endif
+    }
+    static inline float setDeltaAlphaA(float angle) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_ALPHA_A, angle);
+        EEPROM::updateChecksum();
+#endif
+    }
+    static inline float setDeltaAlphaB(float angle) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_ALPHA_B, angle);
+        EEPROM::updateChecksum();
+#endif
+    }
+    static inline float setDeltaAlphaC(float angle) {
+#if EEPROM_MODE != 0
+        HAL::eprSetFloat(EPR_DELTA_ALPHA_C, angle);
         EEPROM::updateChecksum();
 #endif
     }

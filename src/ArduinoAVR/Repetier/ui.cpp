@@ -39,6 +39,8 @@ extern const int8_t encoder_table[16] PROGMEM ;
 #include <inttypes.h>
 #include <ctype.h>
 
+#include "DeltaCalibration.h"
+
 #if FEATURE_SERVO > 0 && UI_SERVO_CONTROL > 0
 #if   UI_SERVO_CONTROL == 1 && defined(SERVO0_NEUTRAL_POS)
 uint16_t servoPosition = SERVO0_NEUTRAL_POS;
@@ -1850,6 +1852,61 @@ void UIDisplay::parse(const char *txt, bool ram) {
                 addFloat(Printer::wizardStack[1].f, 0, 1);
             }
             break;
+        case '@':
+            if(c2 == '0') {
+                addFloat(deltaCalibration.probeHeight[0], 1, 2);
+            } else if(c2 == '1') {
+                addFloat(deltaCalibration.probeHeight[1], 1, 2);
+            } else if(c2 == '2') {
+                addFloat(deltaCalibration.probeHeight[2], 1, 2);
+            } else if(c2 == '3') {
+                addFloat(deltaCalibration.probeHeight[3], 1, 2);
+            } else if(c2 == '4') {
+                addFloat(deltaCalibration.probeHeight[4], 1, 2);
+            } else if(c2 == '5') {
+                addFloat(deltaCalibration.probeHeight[5], 1, 2);
+            } else if(c2 == '6') {
+                addFloat(deltaCalibration.probeHeight[6], 1, 2);
+            } else if(c2 == '7') {
+                addFloat(deltaCalibration.probeHeight[7], 1, 2);
+            } else if(c2 == '8') {
+                addFloat(deltaCalibration.probeHeight[8], 1, 2);
+            } else if(c2 == '9') {
+                addFloat(deltaCalibration.probeHeight[9], 1, 2);
+            } else if(c2 == 'i') {
+                addFloat(deltaCalibration.xStop * float(XAXIS_STEPS_PER_MM), 1, 2);
+            } else if(c2 == 'j') {
+                addFloat(deltaCalibration.yStop * float(YAXIS_STEPS_PER_MM), 1, 2);
+            } else if(c2 == 'k') {
+                addFloat(deltaCalibration.zStop * float(ZAXIS_STEPS_PER_MM), 1, 2);
+            } else if(c2 == 'm') {
+                addFloat(deltaCalibration.xAdj, 1, 2);
+            } else if(c2 == 'n') {
+                addFloat(deltaCalibration.yAdj, 1, 2);
+            } else if(c2 == 'o') {
+                addFloat(deltaCalibration.zAdj, 1, 2);
+            } else if(c2 == 'p') {
+                addFloat(deltaCalibration.radius, 1, 2);
+            } else if(c2 == 'q') {
+                addFloat(deltaCalibration.deviation, 1, 2);    
+            } else if(c2 == 'x') {
+                addInt(EEPROM::deltaTowerXOffsetSteps(), 3);
+            } else if(c2 == 'y') {
+                addInt(EEPROM::deltaTowerYOffsetSteps(), 3);
+            } else if(c2 == 'z') {
+                addInt(EEPROM::deltaTowerZOffsetSteps(), 3);
+            } else if(c2 == 'r') {
+                addFloat(EEPROM::deltaHorizontalRadius(), 3, 2);
+            } else if(c2 == 'a') {
+                addFloat(EEPROM::deltaAlphaA(), 3, 2);
+            } else if(c2 == 'b') {
+                addFloat(EEPROM::deltaAlphaB(), 3, 2);
+            } else if(c2 == 'c') {
+                addFloat(EEPROM::deltaAlphaC(), 3, 2);
+            } else if(c2 == 'l') {
+                addFloat(EEPROM::deltaDiagonalRodLength(), 3, 2);
+            }
+            break;
         }
     }
     uid.printCols[col] = 0;
@@ -2603,6 +2660,11 @@ int UIDisplay::okAction(bool allowMoves) {
                 uid.popMenu(true);
                 break;
 #endif
+            case UI_ACTION_CAL_RESULT:
+                popMenu(false);
+                pushMenu(&ui_msg_cal_full_calibration_result, true);
+                break;
+
             default:
                 EVENT_UI_OK_WIZARD(action);
                 break;
@@ -3172,6 +3234,71 @@ ZPOS2:
         popMenu(true);
         break;
 #endif
+    case UI_ACTION_X_ENDSTOP_OFFSET: {
+            int16_t value = EEPROM::deltaTowerXOffsetSteps();
+            INCREMENT_MIN_MAX(value, 1, 0, 500);
+            EEPROM::setDeltaTowerXOffsetSteps(value);
+        }
+        break; 
+    case UI_ACTION_Y_ENDSTOP_OFFSET: {
+            int16_t value = EEPROM::deltaTowerYOffsetSteps();
+            INCREMENT_MIN_MAX(value, 1, 0, 500);
+            EEPROM::setDeltaTowerYOffsetSteps(value);
+        }
+        break; 
+
+    case UI_ACTION_Z_ENDSTOP_OFFSET: {
+            int16_t value = EEPROM::deltaTowerZOffsetSteps();
+            INCREMENT_MIN_MAX(value, 1, 0, 500);
+            EEPROM::setDeltaTowerZOffsetSteps(value);
+        }
+        break; 
+
+    case UI_ACTION_DELTA_RADIUS: {
+            float value = EEPROM::deltaHorizontalRadius();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setRodRadius(value);
+
+            Printer::updateDerivedParameter();
+        }
+        break; 
+
+    case UI_ACTION_X_TOWER_ANGLE: {
+            float value = EEPROM::deltaAlphaA();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaAlphaA(value);
+
+            Printer::updateDerivedParameter();
+        }
+        break; 
+
+    case UI_ACTION_Y_TOWER_ANGLE: {
+            float value = EEPROM::deltaAlphaB();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaAlphaB(value);
+
+            Printer::updateDerivedParameter();
+        }
+        break; 
+
+    case UI_ACTION_Z_TOWER_ANGLE: {
+            float value = EEPROM::deltaAlphaC();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaAlphaC(value);
+
+            Printer::updateDerivedParameter();
+        }
+        break; 
+
+    case UI_ACTION_DIAGONAL_ROD_LENGTH: {
+            float value = EEPROM::deltaDiagonalRodLength();
+            INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
+            EEPROM::setDeltaDiagonalRodLength(value);
+
+            Printer::updateDerivedParameter();
+        }
+        break; 
+
     default:
         EVENT_UI_NEXTPREVIOUS(action, allowMoves, increment);
         break;
@@ -3998,10 +4125,60 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
                 Printer::distortion.enable(true);
             break;
 #endif
+
+        case UI_ACTION_CAL_PLAIN_PROBING:
+            pushMenu(&ui_msg_cal_plain_probing_result, true);
+
+            deltaCalibration.plainProbing();
+            break;
+
+        case UI_ACTION_CAL_AUTOLEVEL_PROBING:
+            pushMenu(&ui_msg_cal_autolevel_probing_result, true);
+
+            deltaCalibration.autolevelProbing();
+            break;
+
+        case UI_ACTION_CAL_RUN_FULL_CALIBRATION:
+            pushMenu(&ui_menu_cal_ask_use_tower_angle_corr, true);
+            break;
+
+        case UI_ACTION_CAL_RUN_FULL_CALIBRATION_WITH_TOWER_ANGLE_CORR:
+            menuLevel = menuLevel - 1;
+            pushMenu(&ui_msg_cal_full_calibration_probing_result, true);
+            deltaCalibration.fullCalibration(5, false);
+            break;
+
+        case UI_ACTION_CAL_RUN_FULL_CALIBRATION_WITHOUT_TOWER_ANGLE_CORR:
+            menuLevel = menuLevel - 1;
+            pushMenu(&ui_msg_cal_full_calibration_probing_result, true);
+            deltaCalibration.fullCalibration(5, true);
+            break;  
+
+        case UI_ACTION_CONFIRM_RESET_TO_DEFAULTS:
+            pushMenu(&ui_menu_confirm_reset_to_defaults, true);
+            break; 
+
+        case UI_ACTION_RESET_TO_DEFAULTS:
+            EEPROM::setDeltaTowerXOffsetSteps(DELTA_X_ENDSTOP_OFFSET_STEPS);
+            EEPROM::setDeltaTowerYOffsetSteps(DELTA_Y_ENDSTOP_OFFSET_STEPS);
+            EEPROM::setDeltaTowerZOffsetSteps(DELTA_Z_ENDSTOP_OFFSET_STEPS);
+
+            EEPROM::setRodRadius(float(ROD_RADIUS));
+
+            EEPROM::setDeltaAlphaA(float(DELTA_ALPHA_A));
+            EEPROM::setDeltaAlphaB(float(DELTA_ALPHA_B));
+            EEPROM::setDeltaAlphaC(float(DELTA_ALPHA_C));
+
+            EEPROM::setDeltaDiagonalRodLength(float(DELTA_DIAGONAL_ROD));
+
+            popMenu(true);
+            break; 
+
         default:
             EVENT_UI_EXECUTE(action, allowMoves);
             break;
         }
+
     refreshPage();
 #if UI_AUTORETURN_TO_MENU_AFTER!=0
     ui_autoreturn_time = HAL::timeInMilliseconds() + UI_AUTORETURN_TO_MENU_AFTER;

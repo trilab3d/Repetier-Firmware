@@ -1072,6 +1072,9 @@ writeFloat(EPR_X2AXIS_STEPS_PER_MM, Com::tEPRX2StepsPerMM, 4);
 	writeByte(EPR_EOF_CONTROL,Com::tEPREofControl);
 #endif 
     }
+#if EXTRUDER_JAM_CONTROL
+	writeByte(EPR_EOF_CONTROL,Com::tEPREofControl);
+#endif 
 #else
     Com::printErrorF(Com::tNoEEPROMSupport);
 #endif

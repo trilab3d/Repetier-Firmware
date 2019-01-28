@@ -97,8 +97,8 @@
 #define LANGUAGE_TR_ID 10
 #define LANGUAGE_FI_ID 11
 
-#define NUM_LANGUAGES_KNOWN 12
-#define NUM_TRANSLATED_WORDS 322
+#define NUM_LANGUAGES_KNOWN 12 //12
+#define NUM_TRANSLATED_WORDS 347 //322
 
 // For selectable translations we refer to each text by a id which gets
 // defined here. The list starts at 0 and defines the position in the
@@ -430,7 +430,35 @@
 #define SERVICE_MENU_ITEM4_ID 320
 #define SERVICE_MENU_ITEM5_ID 321
 
+#define UI_TEXT_SERVICE_CAL_ID 322 // "Calibration"
+#define UI_TEXT_CAL_PLAIN_PROBING_ID 323 // "Plain probing"
+#define UI_TEXT_CAL_AUTOLEVEL_PROBING_ID 324 // "Autolevel probing"
+#define UI_TEXT_CAL_RUN_FULL_CALIBRATION_ID 325 // "Run full calibration"
+#define UI_TEXT_CAL_MANUAL_ADJUST_ID 326 // "Manual adjust"
 
+#define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_1_ID 327 // "Use tower angle"
+#define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_2_ID 328 // "correction ?"
+
+#define UI_TEXT_CAL_PROBING_RESULT_ID 329 // "Probing result"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L1_ID 330 // "Probe height L1"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L2_ID 331 // "Probe height L2"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L3_ID 332 // "Probe height L3"
+
+#define UI_TEXT_CAL_RESULT_1_ID 333
+#define UI_TEXT_CAL_RESULT_2_ID 334
+#define UI_TEXT_CAL_RESULT_3_ID 335
+#define UI_TEXT_CAL_RESULT_4_ID 336
+
+#define UI_TEXT_X_ENDSTOP_OFFSET_ID 337 // "X endstop offset %@x"
+#define UI_TEXT_Y_ENDSTOP_OFFSET_ID 338 // "Y endstop offset %@y"
+#define UI_TEXT_Z_ENDSTOP_OFFSET_ID 339 // "Z endstop offset %@z"
+#define UI_TEXT_DELTA_RADIUS_ID 340 // "Delta radius %@r"
+#define UI_TEXT_X_TOWER_ANGLE_ID 341 // "X tower angle %@a"
+#define UI_TEXT_Y_TOWER_ANGLE_ID 342 // "Y tower angle %@b"
+#define UI_TEXT_Z_TOWER_ANGLE_ID 343 // "Z tower angle %@c"
+#define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 344 // "Diagonal rod %@l"
+#define UI_TEXT_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
+#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_ID 346 // "Confirm reset ?"
 
 // Universal definitions
 
@@ -465,7 +493,7 @@
 #define UI_TEXT_HOME_X_EN           "Home X"
 #define UI_TEXT_HOME_Y_EN           "Home Y"
 #define UI_TEXT_HOME_Z_EN           "Home Z"
-#define UI_TEXT_PREHEAT_SINGLE_EN      "Preheat Single Extr."
+#define UI_TEXT_PREHEAT_SINGLE_EN   "Preheat Single Extr."
 #define UI_TEXT_PREHEAT_ALL_EN      "Preheat All Extr."
 #define UI_TEXT_LIGHTS_ONOFF_EN     "Lights:%lo"
 #define UI_TEXT_COOLDOWN_EN         "Cooldown"
@@ -775,17 +803,48 @@
 #define UI_TEXT_MAINPAGE6_4_C_EN "Mul: %om%%%    Spi:%opRPM "
 #define UI_TEXT_JAMCONTROL_EN "%ej Jam Control"
 
-#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_EN USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_TEXT
-#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_EN USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_TEXT
-#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_EN USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_TEXT
-#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4_EN USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4_TEXT
-#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_5_EN USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_5_TEXT
-#define UI_TEXT_SERVICE_MENU_EN UI_TEXT_SERVICE_MENU_TEXT
-#define SERVICE_MENU_ITEM1_EN SERVICE_MENU_ITEM1_TEXT
-#define SERVICE_MENU_ITEM2_EN SERVICE_MENU_ITEM2_TEXT
-#define SERVICE_MENU_ITEM3_EN SERVICE_MENU_ITEM3_TEXT
-#define SERVICE_MENU_ITEM4_EN SERVICE_MENU_ITEM4_TEXT
-#define SERVICE_MENU_ITEM5_EN SERVICE_MENU_ITEM5_TEXT
+#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_EN "USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_TEXT"
+#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_EN "USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_TEXT"
+#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_EN "USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_TEXT"
+#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4_EN "USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4_TEXT"
+#define UI_TEXT_USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_5_EN "USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_5_TEXT"
+#define UI_TEXT_SERVICE_MENU_EN "UI_TEXT_SERVICE_MENU_TEXT"
+#define UI_TEXT_SERVICE_MENU_ITEM1_EN "SERVICE_MENU_ITEM1_TEXT"
+#define UI_TEXT_SERVICE_MENU_ITEM2_EN "SERVICE_MENU_ITEM2_TEXT"
+#define UI_TEXT_SERVICE_MENU_ITEM3_EN "SERVICE_MENU_ITEM3_TEXT"
+#define UI_TEXT_SERVICE_MENU_ITEM4_EN "SERVICE_MENU_ITEM4_TEXT"
+#define UI_TEXT_SERVICE_MENU_ITEM5_EN "SERVICE_MENU_ITEM5_TEXT"
+
+#define UI_TEXT_SERVICE_CAL_EN "Calibration"
+#define UI_TEXT_CAL_PLAIN_PROBING_EN "Plain probing"
+#define UI_TEXT_CAL_AUTOLEVEL_PROBING_EN "Autolevel probing"
+#define UI_TEXT_CAL_RUN_FULL_CALIBRATION_EN "Full calibration"
+#define UI_TEXT_CAL_MANUAL_ADJUST_EN "Manual adjust"
+
+#define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_1_EN "Use tower angle"
+#define UI_TEXT_CAL_USE_TOWER_ANGLE_CORR_2_EN "correction ?"
+
+#define UI_TEXT_CAL_PROBING_RESULT_EN "Probing result"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L1_EN "%@5 %@0 %@1"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L2_EN "%@8 %@6 %@7 %@9"
+#define UI_TEXT_CAL_PROBE_HEIGHT_L3_EN "%@4 %@3 %@2"
+
+#define UI_TEXT_CAL_RESULT_1_EN "Xe %@i Xa %@m"
+#define UI_TEXT_CAL_RESULT_2_EN "Ye %@j Ya %@n"
+#define UI_TEXT_CAL_RESULT_3_EN "Ze %@k Za %@o"
+#define UI_TEXT_CAL_RESULT_4_EN "DR %@p Dev %@q"
+
+#define UI_TEXT_X_ENDSTOP_OFFSET_EN "X endstop offst %@x"
+#define UI_TEXT_Y_ENDSTOP_OFFSET_EN "Y endstop offst %@y"
+#define UI_TEXT_Z_ENDSTOP_OFFSET_EN "Z endstop offst %@z"
+#define UI_TEXT_DELTA_RADIUS_EN "Delta radius %@r"
+#define UI_TEXT_X_TOWER_ANGLE_EN "X tower angl %@a"
+#define UI_TEXT_Y_TOWER_ANGLE_EN "Y tower angl %@b"
+#define UI_TEXT_Z_TOWER_ANGLE_EN "Z tower angl %@c"
+#define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Diagonal rod %@l"
+#define UI_TEXT_RESET_TO_DEFAULTS_EN "Reset to defaults"
+#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_EN "Confirm reset ?"
+
 // *************** German translation ****************
 
 #define UI_TEXT_ON_DE               "An"
@@ -1134,6 +1193,7 @@
 #define SERVICE_MENU_ITEM3_DE SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_DE SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_DE SERVICE_MENU_ITEM5_TEXT
+
 // Dutch translation
 
 #define UI_TEXT_ON_NL               "Aan"
@@ -1481,6 +1541,7 @@
 #define SERVICE_MENU_ITEM3_NL SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_NL SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_NL SERVICE_MENU_ITEM5_TEXT
+
 // *************** Brazilian portuguese translation ****************
 
 #define UI_TEXT_ON_PT               "On"
@@ -1829,6 +1890,7 @@
 #define SERVICE_MENU_ITEM3_PT SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_PT SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_PT SERVICE_MENU_ITEM5_TEXT
+
 // *************** Italian translation ****************
 
 #define UI_TEXT_ON_IT               "On"
@@ -2175,6 +2237,7 @@
 #define SERVICE_MENU_ITEM3_IT SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_IT SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_IT SERVICE_MENU_ITEM5_TEXT
+
 // Spanish translation
 
 #define UI_TEXT_ON_ES               "On"
@@ -3219,6 +3282,7 @@
 #define SERVICE_MENU_ITEM3_FR SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_FR SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_FR SERVICE_MENU_ITEM5_TEXT
+
 // *************** Czech translation ****************
 // ***************      By Majkl     ****************
 // version: 2014/08/27
@@ -3568,6 +3632,7 @@
 #define SERVICE_MENU_ITEM3_CZ SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_CZ SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_CZ SERVICE_MENU_ITEM5_TEXT
+
 // *************** Polish translation ****************
 // ***************       By MIS       ****************
 // version: 2015/01/18
@@ -3915,6 +3980,7 @@
 #define SERVICE_MENU_ITEM3_PL SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_PL SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_PL SERVICE_MENU_ITEM5_TEXT
+
 // Türk
 
 #define UI_TEXT_ON_TR               "Acik"
@@ -4259,6 +4325,7 @@
 #define SERVICE_MENU_ITEM3_TR SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_TR SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_TR SERVICE_MENU_ITEM5_TEXT
+
 // *************** Finnish translation ****************
 // ********** By Matti Granstedt 28.01.2016 ***********
 
