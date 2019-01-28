@@ -65,7 +65,7 @@ usage or for searching for memory induced errors. Switch it off for production, 
 //#define DEBUG_DELTA_OVERFLOW
 //#define DEBUG_DELTA_REALPOS
 //#define DEBUG_SPLIT
-//#define DEBUG_JAM
+#define DEBUG_JAM
 // Find the longest segment length during a print
 //#define DEBUG_SEGMENT_LENGTH
 // Find the maximum real jerk during a print

@@ -129,6 +129,8 @@ have problems with other modules using the eeprom */
 #define EPR_BENDING_CORRECTION_C              1044
 #define EPR_BED_PREHEAT_TEMP                  1048
 #define EPR_X2AXIS_STEPS_PER_MM               1052
+#define EPR_EOF_CONTROL						  1056
+	
 #if EEPROM_MODE != 0
 #define EEPROM_FLOAT(x) HAL::eprGetFloat(EPR_##x)
 #define EEPROM_INT32(x) HAL::eprGetInt32(EPR_##x)

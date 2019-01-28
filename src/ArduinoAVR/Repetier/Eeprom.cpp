@@ -448,6 +448,9 @@ void EEPROM::storeDataIntoEEPROM(uint8_t corrupted)
 #if MIXING_EXTRUDER
     storeMixingRatios(false);
 #endif
+#if EXTRUDER_JAM_CONTROL
+	HAL::eprSetByte(EPR_EOF_CONTROL,Printer::isJamcontrolDisabled());
+#endif 
     if(corrupted)
     {
         HAL::eprSetInt32(EPR_PRINTING_TIME,0);
@@ -607,6 +610,9 @@ void EEPROM::readDataFromEEPROM(bool includeExtruder)
 #if MIXING_EXTRUDER
         readMixingRatios();
 #endif
+#if EXTRUDER_JAM_CONTROL
+	Printer::setJamcontrolDisabled(HAL::eprGetByte(EPR_EOF_CONTROL));
+#endif 
         // now the extruder
         for(uint8_t i = 0; i < NUM_EXTRUDER; i++)
         {
@@ -1004,6 +1010,7 @@ writeFloat(EPR_X2AXIS_STEPS_PER_MM, Com::tEPRX2StepsPerMM, 4);
     writeFloat(EPR_BED_PID_DGAIN, Com::tEPRBedDGain);
     writeByte(EPR_BED_PID_MAX, Com::tEPRBedPISMaxValue);
 #endif
+
 #if FEATURE_RETRACTION
     writeByte(EPR_AUTORETRACT_ENABLED,Com::tEPRAutoretractEnabled);
     writeFloat(EPR_RETRACTION_LENGTH,Com::tEPRRetractionLength);
@@ -1061,6 +1068,9 @@ writeFloat(EPR_X2AXIS_STEPS_PER_MM, Com::tEPRX2StepsPerMM, 4);
             Com::printFLN(PSTR("Weight "), (int)(v + 1));
         }
 #endif
+#if EXTRUDER_JAM_CONTROL
+	writeByte(EPR_EOF_CONTROL,Com::tEPREofControl);
+#endif 
     }
 #else
     Com::printErrorF(Com::tNoEEPROMSupport);

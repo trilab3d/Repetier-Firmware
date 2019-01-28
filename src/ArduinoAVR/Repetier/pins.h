@@ -420,6 +420,8 @@ STEPPER_CURRENT_CONTROL
 #define HEATER_0_PIN       10
 #define HEATER_1_PIN       8
 #define HEATER_2_PIN       9
+#define HEATER_3_PIN       7 //VT MKS E1 pin
+
 // ANALOG NUMBERING
 #define TEMP_0_PIN         13   
 #define TEMP_1_PIN         14
