@@ -40,6 +40,20 @@
 #define MOTHERBOARD 33
 #include "pins.h"
 
+/**
+   * Continue after Power-Loss
+   *
+   * Store the current state to the SD Card at the start of each layer
+   * during SD printing. If the recovery file is found at boot time, present
+   * an option on the LCD screen to continue the print from the last-known
+   * point in the file.
+   */
+#define POWER_LOSS_RECOVERY
+#ifdef POWER_LOSS_RECOVERY
+  #define POWER_LOSS_PIN   X_MIN_PIN  // Pin to detect power loss
+  #define POWER_LOSS_STATE LOW        // State of pin indicating power loss
+#endif
+
 // ################## EDIT THESE SETTINGS MANUALLY ################
 #define MICROSTEP_MODES { 16,16,16,16,16,16 } // [1,2,4,8,16]
 

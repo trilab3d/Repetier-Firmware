@@ -1656,6 +1656,17 @@ void Commands::processMCode(GCode *com) {
         }
 #endif // defined
         break;
+
+    case 10: // M10
+        Com::printF(PSTR("State: "));
+        Com::printFLN(READ(X_MIN_PIN) ? PSTR("1") : PSTR("0"));
+        Com::printFLN(PSTR("tempLongFilename "), tempLongFilename);
+        Com::printFLN(PSTR("fullname "), fullName);
+        Com::printFLN(PSTR("shortname "), sd.shortname);
+        Com::printFLN(PSTR("pathend "), sd.pathend);
+        sd.file.printName();
+        break;
+
 #if SDSUPPORT
     case 20: // M20 - list SD card
 #if JSON_OUTPUT

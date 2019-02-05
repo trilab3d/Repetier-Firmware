@@ -2551,6 +2551,7 @@ int UIDisplay::okAction(bool allowMoves) {
         EVENT_START_UI_ACTION(shortAction);
         switch(shortAction) {
         case UI_ACTION_SD_PRINT:
+            Com::printFLN(PSTR("filename"), filename);
             if (sd.selectFile(filename, false)) {
                 sd.startPrint();
                 BEEP_LONG;
