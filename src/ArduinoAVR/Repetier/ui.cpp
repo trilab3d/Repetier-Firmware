@@ -1408,6 +1408,7 @@ void UIDisplay::parse(const char *txt, bool ram) {
 #endif
             if(c2 == 'j') { // jam control enabled
                 addStringOnOff(!Printer::isJamcontrolDisabled());
+                break;
             }
 #if NUM_TEMPERATURE_LOOPS > 0
             uint8_t eid = NUM_EXTRUDER;    // default = BED if c2 not specified extruder number
@@ -3468,9 +3469,12 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             if(!allowMoves) return UI_ACTION_SET_ORIGIN;
             Printer::setOrigin(0, 0, 0);
             break;
+#if EXTRUDER_JAM_CONTROL
         case UI_ACTION_TOGGLE_JAMCONTROL:
-            Printer::setJamcontrolDisabled(!Printer::isJamcontrolDisabled());
+            Printer::setJamcontrolDisabled(!Printer::isJamcontrolDisabled()); // Invert state
+            EEPROM::setJamcontrolDisabled(Printer::isJamcontrolDisabled()); // Save to eeprom
             break;
+#endif 
         case UI_ACTION_DEBUG_ECHO:
             Printer::toggleEcho();
             break;
