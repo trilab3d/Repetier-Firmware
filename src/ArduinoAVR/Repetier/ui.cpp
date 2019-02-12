@@ -1425,14 +1425,6 @@ void UIDisplay::parse(const char *txt, bool ram) {
                     break;
                 }
             }
-#if EXTRUDER_JAM_CONTROL
-            if(tempController[eid]->isJammed()) {
-                if(++beepdelay > 10) beepdelay = 0;  // beep every 10 seconds
-                if(beepdelay == 1) BEEP_LONG;
-                addStringP(PSTR(" jam "));
-                break;
-            }
-#endif
 #endif
             if(c2 == 'c') fvalue = Extruder::current->tempControl.currentTemperatureC;
             else if(c2 >= '0' && c2 <= '9') fvalue = extruder[c2 - '0'].tempControl.currentTemperatureC;
@@ -1915,7 +1907,7 @@ void UIDisplay::parse(const char *txt, bool ram) {
 
 void UIDisplay::showLanguageSelectionWizard() {
 #if EEPROM_MODE != 0
-    pushMenu(&ui_menu_languages_wiz, true);
+    // pushMenu(&ui_menu_languages_wiz, true);
 #endif
 }
 
@@ -2452,7 +2444,7 @@ void UIDisplay::pushMenu(const UIMenu *men, bool refresh) {
         if (menuPos[menuLevel] > nFilesOnCard) {
             //This exception can happen if the card was unplugged or modified.
             menuTop[menuLevel] = 0;
-            menuPos[menuLevel] = UI_MENU_BACKCNT; // if top entry is back, default to next useful item
+            menuPos[menuLevel] = 1; // if top entry is back, default to next useful item
         }
     } else
 #endif
@@ -2506,7 +2498,7 @@ int UIDisplay::okAction(bool allowMoves) {
     if(menuLevel == 0) { // Enter menu
         menuLevel = 1;
         menuTop[1] = 0;
-        menuPos[1] =  UI_MENU_BACKCNT; // if top entry is back, default to next useful item
+        menuPos[1] =  1; // if top entry is back, default to next useful item
         menu[1] = &ui_menu_main;
         return 0;
     }
@@ -3341,11 +3333,6 @@ void UIDisplay::finishAction(unsigned int action) {
     if(EVENT_UI_FINISH_ACTION(action))
         return;
     switch(action) {
-#if UI_BED_COATING
-    case UI_ACTION_COATING_CUSTOM:
-        menuAdjustHeight(&ui_menu_coating_custom, Printer::zBedOffset);
-        break;
-#endif
 #if EEPROM_MODE != 0
     case UI_ACTION_BED_PREHEAT:
 #if HAVE_HEATED_BED
@@ -3662,9 +3649,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         case UI_ACTION_SD_MOUNT:
             sd.mount();
             break;
-        case UI_ACTION_MENU_SDCARD:
-            pushMenu(&ui_menu_sd, false);
-            break;
 #endif
         case UI_ACTION_STOP:
             pushMenu(&ui_menu_askstop, true);
@@ -3718,7 +3702,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             pushMenu(&ui_menu_zpos_fast, false);
             break;
         case UI_ACTION_MENU_QUICKSETTINGS:
-            pushMenu(&ui_menu_quick, false);
+            //pushMenu(&ui_menu_quick, false);
             break;
         case UI_ACTION_MENU_EXTRUDER:
             pushMenu(&ui_menu_extruder, false);
@@ -3919,7 +3903,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         case UI_ACTION_MEASURE_ZPROBE_HEIGHT:
             Printer::wizardStackPos = 0;
             Printer::wizardStack[0].f = Printer::currentPosition[Z_AXIS];
-            uid.pushMenu(&ui_menu_mzp, true);
+            // uid.pushMenu(&ui_menu_mzp, true);
             break;
         case UI_ACTION_MEASURE_ZPROBE_HEIGHT2:
             Printer::measureZProbeHeight(Printer::wizardStack[0].f);
@@ -3955,26 +3939,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             }
             //Com::printFLN(PSTR("RequestPause:"));
             break;
-#if UI_BED_COATING
-        case UI_ACTION_NOCOATING:
-            menuAdjustHeight(&ui_menu_nocoating_action, 0);
-            break;
-        case UI_ACTION_BUILDTAK:
-            menuAdjustHeight(&ui_menu_buildtak_action, 0.4);
-            break;
-        case UI_ACTION_KAPTON:
-            menuAdjustHeight(&ui_menu_kapton_action, 0.04);
-            break;
-        case UI_ACTION_GLUESTICK:
-            menuAdjustHeight(&ui_menu_gluestick_action, 0.04);
-            break;
-        case UI_ACTION_BLUETAPE:
-            menuAdjustHeight(&ui_menu_bluetape_action, 0.15);
-            break;
-        case UI_ACTION_PETTAPE:
-            menuAdjustHeight(&ui_menu_pettape_action, 0.09);
-            break;
-#endif
 #if FEATURE_AUTOLEVEL
         case UI_ACTION_AUTOLEVEL_ONOFF:
             Printer::setAutolevelActive(!Printer::isAutolevelActive());
