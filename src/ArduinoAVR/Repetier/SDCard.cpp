@@ -160,22 +160,16 @@ void SDCard::pausePrint(bool intern)
         Commands::waitUntilEndOfAllBuffers();
         //sdmode = 0; // why ?
         Printer::MemoryPosition();
-        Printer::moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, IGNORE_COORDINATE,
+        Printer::moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::memoryZ + FILAMENTCHANGE_Z_ADD,
                             Printer::memoryE - RETRACT_ON_PAUSE,
                             Printer::maxFeedrate[E_AXIS] / 2);
-#ifdef CNC_SAFE_Z
-		if(Printer::mode == PRINTER_MODE_CNC) {
-			Printer::moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE,  CNC_SAFE_Z - Printer::coordinateOffset[Z_AXIS], IGNORE_COORDINATE, Printer::maxFeedrate[Z_AXIS]);
-		}
-#endif
+
 #if DRIVE_SYSTEM == DELTA
-			Printer::moveToReal(0, 0.9 * EEPROM::deltaMaxRadius(), IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::maxFeedrate[X_AXIS]);
+		Printer::moveToReal(0, 0.9 * EEPROM::deltaMaxRadius(), IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::maxFeedrate[X_AXIS]);
 #else
-			Printer::moveToReal(Printer::xMin, Printer::yMin + Printer::yLength, IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::maxFeedrate[X_AXIS]);
+		Printer::moveToReal(Printer::xMin, Printer::yMin + Printer::yLength, IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::maxFeedrate[X_AXIS]);
 #endif
-        Printer::lastCmdPos[X_AXIS] = Printer::currentPosition[X_AXIS];
-        Printer::lastCmdPos[Y_AXIS] = Printer::currentPosition[Y_AXIS];
-        Printer::lastCmdPos[Z_AXIS] = Printer::currentPosition[Z_AXIS];
+        Printer::updateCurrentPosition(true);
         GCode::executeFString(PSTR(PAUSE_START_COMMANDS));
     }
 	}
@@ -190,7 +184,7 @@ void SDCard::continuePrint(bool intern)
         GCode::executeFString(PSTR(PAUSE_END_COMMANDS));
         Printer::GoToMemoryPosition(true, true, false, false, Printer::maxFeedrate[X_AXIS]);
         Printer::GoToMemoryPosition(false, false, true, false, Printer::maxFeedrate[Z_AXIS] / 2.0f);
-        Printer::GoToMemoryPosition(false, false, false, true, Printer::maxFeedrate[E_AXIS] / 2.0f);
+        // Printer::GoToMemoryPosition(false, false, false, true, Printer::maxFeedrate[E_AXIS] / 2.0f);
     }
 	}
 	EVENT_SD_CONTINUE_END(intern);

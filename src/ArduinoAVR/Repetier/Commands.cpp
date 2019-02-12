@@ -32,6 +32,12 @@ void Commands::commandLoop() {
     debugWaitLoop = 1;
 #endif
     if(!Printer::isBlockingReceive()) {
+
+        if (uid.mainThreadAction != 0) {
+            uid.executeAction(uid.mainThreadAction, true);
+            uid.mainThreadAction = 0;
+        }
+
         GCode::readFromSerial();
         GCode *code = GCode::peekCurrentCommand();
         //UI_SLOW; // do longer timed user interface action

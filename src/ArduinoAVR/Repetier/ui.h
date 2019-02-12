@@ -647,6 +647,7 @@ class UIDisplay {
     int8_t oldMenuLevel;
     uint8_t encoderStartScreen;
     char printCols[MAX_COLS + 1];
+    uint16_t mainThreadAction;
     void addInt(int value, uint8_t digits, char fillChar = ' '); // Print int into printCols
     void addLong(long value, int8_t digits);
     inline void addLong(long value) {

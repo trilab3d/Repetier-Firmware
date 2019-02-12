@@ -2600,31 +2600,11 @@ int UIDisplay::okAction(bool allowMoves) {
             switch(action) {
 #if FEATURE_RETRACTION
             case UI_ACTION_WIZARD_FILAMENTCHANGE: { // filament change is finished
-//            BEEP_SHORT;
                 popMenu(true);
 
-                Extruder::current->retractDistance(EEPROM_FLOAT(RETRACTION_LENGTH));
-#if FILAMENTCHANGE_REHOME
-                if(Printer::isHomedAll()) {
-#if Z_HOME_DIR > 0
-                    Printer::homeAxis(true, true, FILAMENTCHANGE_REHOME == 2);
-#else
-                    Printer::homeAxis(true, true, false);
-#endif
-                }
-#endif
-                Printer::coordinateOffset[Z_AXIS] = Printer::popWizardVar().f;
-                Printer::coordinateOffset[Y_AXIS] = Printer::popWizardVar().f;
-                Printer::coordinateOffset[X_AXIS] = Printer::popWizardVar().f;
-                if(Printer::isHomedAll()) {
-                    Printer::GoToMemoryPosition(true, true, false, false, Printer::homingFeedrate[X_AXIS]);
-                    Printer::GoToMemoryPosition(false, false, true, false, Printer::homingFeedrate[Z_AXIS]);
-                }
-                Extruder::current->retractDistance(-EEPROM_FLOAT(RETRACTION_LENGTH));
-                Printer::currentPositionSteps[E_AXIS] = Printer::popWizardVar().l; // set e to starting position
-                Commands::waitUntilEndOfAllMoves(); // catch retract/extrude in case no filament was inserted no jam report occurs
+                Printer::continuePrint();
+
                 Printer::setJamcontrolDisabled(false);
-                Printer::setBlockingReceive(false);
             }
             break;
 #if EXTRUDER_JAM_CONTROL
@@ -3824,34 +3804,21 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         }
         break;
 #if EXTRUDER_JAM_CONTROL
-        case UI_ACTION_WIZARD_JAM_EOF: {
-            Printer::setJamcontrolDisabled(true);
-            Printer::setBlockingReceive(true);
-            Printer::resetWizardStack();
-            Printer::pushWizardVar(Printer::currentPositionSteps[E_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[X_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Y_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Z_AXIS]);
-            Printer::MemoryPosition();
-            Extruder::current->retractDistance(FILAMENTCHANGE_SHORTRETRACT);
-            float newZ = FILAMENTCHANGE_Z_ADD + Printer::currentPosition[Z_AXIS];
-            Printer::currentPositionSteps[E_AXIS] = 0;
-            if(Printer::isHomedAll()) { // for safety move only when homed!
-                Printer::moveToReal(Printer::currentPosition[X_AXIS], Printer::currentPosition[Y_AXIS], newZ, 0, Printer::homingFeedrate[Z_AXIS]);
-                Printer::moveToReal(FILAMENTCHANGE_X_POS, FILAMENTCHANGE_Y_POS, newZ, 0, Printer::homingFeedrate[X_AXIS]);
-            }
-            Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
-            Extruder::pauseExtruders(false);
-            Commands::waitUntilEndOfAllMoves();
-#if FILAMENTCHANGE_REHOME
-            Printer::disableXStepper();
-            Printer::disableYStepper();
-#if Z_HOME_DIR > 0 && FILAMENTCHANGE_REHOME == 2
-            Printer::disableZStepper();
-#endif
-#endif
-            pushMenu(&ui_wiz_jamreheat, true);
-        }
+        case UI_ACTION_WIZARD_JAM_EOF:
+            if (mainThreadAction == action) {
+                Printer::setJamcontrolDisabled(true);
+
+                Printer::pausePrint();
+
+                Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
+                Extruder::pauseExtruders(false);
+
+                Printer::resetWizardStack();
+                pushMenu(&ui_wiz_jamreheat, true);
+
+            } else if (mainThreadAction <= 0) {
+                mainThreadAction = action;
+            }  
         break;
 #endif // EXTRUDER_JAM_CONTROL
 #endif // FEATURE_RETRACTION
@@ -3981,7 +3948,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             HAL::resetHardware();
             break;
         case UI_ACTION_PAUSE:
-            Printer::pausePrint();
+            if (mainThreadAction == action) {
+                Printer::pausePrint();
+            } else if (mainThreadAction <= 0) {
+                mainThreadAction = action;
+            }
             //Com::printFLN(PSTR("RequestPause:"));
             break;
 #if UI_BED_COATING
