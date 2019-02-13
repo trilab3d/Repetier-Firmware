@@ -70,7 +70,7 @@ UI_WIZARD4_T(ui_wiz_jamwaitheat, UI_ACTION_WIZARD_JAM_WAITHEAT, UI_TEXT_WIZ_WAIT
 UI_WIZARD4_T(ui_wiz_jamreheat, UI_ACTION_WIZARD_JAM_REHEAT, UI_TEXT_WIZ_REHEAT1_ID, UI_TEXT_WIZ_REHEAT2_ID, UI_TEXT_EMPTY_ID, UI_TEXT_CURRENT_TEMP_ID)
 
 // Home all
-UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_home_all, UI_TEXT_HOME_ALL_ID, UI_ACTION_HOME_ALL, 0, MENU_MODE_PRINTING)
+UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_home_all, UI_TEXT_HOME_ALL_ID, UI_ACTION_HOME_ALL, 0, MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
 // Print file
 #define UI_MENU_SD_FILESELECTOR {&ui_menu_back}
@@ -139,7 +139,7 @@ UI_MENU_ACTIONSELECTOR_T(ui_menu_go_zfast, UI_TEXT_Z_POS_FAST_ID, ui_menu_zpos_f
 
 #define UI_MENU_POSITIONS {&ui_menu_back, &ui_menu_home_all, &ui_menu_go_xfast, &ui_menu_go_xpos, &ui_menu_go_yfast, &ui_menu_go_ypos, &ui_menu_go_zfast, &ui_menu_go_zpos}
 UI_MENU(ui_menu_positions, UI_MENU_POSITIONS, 7)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_move, UI_TEXT_POSITION_ID, ui_menu_positions,0,MENU_MODE_PRINTING)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_move, UI_TEXT_POSITION_ID, ui_menu_positions,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
 
 // Extruder
@@ -159,15 +159,15 @@ UI_MENU_CHANGEACTION_FILTER_T(ui_menu_fan_fanspeed_printing, UI_TEXT_ACTION_FANS
 
 #define UI_MENU_EXTRUDER {&ui_menu_back, &ui_menu_quick_cooldown, &ui_menu_bed_temp, &ui_menu_ext_temp0, &ui_menu_ext_temp1, &ui_menu_ext_off0, &ui_menu_ext_off1, &ui_menu_ext_sel0, &ui_menu_ext_sel1 , &ui_menu_go_epos, &ui_menu_fan_fanspeed}
 UI_MENU(ui_menu_extruder, UI_MENU_EXTRUDER, 11)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_extrudercontrol, UI_TEXT_EXTRUDER_ID, ui_menu_extruder,0,MENU_MODE_PRINTING)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_extrudercontrol, UI_TEXT_EXTRUDER_ID, ui_menu_extruder,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
 // Settings
-UI_MENU_ACTIONCOMMAND(ui_service_menu_item1,SERVICE_MENU_ITEM1_TEXT,UI_ACTION_SERVICE_MENU_ITEM1) // Z Home calib
+UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_z_home_cal,UI_TEXT_Z_HOME_CALIB_ID,UI_ACTION_SERVICE_MENU_ITEM1,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 UI_MENU_ACTION2_T(ui_menu_z_offset_change, UI_ACTION_DUMMY, UI_TEXT_BED_COATING_SET1_ID, UI_TEXT_COATING_THICKNESS_ID)
-UI_MENU_CHANGEACTION_FILTER_T(ui_menu_adjust_z_offset_change, UI_TEXT_ZPROBE_HEIGHT_ID, UI_ACTION_Z_OFFSET_CHANGE, 0, MENU_MODE_PRINTING)
+UI_MENU_CHANGEACTION_FILTER_T(ui_menu_adjust_z_offset_change, UI_TEXT_ZPROBE_HEIGHT_ID, UI_ACTION_Z_OFFSET_CHANGE, 0, MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 UI_MENU_ACTIONCOMMAND_T(ui_fil_sensor_on_off, UI_TEXT_JAMCONTROL_ID, UI_ACTION_TOGGLE_JAMCONTROL)
 
-#define UI_MENU_CONFIGURATION {&ui_menu_back, &ui_service_menu_item1, &ui_menu_adjust_z_offset_change, &ui_fil_sensor_on_off}
+#define UI_MENU_CONFIGURATION {&ui_menu_back, &ui_menu_z_home_cal, &ui_menu_adjust_z_offset_change, &ui_fil_sensor_on_off}
 UI_MENU(ui_menu_configuration, UI_MENU_CONFIGURATION, 4)
 UI_MENU_SUBMENU_FILTER_T(ui_menu_settings, UI_TEXT_CONFIGURATION_ID, ui_menu_configuration,0,MENU_MODE_PRINTING)
 
@@ -277,7 +277,7 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_service_only_separator, UI_TEXT_LINE_SEPARATOR_I
 // Service menu
 #define UI_MENU_SERVICE {&ui_menu_back, &ui_menu_service_only_separator, &ui_menu_service_only, &ui_menu_service_only_separator, &ui_menu_general_baud, &ui_menu_general_stepper_inactive, &ui_menu_general_max_inactive, &ui_menu_conf_accel, &ui_menu_conf_feed, &ui_menu_conf_extr, &ui_menu_conf_bed, &ui_menu_service_cal_sub, &ui_menu_conf_to_eeprom, &ui_menu_conf_from_eeprom, &ui_menu_factory_reset}
 UI_MENU(ui_menu_service, UI_MENU_SERVICE, 15)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_service_sub, UI_TEXT_NA_ID , ui_menu_service, 0, MENU_MODE_PRINTING)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_service_sub, UI_TEXT_NA_ID , ui_menu_service, 0, MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
 // Printing menu - stop/pause/continue...
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_pause,UI_TEXT_PAUSE_PRINT_ID,UI_ACTION_PAUSE,MENU_MODE_PRINTING,MENU_MODE_PAUSED)
