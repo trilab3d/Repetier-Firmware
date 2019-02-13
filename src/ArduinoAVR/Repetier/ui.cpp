@@ -3511,6 +3511,9 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #if HAVE_HEATED_BED
             Extruder::setHeatedBedTemperature(0);
 #endif
+            Commands::setFanSpeed(0);
+
+            Printer::kill(true);            
             break;
         case UI_ACTION_HEATED_BED_OFF:
 #if HAVE_HEATED_BED
@@ -4112,6 +4115,123 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 
             popMenu(true);
             break; 
+
+        case UI_ACTION_LOAD_FILAMENT_BOWDEN:
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(0);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_loading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_FAST, false, 16);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_SLOW, false, 8);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, 2);
+            Commands::waitUntilEndOfAllBuffers();
+            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
+
+            popMenu(false);
+            pushMenu(&ui_wiz_filamentchange, true);
+            break;
+
+        case UI_ACTION_LOAD_FILAMENT_DIRECT:
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(1);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_loading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_DIRECT_LENGTH, false, 2);
+            Commands::waitUntilEndOfAllBuffers();
+            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
+
+            popMenu(false);
+            pushMenu(&ui_wiz_filamentchange, true);
+            break;
+
+        case UI_ACTION_UNLOAD_FILAMENT_BOWDEN:
+            popMenu(false);
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(0);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_unloading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_BOWDEN_LENGTH_PURGE, false, 3);
+            Extruder::current->retractDistance(FILAMENT_UNLOAD_BOWDEN_LENGTH_RETRACT, false, 100);
+            Commands::waitUntilEndOfAllBuffers();
+            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
+
+            popMenu(false);
+            break;
+
+        case UI_ACTION_UNLOAD_FILAMENT_DIRECT:
+            popMenu(false);
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(1);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_unloading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_DIRECT_LENGTH_PURGE, false, 3);
+            Extruder::current->retractDistance(FILAMENT_UNLOAD_DIRECT_LENGTH_RETRACT, false, 100);
+            Commands::waitUntilEndOfAllBuffers();
+            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
+
+            popMenu(false);
+            break;
+
+        case UI_ACTION_PURGE_FILAMENT_BOWDEN:
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(0);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_purging_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, 2);
+            Commands::waitUntilEndOfAllBuffers();
+            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
+
+            popMenu(false);
+            pushMenu(&ui_wiz_filamentchange, true);
+            break;
+
+        case UI_ACTION_PURGE_FILAMENT_DIRECT:
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(1);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_purging_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_DIRECT_LENGTH, false, 2);
+            Commands::waitUntilEndOfAllBuffers();
+            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
+
+            popMenu(false);
+            pushMenu(&ui_wiz_filamentchange, true);
+            break;
+
+        case UI_ACTION_FACTORY_RESET_CONFIRM:
+            pushMenu(&ui_menu_factory_reset_confirm, true);
+            break;
+
+        case UI_ACTION_FACTORY_RESET:
+            EEPROM::restoreEEPROMSettingsFromConfiguration();
+            EEPROM::storeDataIntoEEPROM(false);
+            
+            popMenu(true);
+            break;            
 
         default:
             EVENT_UI_EXECUTE(action, allowMoves);

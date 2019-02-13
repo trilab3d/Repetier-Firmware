@@ -2611,11 +2611,12 @@ int16_t read_max31855(uint8_t ss_pin, fast8_t idx) {
 #endif
 
 #if FEATURE_RETRACTION
-void Extruder::retractDistance(float dist, bool extraLength) {
+void Extruder::retractDistance(float dist, bool extraLength, float speed) {
     float oldFeedrate = Printer::feedrate;
     int32_t distance = static_cast<int32_t>(dist * stepsPerMM / Printer::extrusionFactor);
     int32_t oldEPos = Printer::currentPositionSteps[E_AXIS];
-    float speed = distance > 0 ? EEPROM_FLOAT(RETRACTION_SPEED) : EEPROM_FLOAT(RETRACTION_UNDO_SPEED);
+    if (speed == 0)
+      speed = distance > 0 ? EEPROM_FLOAT(RETRACTION_SPEED) : EEPROM_FLOAT(RETRACTION_UNDO_SPEED);
 #if MIXING_EXTRUDER
     if(!extraLength)
         Printer::setAllEMotors(true);

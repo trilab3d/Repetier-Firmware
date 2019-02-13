@@ -316,7 +316,7 @@ public:
         flags = (flags & (255 - EXTRUDER_FLAG_RETRACTED)) | (on ? EXTRUDER_FLAG_RETRACTED : 0);
     }
     void retract(bool isRetract,bool isLong);
-    void retractDistance(float dist,bool extraLength = false);
+    void retractDistance(float dist,bool extraLength = false,float speed = 0);
 #endif
     static void manageTemperatures();
     static void disableCurrentExtruderMotor();
