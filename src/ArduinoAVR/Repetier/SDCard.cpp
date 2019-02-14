@@ -160,9 +160,8 @@ void SDCard::pausePrint(bool intern)
         Commands::waitUntilEndOfAllBuffers();
         //sdmode = 0; // why ?
         Printer::MemoryPosition();
-        Printer::moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::memoryZ + FILAMENTCHANGE_Z_ADD,
-                            Printer::memoryE - RETRACT_ON_PAUSE,
-                            Printer::maxFeedrate[E_AXIS] / 2);
+        Extruder::current->retractDistance(RETRACT_ON_PAUSE, false);
+        Printer::moveToReal(IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::memoryZ + FILAMENTCHANGE_Z_ADD, IGNORE_COORDINATE,Printer::maxFeedrate[Z_AXIS] / 2);
 
 #if DRIVE_SYSTEM == DELTA
 		Printer::moveToReal(0, 0.9 * EEPROM::deltaMaxRadius(), IGNORE_COORDINATE, IGNORE_COORDINATE, Printer::maxFeedrate[X_AXIS]);
@@ -184,7 +183,7 @@ void SDCard::continuePrint(bool intern)
         GCode::executeFString(PSTR(PAUSE_END_COMMANDS));
         Printer::GoToMemoryPosition(true, true, false, false, Printer::maxFeedrate[X_AXIS]);
         Printer::GoToMemoryPosition(false, false, true, false, Printer::maxFeedrate[Z_AXIS] / 2.0f);
-        // Printer::GoToMemoryPosition(false, false, false, true, Printer::maxFeedrate[E_AXIS] / 2.0f);
+        Extruder::current->retractDistance(-RETRACT_ON_PAUSE, false);
     }
 	}
 	EVENT_SD_CONTINUE_END(intern);
