@@ -3207,27 +3207,27 @@ ZPOS2:
         popMenu(true);
         break;
 #endif
-    case UI_ACTION_X_ENDSTOP_OFFSET: {
+    case UI_ACTION_CAL_X_ENDSTOP_OFFSET: {
             int16_t value = EEPROM::deltaTowerXOffsetSteps();
             INCREMENT_MIN_MAX(value, 1, 0, 500);
             EEPROM::setDeltaTowerXOffsetSteps(value);
         }
         break; 
-    case UI_ACTION_Y_ENDSTOP_OFFSET: {
+    case UI_ACTION_CAL_Y_ENDSTOP_OFFSET: {
             int16_t value = EEPROM::deltaTowerYOffsetSteps();
             INCREMENT_MIN_MAX(value, 1, 0, 500);
             EEPROM::setDeltaTowerYOffsetSteps(value);
         }
         break; 
 
-    case UI_ACTION_Z_ENDSTOP_OFFSET: {
+    case UI_ACTION_CAL_Z_ENDSTOP_OFFSET: {
             int16_t value = EEPROM::deltaTowerZOffsetSteps();
             INCREMENT_MIN_MAX(value, 1, 0, 500);
             EEPROM::setDeltaTowerZOffsetSteps(value);
         }
         break; 
 
-    case UI_ACTION_DELTA_RADIUS: {
+    case UI_ACTION_CAL_DELTA_RADIUS: {
             float value = EEPROM::deltaHorizontalRadius();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setRodRadius(value);
@@ -3236,7 +3236,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_X_TOWER_ANGLE: {
+    case UI_ACTION_CAL_X_TOWER_ANGLE: {
             float value = EEPROM::deltaAlphaA();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaA(value);
@@ -3245,7 +3245,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_Y_TOWER_ANGLE: {
+    case UI_ACTION_CAL_Y_TOWER_ANGLE: {
             float value = EEPROM::deltaAlphaB();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaB(value);
@@ -3254,7 +3254,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_Z_TOWER_ANGLE: {
+    case UI_ACTION_CAL_Z_TOWER_ANGLE: {
             float value = EEPROM::deltaAlphaC();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaC(value);
@@ -3263,7 +3263,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_DIAGONAL_ROD_LENGTH: {
+    case UI_ACTION_CAL_DIAGONAL_ROD_LENGTH: {
             float value = EEPROM::deltaDiagonalRodLength();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaDiagonalRodLength(value);
