@@ -187,16 +187,16 @@ UI_MENU_CHANGEACTION_T(ui_x_tower_angle, UI_TEXT_X_TOWER_ANGLE_ID, UI_ACTION_X_T
 UI_MENU_CHANGEACTION_T(ui_y_tower_angle, UI_TEXT_Y_TOWER_ANGLE_ID, UI_ACTION_Y_TOWER_ANGLE)
 UI_MENU_CHANGEACTION_T(ui_z_tower_angle, UI_TEXT_Z_TOWER_ANGLE_ID, UI_ACTION_Z_TOWER_ANGLE)
 UI_MENU_CHANGEACTION_T(ui_diagonal_rod_length, UI_TEXT_DIAGONAL_ROD_LENGTH_ID, UI_ACTION_DIAGONAL_ROD_LENGTH)
-UI_MENU_ACTIONCOMMAND_T(ui_reset_to_defaults, UI_TEXT_RESET_TO_DEFAULTS_ID, UI_ACTION_CONFIRM_RESET_TO_DEFAULTS)
+UI_MENU_ACTIONCOMMAND_T(ui_cal_reset_to_defaults, UI_TEXT_CAL_RESET_TO_DEFAULTS_ID, UI_ACTION_CAL_CONFIRM_RESET_TO_DEFAULTS)
 
-UI_MENU_HEADLINE_T(ui_menu_confirm_reset_to_defaults_1, UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_ID)
-UI_MENU_HEADLINE_T(ui_menu_confirm_reset_to_defaults_2, UI_TEXT_EMPTY_ID)
-UI_MENU_ACTIONCOMMAND_T(ui_menu_confirm_reset_to_defaults_yes, UI_TEXT_YES_ID, UI_ACTION_RESET_TO_DEFAULTS)
-UI_MENU_ACTIONCOMMAND_T(ui_menu_confirm_reset_to_defaults_no, UI_TEXT_NO_ID, UI_ACTION_BACK)
-#define UI_MENU_CONFIRM_RESET_TO_DEFAULTS {&ui_menu_confirm_reset_to_defaults_1,&ui_menu_confirm_reset_to_defaults_2,&ui_menu_confirm_reset_to_defaults_yes,&ui_menu_confirm_reset_to_defaults_no}
-UI_MENU(ui_menu_confirm_reset_to_defaults, UI_MENU_CONFIRM_RESET_TO_DEFAULTS, 4)
+UI_MENU_HEADLINE_T(ui_menu_cal_confirm_reset_to_defaults_1, UI_TEXT_CAL_CONFIRM_RESET_TO_DEFAULTS_ID)
+UI_MENU_HEADLINE_T(ui_menu_cal_confirm_reset_to_defaults_2, UI_TEXT_EMPTY_ID)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_cal_confirm_reset_to_defaults_yes, UI_TEXT_YES_ID, UI_ACTION_CAL_RESET_TO_DEFAULTS)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_cal_confirm_reset_to_defaults_no, UI_TEXT_NO_ID, UI_ACTION_BACK)
+#define UI_MENU_CAL_CONFIRM_RESET_TO_DEFAULTS {&ui_menu_cal_confirm_reset_to_defaults_1,&ui_menu_cal_confirm_reset_to_defaults_2,&ui_menu_cal_confirm_reset_to_defaults_yes,&ui_menu_cal_confirm_reset_to_defaults_no}
+UI_MENU(ui_menu_cal_confirm_reset_to_defaults, UI_MENU_CAL_CONFIRM_RESET_TO_DEFAULTS, 4)
 
-#define UI_MENU_CAL_MANUAL_ADJUST {&ui_menu_back, &ui_x_endstop_offset, &ui_y_endstop_offset, &ui_z_endstop_offset, &ui_delta_radius, &ui_x_tower_angle, &ui_y_tower_angle, &ui_z_tower_angle, &ui_diagonal_rod_length, &ui_reset_to_defaults}
+#define UI_MENU_CAL_MANUAL_ADJUST {&ui_menu_back, &ui_x_endstop_offset, &ui_y_endstop_offset, &ui_z_endstop_offset, &ui_delta_radius, &ui_x_tower_angle, &ui_y_tower_angle, &ui_z_tower_angle, &ui_diagonal_rod_length, &ui_cal_reset_to_defaults}
 UI_MENU(ui_menu_cal_manual_adjust, UI_MENU_CAL_MANUAL_ADJUST, 10)
 UI_MENU_SUBMENU_T(ui_menu_cal_manual_adjust_sub, UI_TEXT_CAL_MANUAL_ADJUST_ID , ui_menu_cal_manual_adjust)
 
@@ -293,7 +293,7 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_fan_ignoreM106, UI_TEXT_IGNORE_M106_ID, UI_ACTIO
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_fan_ignoreM106_printing, UI_TEXT_IGNORE_M106_ID, UI_ACTION_IGNORE_M106,MENU_MODE_PRINTING,0)
 
 // Main menu
-#define UI_MENU_MAIN {&ui_menu_back, &ui_menu_home_all, &ui_menu_sd_printfile, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_stop, &ui_pause, &ui_continue, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
+#define UI_MENU_MAIN {&ui_menu_back, &ui_stop, &ui_pause, &ui_continue, &ui_menu_home_all, &ui_menu_sd_printfile, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
 UI_MENU(ui_menu_main, UI_MENU_MAIN, 21)
 
 

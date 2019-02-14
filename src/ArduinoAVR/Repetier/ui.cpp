@@ -4096,11 +4096,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             deltaCalibration.fullCalibration(5, true);
             break;  
 
-        case UI_ACTION_CONFIRM_RESET_TO_DEFAULTS:
-            pushMenu(&ui_menu_confirm_reset_to_defaults, true);
+        case UI_ACTION_CAL_CONFIRM_RESET_TO_DEFAULTS:
+            pushMenu(&ui_menu_cal_confirm_reset_to_defaults, true);
             break; 
 
-        case UI_ACTION_RESET_TO_DEFAULTS:
+        case UI_ACTION_CAL_RESET_TO_DEFAULTS:
             EEPROM::setDeltaTowerXOffsetSteps(DELTA_X_ENDSTOP_OFFSET_STEPS);
             EEPROM::setDeltaTowerYOffsetSteps(DELTA_Y_ENDSTOP_OFFSET_STEPS);
             EEPROM::setDeltaTowerZOffsetSteps(DELTA_Z_ENDSTOP_OFFSET_STEPS);
@@ -4131,8 +4131,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Commands::waitUntilEndOfAllBuffers();
             Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
-            popMenu(false);
-            pushMenu(&ui_wiz_filamentchange, true);
+            popMenu(true);
             break;
 
         case UI_ACTION_LOAD_FILAMENT_DIRECT:
@@ -4148,8 +4147,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Commands::waitUntilEndOfAllBuffers();
             Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
-            popMenu(false);
-            pushMenu(&ui_wiz_filamentchange, true);
+            popMenu(true);
             break;
 
         case UI_ACTION_UNLOAD_FILAMENT_BOWDEN:

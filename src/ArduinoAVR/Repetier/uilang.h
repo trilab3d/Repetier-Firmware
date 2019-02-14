@@ -457,8 +457,8 @@
 #define UI_TEXT_Y_TOWER_ANGLE_ID 342 // "Y tower angle %@b"
 #define UI_TEXT_Z_TOWER_ANGLE_ID 343 // "Z tower angle %@c"
 #define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 344 // "Diagonal rod %@l"
-#define UI_TEXT_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
-#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_ID 346 // "Confirm reset ?"
+#define UI_TEXT_CAL_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
+#define UI_TEXT_CAL_CONFIRM_RESET_TO_DEFAULTS_ID 346 // "Confirm reset ?"
 
 #define UI_TEXT_LOAD_FILAMENT_ID 347 // "Load filament"
 #define UI_TEXT_UNLOAD_FILAMENT_ID 348 // "Unload filament"
@@ -860,8 +860,8 @@
 #define UI_TEXT_Y_TOWER_ANGLE_EN "Y tower angl %@b"
 #define UI_TEXT_Z_TOWER_ANGLE_EN "Z tower angl %@c"
 #define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Diagonal rod %@l"
-#define UI_TEXT_RESET_TO_DEFAULTS_EN "Reset to defaults"
-#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_EN "Confirm reset ?"
+#define UI_TEXT_CAL_RESET_TO_DEFAULTS_EN "Reset to defaults"
+#define UI_TEXT_CAL_CONFIRM_RESET_TO_DEFAULTS_EN "Confirm reset ?"
 
 #define UI_TEXT_LOAD_FILAMENT_EN "Load filament"
 #define UI_TEXT_UNLOAD_FILAMENT_EN "Unload filament"
