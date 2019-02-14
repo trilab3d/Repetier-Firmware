@@ -159,7 +159,7 @@ UI_MENU_CHANGEACTION_FILTER_T(ui_menu_fan_fanspeed_printing, UI_TEXT_ACTION_FANS
 
 #define UI_MENU_EXTRUDER {&ui_menu_back, &ui_menu_quick_cooldown, &ui_menu_bed_temp, &ui_menu_ext_temp0, &ui_menu_ext_temp1, &ui_menu_ext_off0, &ui_menu_ext_off1, &ui_menu_ext_sel0, &ui_menu_ext_sel1 , &ui_menu_go_epos, &ui_menu_fan_fanspeed}
 UI_MENU(ui_menu_extruder, UI_MENU_EXTRUDER, 11)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_extrudercontrol, UI_TEXT_EXTRUDER_ID, ui_menu_extruder,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_extrudercontrol, UI_TEXT_EXTRUDER_ID, ui_menu_extruder,0,MENU_MODE_PRINTING)
 
 // Settings
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_z_home_cal,UI_TEXT_Z_HOME_CALIB_ID,UI_ACTION_SERVICE_MENU_ITEM1,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)

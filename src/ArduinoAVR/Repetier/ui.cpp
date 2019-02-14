@@ -4117,7 +4117,9 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             break; 
 
         case UI_ACTION_LOAD_FILAMENT_BOWDEN:
-            Printer::homeAxis(true, true, true);
+            if(!Printer::isMenuMode(MENU_MODE_PAUSED))
+              Printer::homeAxis(true, true, true);
+            
             Extruder::selectExtruderById(0);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
@@ -4129,13 +4131,14 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_SLOW, false, 8);
             Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, 2);
             Commands::waitUntilEndOfAllBuffers();
-            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
             popMenu(true);
             break;
 
         case UI_ACTION_LOAD_FILAMENT_DIRECT:
-            Printer::homeAxis(true, true, true);
+            if(!Printer::isMenuMode(MENU_MODE_PAUSED))
+              Printer::homeAxis(true, true, true);
+
             Extruder::selectExtruderById(1);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
@@ -4145,7 +4148,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             pushMenu(&ui_menu_loading_filament, true);
             Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_DIRECT_LENGTH, false, 2);
             Commands::waitUntilEndOfAllBuffers();
-            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
             popMenu(true);
             break;
@@ -4163,7 +4165,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_BOWDEN_LENGTH_PURGE, false, 3);
             Extruder::current->retractDistance(FILAMENT_UNLOAD_BOWDEN_LENGTH_RETRACT, false, 100);
             Commands::waitUntilEndOfAllBuffers();
-            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
             popMenu(false);
             break;
@@ -4181,7 +4182,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_DIRECT_LENGTH_PURGE, false, 3);
             Extruder::current->retractDistance(FILAMENT_UNLOAD_DIRECT_LENGTH_RETRACT, false, 100);
             Commands::waitUntilEndOfAllBuffers();
-            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
             popMenu(false);
             break;
@@ -4197,7 +4197,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             pushMenu(&ui_menu_purging_filament, true);
             Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, 2);
             Commands::waitUntilEndOfAllBuffers();
-            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
             popMenu(false);
             pushMenu(&ui_wiz_filamentchange, true);
@@ -4214,7 +4213,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             pushMenu(&ui_menu_purging_filament, true);
             Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_DIRECT_LENGTH, false, 2);
             Commands::waitUntilEndOfAllBuffers();
-            Printer::destinationSteps[E_AXIS] = Printer::currentPositionSteps[E_AXIS] = 0;
 
             popMenu(false);
             pushMenu(&ui_wiz_filamentchange, true);
