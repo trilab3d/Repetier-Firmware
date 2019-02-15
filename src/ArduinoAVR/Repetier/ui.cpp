@@ -4123,13 +4123,13 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::selectExtruderById(0);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
-            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
 
             popMenu(false);
             pushMenu(&ui_menu_loading_filament, true);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_FAST, false, 16);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_SLOW, false, 8);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, 2);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_FAST, false, FILAMENT_LOAD_BOWDEN_FEED_FAST);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_SLOW, false, FILAMENT_LOAD_BOWDEN_FEED_SLOW);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, FILAMENT_PURGE_BOWDEN_FEED);
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(true);
@@ -4142,11 +4142,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::selectExtruderById(1);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
-            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
 
             popMenu(false);
             pushMenu(&ui_menu_loading_filament, true);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_DIRECT_LENGTH, false, 2);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_DIRECT_LENGTH, false, FILAMENT_LOAD_DIRECT_FEED);
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(true);
@@ -4158,12 +4158,12 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::selectExtruderById(0);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
-            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
 
             popMenu(false);
             pushMenu(&ui_menu_unloading_filament, true);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_BOWDEN_LENGTH_PURGE, false, 3);
-            Extruder::current->retractDistance(FILAMENT_UNLOAD_BOWDEN_LENGTH_RETRACT, false, 100);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_BOWDEN_LENGTH_PURGE, false, FILAMENT_UNLOAD_BOWDEN_FEED_PURGE);
+            Extruder::current->retractDistance(FILAMENT_UNLOAD_BOWDEN_LENGTH_RETRACT, false, FILAMENT_UNLOAD_BOWDEN_FEED_RETRACT);
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
@@ -4175,12 +4175,12 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::selectExtruderById(1);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
-            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
 
             popMenu(false);
             pushMenu(&ui_menu_unloading_filament, true);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_DIRECT_LENGTH_PURGE, false, 3);
-            Extruder::current->retractDistance(FILAMENT_UNLOAD_DIRECT_LENGTH_RETRACT, false, 100);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_DIRECT_LENGTH_PURGE, false, FILAMENT_UNLOAD_DIRECT_FEED_PURGE);
+            Extruder::current->retractDistance(FILAMENT_UNLOAD_DIRECT_LENGTH_RETRACT, false, FILAMENT_UNLOAD_DIRECT_FEED_RETRACT);
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
@@ -4191,11 +4191,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::selectExtruderById(0);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
-            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
 
             popMenu(false);
             pushMenu(&ui_menu_purging_filament, true);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, 2);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, FILAMENT_PURGE_BOWDEN_FEED);
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
@@ -4207,11 +4207,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Extruder::selectExtruderById(1);
 
             pushMenu(&ui_wiz_jamwaitheat, true);
-            Extruder::setTemperatureForExtruder(210, Extruder::current->id, false, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
 
             popMenu(false);
             pushMenu(&ui_menu_purging_filament, true);
-            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_DIRECT_LENGTH, false, 2);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_DIRECT_LENGTH, false, FILAMENT_PURGE_DIRECT_FEED);
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);

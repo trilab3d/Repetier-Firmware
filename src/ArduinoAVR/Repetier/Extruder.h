@@ -194,10 +194,9 @@ extern Extruder extruder[];
         extruder[x].jamDetectTime = millis();\
     }\
     if (sig)\
-      if (!Printer::isJamcontrolDisabled() && !extruder[x].tempControl.isJammed() && (millis() > (extruder[x].jamDetectTime + JAM_DEBOUNCE))){\
-        extruder[x].tempControl.setFilamentChange(true);\
-        extruder[x].tempControl.setJammed(true);\
-      }\
+      if (!Printer::isJamcontrolDisabled())\
+        if (!extruder[x].tempControl.isJammed() && (millis() > (extruder[x].jamDetectTime + JAM_DEBOUNCE)))\
+          extruder[x].tempControl.setJammed(true);\
     }
 
 #define RESET_EXTRUDER_JAM(x,dir)
