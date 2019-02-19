@@ -303,7 +303,7 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_fan_ignoreM106, UI_TEXT_IGNORE_M106_ID, UI_ACTIO
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_fan_ignoreM106_printing, UI_TEXT_IGNORE_M106_ID, UI_ACTION_IGNORE_M106,MENU_MODE_PRINTING,0)
 
 // Main menu
-#define UI_MENU_MAIN {&ui_menu_back, &ui_stop, &ui_pause, &ui_continue, &ui_menu_home_all, &ui_menu_sd_printfile, &ui_menu_quick_changefil_printing, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
+#define UI_MENU_MAIN {&ui_menu_back, &ui_menu_home_all, &ui_stop, &ui_pause, &ui_continue, &ui_menu_sd_printfile, &ui_menu_quick_changefil_printing, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
 UI_MENU(ui_menu_main, UI_MENU_MAIN, 22)
 
 
