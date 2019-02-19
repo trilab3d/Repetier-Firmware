@@ -188,14 +188,17 @@ extern Extruder extruder[];
 #define RESET_EXTRUDER_JAM(x,dir) extruder[x].jamLastDir = dir ? 1 : -1;
 #elif JAM_METHOD == 2
 #define _TEST_EXTRUDER_JAM(x,pin) {\
-        uint8_t sig = READ(pin);\
-		  if(sig != extruder[x].jamLastSignal) {\
-			  extruder[x].jamLastSignal = sig;\
-			  if(sig)\
-				{extruder[x].tempControl.setFilamentChange(true);extruder[x].tempControl.setJammed(true);} \
-			  else if(!Printer::isDebugJamOrDisabled() && extruder[x].tempControl.isJammed()) \
-				{extruder[x].resetJamSteps();}}\
-		  }
+    uint8_t sig = READ(pin);\
+    if(sig != extruder[x].jamLastSignal){\
+        extruder[x].jamLastSignal = sig;\
+        extruder[x].jamDetectTime = millis();\
+    }\
+    if (sig)\
+      if (!Printer::isJamcontrolDisabled() && !extruder[x].tempControl.isJammed())\
+        if (millis() > (extruder[x].jamDetectTime + JAM_DEBOUNCE))\
+          extruder[x].tempControl.setJammed(true);\
+    }
+
 #define RESET_EXTRUDER_JAM(x,dir)
 #elif JAM_METHOD == 3
 #define _TEST_EXTRUDER_JAM(x,pin) {\
@@ -286,6 +289,7 @@ public:
 	int32_t jamSlowdownSteps;
 	int32_t jamErrorSteps;
 	uint8_t jamSlowdownTo;
+    unsigned long jamDetectTime;
 #endif
 
     // Methods here
@@ -316,7 +320,7 @@ public:
         flags = (flags & (255 - EXTRUDER_FLAG_RETRACTED)) | (on ? EXTRUDER_FLAG_RETRACTED : 0);
     }
     void retract(bool isRetract,bool isLong);
-    void retractDistance(float dist,bool extraLength = false);
+    void retractDistance(float dist,bool extraLength = false,float speed = 0);
 #endif
     static void manageTemperatures();
     static void disableCurrentExtruderMotor();

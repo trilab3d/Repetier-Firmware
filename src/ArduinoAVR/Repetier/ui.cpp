@@ -1408,6 +1408,7 @@ void UIDisplay::parse(const char *txt, bool ram) {
 #endif
             if(c2 == 'j') { // jam control enabled
                 addStringOnOff(!Printer::isJamcontrolDisabled());
+                break;
             }
 #if NUM_TEMPERATURE_LOOPS > 0
             uint8_t eid = NUM_EXTRUDER;    // default = BED if c2 not specified extruder number
@@ -1424,14 +1425,6 @@ void UIDisplay::parse(const char *txt, bool ram) {
                     break;
                 }
             }
-#if EXTRUDER_JAM_CONTROL
-            if(tempController[eid]->isJammed()) {
-                if(++beepdelay > 10) beepdelay = 0;  // beep every 10 seconds
-                if(beepdelay == 1) BEEP_LONG;
-                addStringP(PSTR(" jam "));
-                break;
-            }
-#endif
 #endif
             if(c2 == 'c') fvalue = Extruder::current->tempControl.currentTemperatureC;
             else if(c2 >= '0' && c2 <= '9') fvalue = extruder[c2 - '0'].tempControl.currentTemperatureC;
@@ -1914,7 +1907,7 @@ void UIDisplay::parse(const char *txt, bool ram) {
 
 void UIDisplay::showLanguageSelectionWizard() {
 #if EEPROM_MODE != 0
-    pushMenu(&ui_menu_languages_wiz, true);
+    // pushMenu(&ui_menu_languages_wiz, true);
 #endif
 }
 
@@ -2451,7 +2444,7 @@ void UIDisplay::pushMenu(const UIMenu *men, bool refresh) {
         if (menuPos[menuLevel] > nFilesOnCard) {
             //This exception can happen if the card was unplugged or modified.
             menuTop[menuLevel] = 0;
-            menuPos[menuLevel] = UI_MENU_BACKCNT; // if top entry is back, default to next useful item
+            menuPos[menuLevel] = 1; // if top entry is back, default to next useful item
         }
     } else
 #endif
@@ -2505,7 +2498,7 @@ int UIDisplay::okAction(bool allowMoves) {
     if(menuLevel == 0) { // Enter menu
         menuLevel = 1;
         menuTop[1] = 0;
-        menuPos[1] =  UI_MENU_BACKCNT; // if top entry is back, default to next useful item
+        menuPos[1] =  1; // if top entry is back, default to next useful item
         menu[1] = &ui_menu_main;
         return 0;
     }
@@ -2600,31 +2593,11 @@ int UIDisplay::okAction(bool allowMoves) {
             switch(action) {
 #if FEATURE_RETRACTION
             case UI_ACTION_WIZARD_FILAMENTCHANGE: { // filament change is finished
-//            BEEP_SHORT;
                 popMenu(true);
 
-                Extruder::current->retractDistance(EEPROM_FLOAT(RETRACTION_LENGTH));
-#if FILAMENTCHANGE_REHOME
-                if(Printer::isHomedAll()) {
-#if Z_HOME_DIR > 0
-                    Printer::homeAxis(true, true, FILAMENTCHANGE_REHOME == 2);
-#else
-                    Printer::homeAxis(true, true, false);
-#endif
-                }
-#endif
-                Printer::coordinateOffset[Z_AXIS] = Printer::popWizardVar().f;
-                Printer::coordinateOffset[Y_AXIS] = Printer::popWizardVar().f;
-                Printer::coordinateOffset[X_AXIS] = Printer::popWizardVar().f;
-                if(Printer::isHomedAll()) {
-                    Printer::GoToMemoryPosition(true, true, false, false, Printer::homingFeedrate[X_AXIS]);
-                    Printer::GoToMemoryPosition(false, false, true, false, Printer::homingFeedrate[Z_AXIS]);
-                }
-                Extruder::current->retractDistance(-EEPROM_FLOAT(RETRACTION_LENGTH));
-                Printer::currentPositionSteps[E_AXIS] = Printer::popWizardVar().l; // set e to starting position
-                Commands::waitUntilEndOfAllMoves(); // catch retract/extrude in case no filament was inserted no jam report occurs
+                Printer::continuePrint();
+
                 Printer::setJamcontrolDisabled(false);
-                Printer::setBlockingReceive(false);
             }
             break;
 #if EXTRUDER_JAM_CONTROL
@@ -3235,27 +3208,27 @@ ZPOS2:
         popMenu(true);
         break;
 #endif
-    case UI_ACTION_X_ENDSTOP_OFFSET: {
+    case UI_ACTION_CAL_X_ENDSTOP_OFFSET: {
             int16_t value = EEPROM::deltaTowerXOffsetSteps();
             INCREMENT_MIN_MAX(value, 1, 0, 500);
             EEPROM::setDeltaTowerXOffsetSteps(value);
         }
         break; 
-    case UI_ACTION_Y_ENDSTOP_OFFSET: {
+    case UI_ACTION_CAL_Y_ENDSTOP_OFFSET: {
             int16_t value = EEPROM::deltaTowerYOffsetSteps();
             INCREMENT_MIN_MAX(value, 1, 0, 500);
             EEPROM::setDeltaTowerYOffsetSteps(value);
         }
         break; 
 
-    case UI_ACTION_Z_ENDSTOP_OFFSET: {
+    case UI_ACTION_CAL_Z_ENDSTOP_OFFSET: {
             int16_t value = EEPROM::deltaTowerZOffsetSteps();
             INCREMENT_MIN_MAX(value, 1, 0, 500);
             EEPROM::setDeltaTowerZOffsetSteps(value);
         }
         break; 
 
-    case UI_ACTION_DELTA_RADIUS: {
+    case UI_ACTION_CAL_DELTA_RADIUS: {
             float value = EEPROM::deltaHorizontalRadius();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setRodRadius(value);
@@ -3264,7 +3237,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_X_TOWER_ANGLE: {
+    case UI_ACTION_CAL_X_TOWER_ANGLE: {
             float value = EEPROM::deltaAlphaA();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaA(value);
@@ -3273,7 +3246,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_Y_TOWER_ANGLE: {
+    case UI_ACTION_CAL_Y_TOWER_ANGLE: {
             float value = EEPROM::deltaAlphaB();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaB(value);
@@ -3282,7 +3255,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_Z_TOWER_ANGLE: {
+    case UI_ACTION_CAL_Z_TOWER_ANGLE: {
             float value = EEPROM::deltaAlphaC();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaAlphaC(value);
@@ -3291,7 +3264,7 @@ ZPOS2:
         }
         break; 
 
-    case UI_ACTION_DIAGONAL_ROD_LENGTH: {
+    case UI_ACTION_CAL_DIAGONAL_ROD_LENGTH: {
             float value = EEPROM::deltaDiagonalRodLength();
             INCREMENT_MIN_MAX(value, 0.01, 1.0, 1000.0);
             EEPROM::setDeltaDiagonalRodLength(value);
@@ -3361,11 +3334,6 @@ void UIDisplay::finishAction(unsigned int action) {
     if(EVENT_UI_FINISH_ACTION(action))
         return;
     switch(action) {
-#if UI_BED_COATING
-    case UI_ACTION_COATING_CUSTOM:
-        menuAdjustHeight(&ui_menu_coating_custom, Printer::zBedOffset);
-        break;
-#endif
 #if EEPROM_MODE != 0
     case UI_ACTION_BED_PREHEAT:
 #if HAVE_HEATED_BED
@@ -3469,9 +3437,12 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             if(!allowMoves) return UI_ACTION_SET_ORIGIN;
             Printer::setOrigin(0, 0, 0);
             break;
+#if EXTRUDER_JAM_CONTROL
         case UI_ACTION_TOGGLE_JAMCONTROL:
-            Printer::setJamcontrolDisabled(!Printer::isJamcontrolDisabled());
+            Printer::setJamcontrolDisabled(!Printer::isJamcontrolDisabled()); // Invert state
+            EEPROM::setJamcontrolDisabled(Printer::isJamcontrolDisabled()); // Save to eeprom
             break;
+#endif 
         case UI_ACTION_DEBUG_ECHO:
             Printer::toggleEcho();
             break;
@@ -3541,6 +3512,9 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #if HAVE_HEATED_BED
             Extruder::setHeatedBedTemperature(0);
 #endif
+            Commands::setFanSpeed(0);
+
+            Printer::kill(true);            
             break;
         case UI_ACTION_HEATED_BED_OFF:
 #if HAVE_HEATED_BED
@@ -3679,9 +3653,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         case UI_ACTION_SD_MOUNT:
             sd.mount();
             break;
-        case UI_ACTION_MENU_SDCARD:
-            pushMenu(&ui_menu_sd, false);
-            break;
 #endif
         case UI_ACTION_STOP:
             pushMenu(&ui_menu_askstop, true);
@@ -3735,7 +3706,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             pushMenu(&ui_menu_zpos_fast, false);
             break;
         case UI_ACTION_MENU_QUICKSETTINGS:
-            pushMenu(&ui_menu_quick, false);
+            //pushMenu(&ui_menu_quick, false);
             break;
         case UI_ACTION_MENU_EXTRUDER:
             pushMenu(&ui_menu_extruder, false);
@@ -3795,60 +3766,44 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #endif
 #if FEATURE_RETRACTION
         case UI_ACTION_WIZARD_FILAMENTCHANGE: {
-            popMenu(false);
-            if(Printer::isBlockingReceive()) break;
-            Printer::setJamcontrolDisabled(true);
-            Com::printFLN(PSTR("important: Filament change required!"));
-            Printer::setBlockingReceive(true);
-            BEEP_LONG;
-            pushMenu(&ui_wiz_filamentchange, true);
-            Printer::resetWizardStack();
-            Printer::pushWizardVar(Printer::currentPositionSteps[E_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[X_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Y_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Z_AXIS]);
-			if(!Printer::isMenuMode(MENU_MODE_SD_PRINTING + MENU_MODE_PAUSED))
-				Printer::MemoryPosition();
-            Extruder::current->retractDistance(FILAMENTCHANGE_SHORTRETRACT);
-            float newZ = FILAMENTCHANGE_Z_ADD + Printer::currentPosition[Z_AXIS];
-            Printer::currentPositionSteps[E_AXIS] = 0;
-            if(Printer::isHomedAll()) { // for safety move only when homed!
-                Printer::moveToReal(Printer::currentPosition[X_AXIS], Printer::currentPosition[Y_AXIS], newZ, 0, Printer::homingFeedrate[Z_AXIS]);
-                Printer::moveToReal(FILAMENTCHANGE_X_POS, FILAMENTCHANGE_Y_POS, newZ, 0, Printer::homingFeedrate[X_AXIS]);
-            }
-            Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT);
-            Extruder::current->disableCurrentExtruderMotor();
+            if (mainThreadAction == action) {
+              if (Printer::isPrinting())
+                Printer::pausePrint();
+
+              Printer::setJamcontrolDisabled(true);
+
+              if (Extruder::current->tempControl.currentTemperatureC < FILAMENT_LOAD_UNLOAD_PURGE_TEMP) {
+                pushMenu(&ui_wiz_jamwaitheat, true);
+                Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+                popMenu(false);
+              }
+
+              Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
+
+              popMenu(false);
+              pushMenu(&ui_wiz_filamentchange, true);
+
+            } else if (mainThreadAction <= 0) {
+                mainThreadAction = action;
+            } 
         }
         break;
 #if EXTRUDER_JAM_CONTROL
-        case UI_ACTION_WIZARD_JAM_EOF: {
-            Printer::setJamcontrolDisabled(true);
-            Printer::setBlockingReceive(true);
-            Printer::resetWizardStack();
-            Printer::pushWizardVar(Printer::currentPositionSteps[E_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[X_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Y_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Z_AXIS]);
-            Printer::MemoryPosition();
-            Extruder::current->retractDistance(FILAMENTCHANGE_SHORTRETRACT);
-            float newZ = FILAMENTCHANGE_Z_ADD + Printer::currentPosition[Z_AXIS];
-            Printer::currentPositionSteps[E_AXIS] = 0;
-            if(Printer::isHomedAll()) { // for safety move only when homed!
-                Printer::moveToReal(Printer::currentPosition[X_AXIS], Printer::currentPosition[Y_AXIS], newZ, 0, Printer::homingFeedrate[Z_AXIS]);
-                Printer::moveToReal(FILAMENTCHANGE_X_POS, FILAMENTCHANGE_Y_POS, newZ, 0, Printer::homingFeedrate[X_AXIS]);
-            }
-            Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
-            Extruder::pauseExtruders(false);
-            Commands::waitUntilEndOfAllMoves();
-#if FILAMENTCHANGE_REHOME
-            Printer::disableXStepper();
-            Printer::disableYStepper();
-#if Z_HOME_DIR > 0 && FILAMENTCHANGE_REHOME == 2
-            Printer::disableZStepper();
-#endif
-#endif
-            pushMenu(&ui_wiz_jamreheat, true);
-        }
+        case UI_ACTION_WIZARD_JAM_EOF:
+            if (mainThreadAction == action) {
+                Printer::setJamcontrolDisabled(true);
+
+                Printer::pausePrint();
+
+                Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
+                Extruder::pauseExtruders(false);
+
+                Printer::resetWizardStack();
+                pushMenu(&ui_wiz_jamreheat, true);
+
+            } else if (mainThreadAction <= 0) {
+                mainThreadAction = action;
+            }  
         break;
 #endif // EXTRUDER_JAM_CONTROL
 #endif // FEATURE_RETRACTION
@@ -3949,7 +3904,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
         case UI_ACTION_MEASURE_ZPROBE_HEIGHT:
             Printer::wizardStackPos = 0;
             Printer::wizardStack[0].f = Printer::currentPosition[Z_AXIS];
-            uid.pushMenu(&ui_menu_mzp, true);
+            // uid.pushMenu(&ui_menu_mzp, true);
             break;
         case UI_ACTION_MEASURE_ZPROBE_HEIGHT2:
             Printer::measureZProbeHeight(Printer::wizardStack[0].f);
@@ -3978,29 +3933,13 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             HAL::resetHardware();
             break;
         case UI_ACTION_PAUSE:
-            Printer::pausePrint();
+            if (mainThreadAction == action) {
+                Printer::pausePrint();
+            } else if (mainThreadAction <= 0) {
+                mainThreadAction = action;
+            }
             //Com::printFLN(PSTR("RequestPause:"));
             break;
-#if UI_BED_COATING
-        case UI_ACTION_NOCOATING:
-            menuAdjustHeight(&ui_menu_nocoating_action, 0);
-            break;
-        case UI_ACTION_BUILDTAK:
-            menuAdjustHeight(&ui_menu_buildtak_action, 0.4);
-            break;
-        case UI_ACTION_KAPTON:
-            menuAdjustHeight(&ui_menu_kapton_action, 0.04);
-            break;
-        case UI_ACTION_GLUESTICK:
-            menuAdjustHeight(&ui_menu_gluestick_action, 0.04);
-            break;
-        case UI_ACTION_BLUETAPE:
-            menuAdjustHeight(&ui_menu_bluetape_action, 0.15);
-            break;
-        case UI_ACTION_PETTAPE:
-            menuAdjustHeight(&ui_menu_pettape_action, 0.09);
-            break;
-#endif
 #if FEATURE_AUTOLEVEL
         case UI_ACTION_AUTOLEVEL_ONOFF:
             Printer::setAutolevelActive(!Printer::isAutolevelActive());
@@ -4155,11 +4094,11 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             deltaCalibration.fullCalibration(5, true);
             break;  
 
-        case UI_ACTION_CONFIRM_RESET_TO_DEFAULTS:
-            pushMenu(&ui_menu_confirm_reset_to_defaults, true);
+        case UI_ACTION_CAL_CONFIRM_RESET_TO_DEFAULTS:
+            pushMenu(&ui_menu_cal_confirm_reset_to_defaults, true);
             break; 
 
-        case UI_ACTION_RESET_TO_DEFAULTS:
+        case UI_ACTION_CAL_RESET_TO_DEFAULTS:
             EEPROM::setDeltaTowerXOffsetSteps(DELTA_X_ENDSTOP_OFFSET_STEPS);
             EEPROM::setDeltaTowerYOffsetSteps(DELTA_Y_ENDSTOP_OFFSET_STEPS);
             EEPROM::setDeltaTowerZOffsetSteps(DELTA_Z_ENDSTOP_OFFSET_STEPS);
@@ -4174,6 +4113,119 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 
             popMenu(true);
             break; 
+
+        case UI_ACTION_LOAD_FILAMENT_BOWDEN:
+            if(!Printer::isMenuMode(MENU_MODE_PAUSED))
+              Printer::homeAxis(true, true, true);
+            
+            Extruder::selectExtruderById(0);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_loading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_FAST, false, FILAMENT_LOAD_BOWDEN_FEED_FAST);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_BOWDEN_LENGTH_SLOW, false, FILAMENT_LOAD_BOWDEN_FEED_SLOW);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, FILAMENT_PURGE_BOWDEN_FEED);
+            Commands::waitUntilEndOfAllBuffers();
+
+            popMenu(true);
+            break;
+
+        case UI_ACTION_LOAD_FILAMENT_DIRECT:
+            if(!Printer::isMenuMode(MENU_MODE_PAUSED))
+              Printer::homeAxis(true, true, true);
+
+            Extruder::selectExtruderById(1);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_loading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_LOAD_DIRECT_LENGTH, false, FILAMENT_LOAD_DIRECT_FEED);
+            Commands::waitUntilEndOfAllBuffers();
+
+            popMenu(true);
+            break;
+
+        case UI_ACTION_UNLOAD_FILAMENT_BOWDEN:
+            popMenu(false);
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(0);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_unloading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_BOWDEN_LENGTH_PURGE, false, FILAMENT_UNLOAD_BOWDEN_FEED_PURGE);
+            Extruder::current->retractDistance(FILAMENT_UNLOAD_BOWDEN_LENGTH_RETRACT, false, FILAMENT_UNLOAD_BOWDEN_FEED_RETRACT);
+            Commands::waitUntilEndOfAllBuffers();
+
+            popMenu(false);
+            break;
+
+        case UI_ACTION_UNLOAD_FILAMENT_DIRECT:
+            popMenu(false);
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(1);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_unloading_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_UNLOAD_DIRECT_LENGTH_PURGE, false, FILAMENT_UNLOAD_DIRECT_FEED_PURGE);
+            Extruder::current->retractDistance(FILAMENT_UNLOAD_DIRECT_LENGTH_RETRACT, false, FILAMENT_UNLOAD_DIRECT_FEED_RETRACT);
+            Commands::waitUntilEndOfAllBuffers();
+
+            popMenu(false);
+            break;
+
+        case UI_ACTION_PURGE_FILAMENT_BOWDEN:
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(0);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_purging_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_BOWDEN_LENGTH, false, FILAMENT_PURGE_BOWDEN_FEED);
+            Commands::waitUntilEndOfAllBuffers();
+
+            popMenu(false);
+            pushMenu(&ui_wiz_filamentchange, true);
+            break;
+
+        case UI_ACTION_PURGE_FILAMENT_DIRECT:
+            Printer::homeAxis(true, true, true);
+            Extruder::selectExtruderById(1);
+
+            pushMenu(&ui_wiz_jamwaitheat, true);
+            Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+
+            popMenu(false);
+            pushMenu(&ui_menu_purging_filament, true);
+            Extruder::current->retractDistance(-1.0 * FILAMENT_PURGE_DIRECT_LENGTH, false, FILAMENT_PURGE_DIRECT_FEED);
+            Commands::waitUntilEndOfAllBuffers();
+
+            popMenu(false);
+            pushMenu(&ui_wiz_filamentchange, true);
+            break;
+
+        case UI_ACTION_FACTORY_RESET_CONFIRM:
+            pushMenu(&ui_menu_factory_reset_confirm, true);
+            break;
+
+        case UI_ACTION_FACTORY_RESET:
+            EEPROM::restoreEEPROMSettingsFromConfiguration();
+            EEPROM::storeDataIntoEEPROM(false);
+            
+            popMenu(true);
+            break;            
 
         default:
             EVENT_UI_EXECUTE(action, allowMoves);
