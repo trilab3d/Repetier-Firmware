@@ -216,12 +216,12 @@
 #define HEATED_BED_HEATER_PIN HEATER_1_PIN
 #define HEATED_BED_SET_INTERVAL 5000
 #define HEATED_BED_HEAT_MANAGER 1
-#define HEATED_BED_PID_INTEGRAL_DRIVE_MAX 230
+#define HEATED_BED_PID_INTEGRAL_DRIVE_MAX 120
 #define HEATED_BED_PID_INTEGRAL_DRIVE_MIN 0
-#define HEATED_BED_PID_PGAIN_OR_DEAD_TIME   120
-#define HEATED_BED_PID_IGAIN   11
-#define HEATED_BED_PID_DGAIN 314
-#define HEATED_BED_PID_MAX 230
+#define HEATED_BED_PID_PGAIN_OR_DEAD_TIME   80
+#define HEATED_BED_PID_IGAIN   30
+#define HEATED_BED_PID_DGAIN 70
+#define HEATED_BED_PID_MAX 120
 #define HEATED_BED_DECOUPLE_TEST_PERIOD 300000
 #define MIN_EXTRUDER_TEMP 90
 #define MAXTEMP 290
@@ -375,7 +375,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define Z_HOME_DIR 1
 #define X_MAX_LENGTH 200
 #define Y_MAX_LENGTH 200
-#define Z_MAX_LENGTH 320
+#define Z_MAX_LENGTH 220
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
@@ -387,7 +387,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DISTORTION_CORRECTION 1
 #define DISTORTION_CORRECTION_POINTS 5
 #define DISTORTION_LIMIT_TO 2
-#define DISTORTION_CORRECTION_R 80
+#define DISTORTION_CORRECTION_R 60
 #define DISTORTION_PERMANENT 1
 #define DISTORTION_UPDATE_FREQUENCY 15
 #define DISTORTION_START_DEGRADE 0.5
@@ -410,7 +410,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define EXACT_DELTA_MOVES 1
 
 // Delta settings
-#define DELTA_DIAGONAL_ROD 299.5 // mm
+#define DELTA_DIAGONAL_ROD 215 // mm
 #define DELTA_ALPHA_A 210
 #define DELTA_ALPHA_B 330
 #define DELTA_ALPHA_C 90
@@ -422,9 +422,9 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DELTA_DIAGONAL_CORRECTION_C 0
 #define END_EFFECTOR_HORIZONTAL_OFFSET 0
 #define CARRIAGE_HORIZONTAL_OFFSET 0
-#define DELTA_MAX_RADIUS 125
-#define ROD_RADIUS 150
-#define PRINTER_RADIUS 150
+#define DELTA_MAX_RADIUS 90
+#define ROD_RADIUS 105
+#define PRINTER_RADIUS 105
 #define DELTA_HOME_ON_POWER 0
 #define STEP_COUNTER
 #define DELTA_X_ENDSTOP_OFFSET_STEPS 50
@@ -433,7 +433,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DELTA_FLOOR_SAFETY_MARGIN_MM 15
 //#define SOFTWARE_LEVELING
 
-#define DELTASEGMENTS_PER_PRINTLINE 12 // 16
+#define DELTASEGMENTS_PER_PRINTLINE 12
 #define STEPPER_INACTIVE_TIME 360L
 #define MAX_INACTIVE_TIME 0L
 #define MAX_FEEDRATE_X 200
@@ -621,12 +621,12 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_MIN_TEMPERATURE 150
 #define FEATURE_AUTOLEVEL 1
 #define FEATURE_SOFTWARE_LEVELING 0
-#define Z_PROBE_X1 -69.28
-#define Z_PROBE_Y1 -40
-#define Z_PROBE_X2 69.28
-#define Z_PROBE_Y2 -40
+#define Z_PROBE_X1 -51.96
+#define Z_PROBE_Y1 -30
+#define Z_PROBE_X2 51.96
+#define Z_PROBE_Y2 -30
 #define Z_PROBE_X3 0
-#define Z_PROBE_Y3 80
+#define Z_PROBE_Y3 60
 #define BED_LEVELING_METHOD 0
 #define BED_CORRECTION_METHOD 0
 #define BED_LEVELING_GRID_SIZE 5
@@ -674,7 +674,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define LANGUAGE_CZ_ACTIVE 0
 #define LANGUAGE_PL_ACTIVE 0
 #define LANGUAGE_TR_ACTIVE 0
-#define UI_PRINTER_NAME "DeltiQ_L"
+#define UI_PRINTER_NAME "DeltiQ_M"
 #define UI_PRINTER_COMPANY "TRILAB"
 #define UI_PAGES_DURATION 4000
 #define UI_SPEEDDEPENDENT_POSITIONING 0
@@ -712,9 +712,9 @@ Values must be in range 1..255
 
 #define USER_QUICK_MENU_Z_PROBE_HEIGHT_USER_CHANGE
 #define UI_Z_PROBE_HEIGHT_USER_CHANGE 1
-#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1 "T0\n G28\n G92 E0\n G91\n M104 S210\n M116\n M117 Loading Filament\n G1 E400 F1000\n G1 E100 F500\n G1 E100 F100\n G90\n G92 E0\n M84"
+#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1 "T0\n G28\n G92 E0\n G91\n M104 S210\n M116\n M117 Loading Filament\n G1 E300 F1000\n G1 E100 F500\n G1 E100 F100\n G90\n G92 E0\n M84"
 #define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_TEXT "Load Filament-Bowden Extr"
-#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2 "T0\n G28\n G92 E0\n G91\n M104 S210\n M116\n M117 Unloading Filament\n G1 E20 F200\n G1 E-100 F6000\n G90\n G92 E0\n M84"
+#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2 "T0\nG28\n G92 E0\n G91\n M104 S210\n M116\n M117 Unloading Filament\n G1 E20 F200\n G1 E-100 F6000\n G90\n G92 E0\n M84"
 #define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_TEXT "Unload Filament-Bowden Extr"
 #define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3 "T0\n G28\n G92 E0\n G91\n M104 S210\n M116\n M117 Purging Filament\n G1 E50 F100\n G90\n G92 E0\n M84"
 #define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_TEXT "Purge Filament-Bowden Extr"
@@ -725,7 +725,7 @@ Values must be in range 1..255
 #define UI_TEXT_SERVICE_MENU_TEXT "Service menu"
 #define UI_SERVICE_MENU_ITEM1 "G28\n M190 S55\n M322\n G33 R0\n G32 S2\n M322\n G33 R0\n G28"
 #define SERVICE_MENU_ITEM1_TEXT "Z home calib"
-#define UI_SERVICE_MENU_ITEM2 "G28\n M303 S205 C10 X0"
+#define UI_SERVICE_MENU_ITEM2 "G28\n M303 S205 C10 X10"
 #define SERVICE_MENU_ITEM2_TEXT "PID tuning"
 #define UI_SERVICE_MENU_ITEM3 "G28"
 #define SERVICE_MENU_ITEM3_TEXT "Home"
@@ -944,7 +944,7 @@ Values must be in range 1..255
     "zMinPos": 0,
     "xLength": 200,
     "yLength": 200,
-    "zLength": 320,
+    "zLength": 220,
     "alwaysCheckEndstops": "0",
     "disableX": "0",
     "disableY": "0",
@@ -958,15 +958,15 @@ Values must be in range 1..255
     "zEndstopBack": 0,
     "deltaSegmentsPerSecondPrint": 100,
     "deltaSegmentsPerSecondTravel": 100,
-    "deltaDiagonalRod": 299.5,
-    "deltaHorizontalRadius": 150,
+    "deltaDiagonalRod": 215,
+    "deltaHorizontalRadius": 105,
     "deltaAlphaA": 210,
     "deltaAlphaB": 330,
     "deltaAlphaC": 90,
     "deltaDiagonalCorrA": 0,
     "deltaDiagonalCorrB": 0,
     "deltaDiagonalCorrC": 0,
-    "deltaMaxRadius": 125,
+    "deltaMaxRadius": 90,
     "deltaFloorSafetyMarginMM": 15,
     "deltaRadiusCorrA": 0,
     "deltaRadiusCorrB": 0,
@@ -1040,7 +1040,7 @@ Values must be in range 1..255
     "extrudeMaxLength": 1000,
     "homeOrder": "HOME_ORDER_ZXY",
     "featureController": 2,
-    "uiPrinterName": "DeltiQ_L",
+    "uiPrinterName": "DeltiQ_M",
     "uiPrinterCompany": "TRILAB",
     "uiPagesDuration": 4000,
     "uiHeadline": "",
@@ -1069,11 +1069,11 @@ Values must be in range 1..255
     "bedPreheat": 55,
     "bedUpdateInterval": 5000,
     "bedPidDriveMin": 0,
-    "bedPidDriveMax": 230,
-    "bedPidP": 120,
-    "bedPidI": 11,
-    "bedPidD": 314,
-    "bedPidMax": 230,
+    "bedPidDriveMax": 120,
+    "bedPidP": 80,
+    "bedPidI": 30,
+    "bedPidD": 70,
+    "bedPidMax": 120,
     "bedDecoupleTestPeriod": 300,
     "caseLightPin": -1,
     "caseLightDefaultOn": "1",
@@ -1155,12 +1155,12 @@ Values must be in range 1..255
     "zProbeStartScript": "",
     "zProbeFinishedScript": "",
     "featureAutolevel": "1",
-    "zProbeX1": -69.28,
-    "zProbeY1": -40,
-    "zProbeX2": 69.28,
-    "zProbeY2": -40,
+    "zProbeX1": -51.96,
+    "zProbeY1": -30,
+    "zProbeX2": 51.96,
+    "zProbeY2": -30,
     "zProbeX3": 0,
-    "zProbeY3": 80,
+    "zProbeY3": 60,
     "zProbeSwitchingDistance": 1,
     "zProbeRepetitions": 3,
     "zProbeMedian": "0",
@@ -1205,7 +1205,7 @@ Values must be in range 1..255
     "pauseEndCommands": "G91\\n G1 Z-10\\n G90\\n",
     "distortionCorrection": "1",
     "distortionCorrectionPoints": 5,
-    "distortionCorrectionR": 80,
+    "distortionCorrectionR": 60,
     "distortionPermanent": "1",
     "distortionUpdateFrequency": 15,
     "distortionStartDegrade": 0.5,
@@ -1347,7 +1347,7 @@ Values must be in range 1..255
             "maxDistance": 20
         }
     ],
-    "manualConfig": "#define USER_QUICK_MENU_Z_PROBE_HEIGHT_USER_CHANGE\n#define UI_Z_PROBE_HEIGHT_USER_CHANGE 1\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1 \"T0\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Loading Filament\\n G1 E400 F1000\\n G1 E100 F500\\n G1 E100 F100\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_TEXT \"Load Filament-Bowden Extr\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2 \"T0\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Unloading Filament\\n G1 E20 F200\\n G1 E-100 F6000\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_TEXT \"Unload Filament-Bowden Extr\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3 \"T0\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Purging Filament\\n G1 E50 F100\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_TEXT \"Purge Filament-Bowden Extr\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4 \"T1\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Purging Filament\\n G1 E50 F50\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4_TEXT \"Purge Filament-Direct Extr\"\n\n#define SERVICE_MENU\n#define UI_TEXT_SERVICE_MENU_TEXT \"Service menu\"\n#define UI_SERVICE_MENU_ITEM1 \"G28\\n M190 S55\\n M322\\n G33 R0\\n G32 S2\\n M322\\n G33 R0\\n G28\"\n#define SERVICE_MENU_ITEM1_TEXT \"Z home calib\"\n#define UI_SERVICE_MENU_ITEM2 \"G28\\n M303 S205 C10 X0\"\n#define SERVICE_MENU_ITEM2_TEXT \"PID tuning\"\n#define UI_SERVICE_MENU_ITEM3 \"G28\"\n#define SERVICE_MENU_ITEM3_TEXT \"Home\"",
+    "manualConfig": "#define USER_QUICK_MENU_Z_PROBE_HEIGHT_USER_CHANGE\n#define UI_Z_PROBE_HEIGHT_USER_CHANGE 1\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1 \"T0\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Loading Filament\\n G1 E300 F1000\\n G1 E100 F500\\n G1 E100 F100\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_1_TEXT \"Load Filament-Bowden Extr\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2 \"T0\\nG28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Unloading Filament\\n G1 E20 F200\\n G1 E-100 F6000\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_2_TEXT \"Unload Filament-Bowden Extr\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3 \"T0\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Purging Filament\\n G1 E50 F100\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_3_TEXT \"Purge Filament-Bowden Extr\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4 \"T1\\n G28\\n G92 E0\\n G91\\n M104 S210\\n M116\\n M117 Purging Filament\\n G1 E50 F50\\n G90\\n G92 E0\\n M84\"\n#define USER_QUICK_MENU_ITEM_CUSTOM_SCRIPT_4_TEXT \"Purge Filament-Direct Extr\"\n\n#define SERVICE_MENU\n#define UI_TEXT_SERVICE_MENU_TEXT \"Service menu\"\n#define UI_SERVICE_MENU_ITEM1 \"G28\\n M190 S55\\n M322\\n G33 R0\\n G32 S2\\n M322\\n G33 R0\\n G28\"\n#define SERVICE_MENU_ITEM1_TEXT \"Z home calib\"\n#define UI_SERVICE_MENU_ITEM2 \"G28\\n M303 S205 C10 X10\"\n#define SERVICE_MENU_ITEM2_TEXT \"PID tuning\"\n#define UI_SERVICE_MENU_ITEM3 \"G28\"\n#define SERVICE_MENU_ITEM3_TEXT \"Home\"",
     "zHomeMinTemperature": 0,
     "zHomeXPos": 999999,
     "zHomeYPos": 999999,

@@ -1231,7 +1231,6 @@
 #define SERVICE_MENU_ITEM4_DE SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_DE SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_DE  "Least squares calib."
 // Dutch translation
 
 #define UI_TEXT_ON_NL               "Aan"
@@ -1579,8 +1578,6 @@
 #define SERVICE_MENU_ITEM3_NL SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_NL SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_NL SERVICE_MENU_ITEM5_TEXT
-
-#define UI_TEXT_LEAST_SQUARES_CALIB_NL  "Least squares calib."
 
 // *************** Brazilian portuguese translation ****************
 
@@ -1931,8 +1928,6 @@
 #define SERVICE_MENU_ITEM4_PT SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_PT SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_PT  "Least squares calib."
-
 // *************** Italian translation ****************
 
 #define UI_TEXT_ON_IT               "On"
@@ -2280,7 +2275,6 @@
 #define SERVICE_MENU_ITEM4_IT SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_IT SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_IT  "Least squares calib."
 // Spanish translation
 
 #define UI_TEXT_ON_ES               "On"
@@ -2627,8 +2621,6 @@
 #define SERVICE_MENU_ITEM3_ES SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_ES SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_ES SERVICE_MENU_ITEM5_TEXT
-
-#define UI_TEXT_LEAST_SQUARES_CALIB_ES  "Least squares calib."
 
 // *************** Swedish translation ****************
 // By Daniel Tedenljung 2013-08-21
@@ -2980,8 +2972,6 @@
 #define SERVICE_MENU_ITEM4_SE SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_SE SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_SE  "Least squares calib."
-
 // *************** French translation ****************
 // ***************      By Doudou     ****************
 
@@ -3330,7 +3320,6 @@
 #define SERVICE_MENU_ITEM4_FR SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_FR SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_FR  "Least squares calib."
 // *************** Czech translation ****************
 // ***************      By Majkl     ****************
 // version: 2014/08/27
@@ -3681,7 +3670,6 @@
 #define SERVICE_MENU_ITEM4_CZ SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_CZ SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_CZ  "Least squares calib."
 // *************** Polish translation ****************
 // ***************       By MIS       ****************
 // version: 2015/01/18
@@ -4030,7 +4018,6 @@
 #define SERVICE_MENU_ITEM4_PL SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_PL SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_PL  "Least squares calib."
 // Türk
 
 #define UI_TEXT_ON_TR               "Acik"
@@ -4376,7 +4363,6 @@
 #define SERVICE_MENU_ITEM4_TR SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_TR SERVICE_MENU_ITEM5_TEXT
 
-#define UI_TEXT_LEAST_SQUARES_CALIB_TR  "Least squares calib."
 // *************** Finnish translation ****************
 // ********** By Matti Granstedt 28.01.2016 ***********
 
@@ -4724,8 +4710,6 @@
 #define SERVICE_MENU_ITEM3_FI SERVICE_MENU_ITEM3_TEXT
 #define SERVICE_MENU_ITEM4_FI SERVICE_MENU_ITEM4_TEXT
 #define SERVICE_MENU_ITEM5_FI SERVICE_MENU_ITEM5_TEXT
-
-#define UI_TEXT_LEAST_SQUARES_CALIB_FI  "Least squares calib."
 
 #define TRANS(x) UI_STRING(F ## x,x)
 #ifdef CUSTOM_TRANSLATIONS
