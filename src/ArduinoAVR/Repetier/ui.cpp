@@ -4200,7 +4200,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
-            pushMenu(&ui_wiz_filamentchange, true);
             break;
 
         case UI_ACTION_PURGE_FILAMENT_DIRECT:
@@ -4216,7 +4215,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
-            pushMenu(&ui_wiz_filamentchange, true);
             break;
 
         case UI_ACTION_FACTORY_RESET_CONFIRM:
