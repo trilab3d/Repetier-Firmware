@@ -3765,29 +3765,26 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #endif
 #if FEATURE_RETRACTION
         case UI_ACTION_WIZARD_FILAMENTCHANGE: {
-            popMenu(false);
-            if(Printer::isBlockingReceive()) break;
-            Printer::setJamcontrolDisabled(true);
-            Com::printFLN(PSTR("important: Filament change required!"));
-            Printer::setBlockingReceive(true);
-            BEEP_LONG;
-            pushMenu(&ui_wiz_filamentchange, true);
-            Printer::resetWizardStack();
-            Printer::pushWizardVar(Printer::currentPositionSteps[E_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[X_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Y_AXIS]);
-            Printer::pushWizardVar(Printer::coordinateOffset[Z_AXIS]);
-			if(!Printer::isMenuMode(MENU_MODE_SD_PRINTING + MENU_MODE_PAUSED))
-				Printer::MemoryPosition();
-            Extruder::current->retractDistance(FILAMENTCHANGE_SHORTRETRACT);
-            float newZ = FILAMENTCHANGE_Z_ADD + Printer::currentPosition[Z_AXIS];
-            Printer::currentPositionSteps[E_AXIS] = 0;
-            if(Printer::isHomedAll()) { // for safety move only when homed!
-                Printer::moveToReal(Printer::currentPosition[X_AXIS], Printer::currentPosition[Y_AXIS], newZ, 0, Printer::homingFeedrate[Z_AXIS]);
-                Printer::moveToReal(FILAMENTCHANGE_X_POS, FILAMENTCHANGE_Y_POS, newZ, 0, Printer::homingFeedrate[X_AXIS]);
-            }
-            Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT);
-            Extruder::current->disableCurrentExtruderMotor();
+            if (mainThreadAction == action) {
+              if (Printer::isPrinting())
+                Printer::pausePrint();
+
+              Printer::setJamcontrolDisabled(true);
+
+              if (Extruder::current->tempControl.currentTemperatureC < FILAMENT_LOAD_UNLOAD_PURGE_TEMP) {
+                pushMenu(&ui_wiz_jamwaitheat, true);
+                Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
+                popMenu(false);
+              }
+
+              Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
+
+              popMenu(false);
+              pushMenu(&ui_wiz_filamentchange, true);
+
+            } else if (mainThreadAction <= 0) {
+                mainThreadAction = action;
+            } 
         }
         break;
 #if EXTRUDER_JAM_CONTROL

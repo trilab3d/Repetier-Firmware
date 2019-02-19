@@ -85,40 +85,6 @@ UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_sd_askstop_yes, UI_TEXT_YES_ID, UI_ACTION
 UI_MENU(ui_menu_askstop, UI_MENU_ASKSTOP, 4)
 UI_MENU_SUBMENU_FILTER_T(ui_menu_sd_stop, UI_TEXT_STOP_PRINT_ID, ui_menu_askstop, MENU_MODE_SD_PRINTING, 0 )
 
-// Load filament
-UI_MENU_ACTIONCOMMAND_T(ui_menu_load_filament_bowden, UI_TEXT_BOWDEN_EXTRUDER_ID, UI_ACTION_LOAD_FILAMENT_BOWDEN)
-UI_MENU_ACTIONCOMMAND_T(ui_menu_load_filament_direct, UI_TEXT_DIRECT_EXTRUDER_ID, UI_ACTION_LOAD_FILAMENT_DIRECT)
-#define UI_MENU_LOAD_FILAMENT {&ui_menu_back, &ui_menu_load_filament_bowden, &ui_menu_load_filament_direct}
-UI_MENU(ui_menu_load_filament_sel_ext, UI_MENU_LOAD_FILAMENT, 3)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_load_filament, UI_TEXT_LOAD_FILAMENT_ID, ui_menu_load_filament_sel_ext,0,MENU_MODE_PRINTING)
-
-UI_MENU_HEADLINE_T(ui_menu_loading_filament_1, UI_TEXT_LOADING_FILAMENT_ID)
-#define UI_MENU_LOADING_FILAMENT {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_loading_filament_1, &ui_menu_empty}
-UI_MENU(ui_menu_loading_filament, UI_MENU_LOADING_FILAMENT, 4)
-
-// Unload filament
-UI_MENU_ACTIONCOMMAND_T(ui_menu_unload_filament_bowden, UI_TEXT_BOWDEN_EXTRUDER_ID, UI_ACTION_UNLOAD_FILAMENT_BOWDEN)
-UI_MENU_ACTIONCOMMAND_T(ui_menu_unload_filament_direct, UI_TEXT_DIRECT_EXTRUDER_ID, UI_ACTION_UNLOAD_FILAMENT_DIRECT)
-#define UI_MENU_UNLOAD_FILAMENT {&ui_menu_back, &ui_menu_unload_filament_bowden, &ui_menu_unload_filament_direct}
-UI_MENU(ui_menu_unload_filament_sel_ext, UI_MENU_UNLOAD_FILAMENT, 3)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_unload_filament, UI_TEXT_UNLOAD_FILAMENT_ID, ui_menu_unload_filament_sel_ext,0,MENU_MODE_PRINTING)
-
-UI_MENU_HEADLINE_T(ui_menu_unloading_filament_1, UI_TEXT_UNLOADING_FILAMENT_ID)
-#define UI_MENU_UNLOADING_FILAMENT {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_unloading_filament_1, &ui_menu_empty}
-UI_MENU(ui_menu_unloading_filament, UI_MENU_UNLOADING_FILAMENT, 4)
-
-// Purge filament
-UI_MENU_ACTIONCOMMAND_T(ui_menu_purge_filament_bowden, UI_TEXT_BOWDEN_EXTRUDER_ID, UI_ACTION_PURGE_FILAMENT_BOWDEN)
-UI_MENU_ACTIONCOMMAND_T(ui_menu_purge_filament_direct, UI_TEXT_DIRECT_EXTRUDER_ID, UI_ACTION_PURGE_FILAMENT_DIRECT)
-#define UI_MENU_PURGE_FILAMENT {&ui_menu_back, &ui_menu_purge_filament_bowden, &ui_menu_purge_filament_direct}
-UI_MENU(ui_menu_purge_filament_sel_ext, UI_MENU_PURGE_FILAMENT, 3)
-UI_MENU_SUBMENU_FILTER_T(ui_menu_purge_filament, UI_TEXT_PURGE_FILAMENT_ID, ui_menu_purge_filament_sel_ext,0,MENU_MODE_PRINTING)
-
-UI_MENU_HEADLINE_T(ui_menu_purging_filament_1, UI_TEXT_PURGING_FILAMENT_ID)
-#define UI_MENU_PURGING_FILAMENT {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_purging_filament_1, &ui_menu_empty}
-UI_MENU(ui_menu_purging_filament, UI_MENU_PURGING_FILAMENT, 4)
-
-
 // Move
 UI_MENU_ACTION4_T(ui_menu_xpos, UI_ACTION_XPOSITION, UI_TEXT_ACTION_XPOSITION4A_ID, UI_TEXT_ACTION_XPOSITION4B_ID, UI_TEXT_ACTION_XPOSITION4C_ID, UI_TEXT_ACTION_XPOSITION4D_ID)
 UI_MENU_ACTION4_T(ui_menu_ypos, UI_ACTION_YPOSITION, UI_TEXT_ACTION_YPOSITION4A_ID, UI_TEXT_ACTION_YPOSITION4B_ID, UI_TEXT_ACTION_YPOSITION4C_ID, UI_TEXT_ACTION_YPOSITION4D_ID)
@@ -279,6 +245,50 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_service_only_separator, UI_TEXT_LINE_SEPARATOR_I
 UI_MENU(ui_menu_service, UI_MENU_SERVICE, 15)
 UI_MENU_SUBMENU_FILTER_T(ui_menu_service_sub, UI_TEXT_NA_ID , ui_menu_service, 0, MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
+
+// Change filament
+UI_MENU_HEADLINE_T(ui_menu_chf_head,UI_TEXT_CHANGE_FILAMENT_ID)
+UI_MENU_CHANGEACTION_T(ui_menu_chf_temp,UI_TEXT_CUR_TEMP_ID,UI_ACTION_EXTRUDER_TEMP)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_chf_continue,UI_TEXT_CONTINUE_ID,UI_ACTION_WIZARD_FILAMENTCHANGE)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_chf_close,UI_TEXT_CLOSE_ID,UI_ACTION_BACK)
+#define UI_MENU_CHF_ITEMS {&ui_menu_chf_head, &ui_menu_ext_sel0, &ui_menu_ext_sel1, &ui_menu_chf_temp,&ui_menu_chf_continue,&ui_menu_chf_close}
+UI_STICKYMENU(ui_menu_chf,UI_MENU_CHF_ITEMS, 6) 
+UI_MENU_SUBMENU_T(ui_menu_quick_changefil,UI_TEXT_CHANGE_FILAMENT_ID,ui_menu_chf)   
+UI_MENU_SUBMENU_FILTER_T(ui_menu_quick_changefil_printing,UI_TEXT_CHANGE_FILAMENT_ID,ui_menu_chf, 0, MENU_MODE_PAUSED)
+
+// Load filament
+UI_MENU_ACTIONCOMMAND_T(ui_menu_load_filament_bowden, UI_TEXT_BOWDEN_EXTRUDER_ID, UI_ACTION_LOAD_FILAMENT_BOWDEN)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_load_filament_direct, UI_TEXT_DIRECT_EXTRUDER_ID, UI_ACTION_LOAD_FILAMENT_DIRECT)
+#define UI_MENU_LOAD_FILAMENT {&ui_menu_back, &ui_menu_load_filament_bowden, &ui_menu_load_filament_direct}
+UI_MENU(ui_menu_load_filament_sel_ext, UI_MENU_LOAD_FILAMENT, 3)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_load_filament, UI_TEXT_LOAD_FILAMENT_ID, ui_menu_load_filament_sel_ext,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
+
+UI_MENU_HEADLINE_T(ui_menu_loading_filament_1, UI_TEXT_LOADING_FILAMENT_ID)
+#define UI_MENU_LOADING_FILAMENT {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_loading_filament_1, &ui_menu_empty}
+UI_MENU(ui_menu_loading_filament, UI_MENU_LOADING_FILAMENT, 4)
+
+// Unload filament
+UI_MENU_ACTIONCOMMAND_T(ui_menu_unload_filament_bowden, UI_TEXT_BOWDEN_EXTRUDER_ID, UI_ACTION_UNLOAD_FILAMENT_BOWDEN)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_unload_filament_direct, UI_TEXT_DIRECT_EXTRUDER_ID, UI_ACTION_UNLOAD_FILAMENT_DIRECT)
+#define UI_MENU_UNLOAD_FILAMENT {&ui_menu_back, &ui_menu_unload_filament_bowden, &ui_menu_unload_filament_direct}
+UI_MENU(ui_menu_unload_filament_sel_ext, UI_MENU_UNLOAD_FILAMENT, 3)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_unload_filament, UI_TEXT_UNLOAD_FILAMENT_ID, ui_menu_unload_filament_sel_ext,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
+
+UI_MENU_HEADLINE_T(ui_menu_unloading_filament_1, UI_TEXT_UNLOADING_FILAMENT_ID)
+#define UI_MENU_UNLOADING_FILAMENT {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_unloading_filament_1, &ui_menu_empty}
+UI_MENU(ui_menu_unloading_filament, UI_MENU_UNLOADING_FILAMENT, 4)
+
+// Purge filament
+UI_MENU_ACTIONCOMMAND_T(ui_menu_purge_filament_bowden, UI_TEXT_BOWDEN_EXTRUDER_ID, UI_ACTION_PURGE_FILAMENT_BOWDEN)
+UI_MENU_ACTIONCOMMAND_T(ui_menu_purge_filament_direct, UI_TEXT_DIRECT_EXTRUDER_ID, UI_ACTION_PURGE_FILAMENT_DIRECT)
+#define UI_MENU_PURGE_FILAMENT {&ui_menu_back, &ui_menu_purge_filament_bowden, &ui_menu_purge_filament_direct}
+UI_MENU(ui_menu_purge_filament_sel_ext, UI_MENU_PURGE_FILAMENT, 3)
+UI_MENU_SUBMENU_FILTER_T(ui_menu_purge_filament, UI_TEXT_PURGE_FILAMENT_ID, ui_menu_purge_filament_sel_ext,0,MENU_MODE_PRINTING + MENU_MODE_PAUSED)
+
+UI_MENU_HEADLINE_T(ui_menu_purging_filament_1, UI_TEXT_PURGING_FILAMENT_ID)
+#define UI_MENU_PURGING_FILAMENT {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_purging_filament_1, &ui_menu_empty}
+UI_MENU(ui_menu_purging_filament, UI_MENU_PURGING_FILAMENT, 4)
+
 // Printing menu - stop/pause/continue...
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_pause,UI_TEXT_PAUSE_PRINT_ID,UI_ACTION_PAUSE,MENU_MODE_PRINTING,MENU_MODE_PAUSED)
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_continue,UI_TEXT_CONTINUE_PRINT_ID,UI_ACTION_CONTINUE,MENU_MODE_PAUSED,0)
@@ -293,8 +303,8 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_fan_ignoreM106, UI_TEXT_IGNORE_M106_ID, UI_ACTIO
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_fan_ignoreM106_printing, UI_TEXT_IGNORE_M106_ID, UI_ACTION_IGNORE_M106,MENU_MODE_PRINTING,0)
 
 // Main menu
-#define UI_MENU_MAIN {&ui_menu_back, &ui_stop, &ui_pause, &ui_continue, &ui_menu_home_all, &ui_menu_sd_printfile, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
-UI_MENU(ui_menu_main, UI_MENU_MAIN, 21)
+#define UI_MENU_MAIN {&ui_menu_back, &ui_stop, &ui_pause, &ui_continue, &ui_menu_home_all, &ui_menu_sd_printfile, &ui_menu_quick_changefil_printing, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
+UI_MENU(ui_menu_main, UI_MENU_MAIN, 22)
 
 
 /* Define menus accessible by action commands
