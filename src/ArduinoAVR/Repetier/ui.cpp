@@ -1051,11 +1051,15 @@ void UIDisplay::initialize() {
 #endif // CUSTOM_LOGO
     } while( u8g_NextPage(&u8g) ); //end picture loop
 #else // not DISPLAY_U8G
-    printRowP(0, versionString);
+    printRowP(0, PSTR(""));
     printRowP(1, PSTR(UI_PRINTER_NAME));
-#if UI_ROWS > 2
-    printRowP(UI_ROWS - 1, PSTR(UI_PRINTER_COMPANY));
-#endif // UI_ROWS > 2
+    printRowP(2, PSTR(UI_PRINTER_COMPANY));
+
+    HAL::delayMilliseconds(UI_START_SCREEN_DELAY);
+
+    printRowP(0, PSTR("Repetier"));
+    printRowP(1, PSTR("Version " REPETIER_VERSION));
+    printRowP(2, PSTR("Build " REPETIER_BUILD_DATE));
 
 #endif // not DISPLAY_U8G
 #endif // gameduino2
