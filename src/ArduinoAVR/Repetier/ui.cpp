@@ -4188,6 +4188,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             break;
 
         case UI_ACTION_PURGE_FILAMENT_BOWDEN:
+            popMenu(false);
             Printer::homeAxis(true, true, true);
             Extruder::selectExtruderById(0);
 
@@ -4203,6 +4204,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             break;
 
         case UI_ACTION_PURGE_FILAMENT_DIRECT:
+            popMenu(false);
             Printer::homeAxis(true, true, true);
             Extruder::selectExtruderById(1);
 
