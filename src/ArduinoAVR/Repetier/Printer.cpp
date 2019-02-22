@@ -2592,6 +2592,7 @@ void Printer::showJSONStatus(int type) {
 #endif // JSON_OUTPUT
 
 void Printer::pausePrint() {
+    Printer::setJamcontrolDisabled(true);
 #if SDSUPPORT
     if(Printer::isMenuMode(MENU_MODE_SD_PRINTING)) {
         sd.pausePrint(true);
@@ -2616,6 +2617,7 @@ void Printer::continuePrint() {
             GCodeSource::printAllFLN(PSTR("RequestContinue:"));
         }
 	setMenuMode(MENU_MODE_PAUSED, false);
+    Printer::setJamcontrolDisabled(EEPROM::JamcontrolDisabled());
 }
 
 void Printer::stopPrint() {

@@ -2599,8 +2599,6 @@ int UIDisplay::okAction(bool allowMoves) {
                 popMenu(true);
 
                 Printer::continuePrint();
-
-                Printer::setJamcontrolDisabled(false);
             }
             break;
 #if EXTRUDER_JAM_CONTROL
@@ -3773,8 +3771,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
               if (Printer::isPrinting())
                 Printer::pausePrint();
 
-              Printer::setJamcontrolDisabled(true);
-
               if (Extruder::current->tempControl.currentTemperatureC < FILAMENT_LOAD_UNLOAD_PURGE_TEMP) {
                 pushMenu(&ui_wiz_jamwaitheat, true);
                 Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
@@ -3794,8 +3790,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #if EXTRUDER_JAM_CONTROL
         case UI_ACTION_WIZARD_JAM_EOF:
             if (mainThreadAction == action) {
-                Printer::setJamcontrolDisabled(true);
-
                 Printer::pausePrint();
 
                 Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
