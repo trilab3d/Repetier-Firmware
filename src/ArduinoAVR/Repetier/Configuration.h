@@ -221,9 +221,9 @@
 #define HEATED_BED_PID_MAX 230
 #define HEATED_BED_DECOUPLE_TEST_PERIOD 300000
 #define MIN_EXTRUDER_TEMP 90
-#define MAXTEMP 290
+#define MAXTEMP 390
 #define MIN_DEFECT_TEMPERATURE 5
-#define MAX_DEFECT_TEMPERATURE 295
+#define MAX_DEFECT_TEMPERATURE 395
 #define MILLISECONDS_PREHEAT_TIME 30000
 
 // ##########################################################################################
@@ -700,7 +700,7 @@ Values must be in range 1..255
 #define UI_SET_MIN_HEATED_BED_TEMP  30
 #define UI_SET_MAX_HEATED_BED_TEMP 105
 #define UI_SET_MIN_EXTRUDER_TEMP   90
-#define UI_SET_MAX_EXTRUDER_TEMP   290
+#define UI_SET_MAX_EXTRUDER_TEMP   390
 #define UI_SET_EXTRUDER_FEEDRATE 2
 #define UI_SET_EXTRUDER_RETRACT_DISTANCE 3
 
