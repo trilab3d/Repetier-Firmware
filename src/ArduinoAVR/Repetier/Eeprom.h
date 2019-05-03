@@ -597,5 +597,11 @@ static inline void setTowerZFloor(float newZ) {
 #endif 
     }
 
+    static inline uint8_t JamcontrolDisabled() {
+#if EXTRUDER_JAM_CONTROL
+        return HAL::eprGetByte(EPR_EOF_CONTROL);
+#endif 
+    }
+
 };
 #endif

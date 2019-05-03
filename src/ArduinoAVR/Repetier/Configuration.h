@@ -688,8 +688,8 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define LANGUAGE_CZ_ACTIVE 0
 #define LANGUAGE_PL_ACTIVE 0
 #define LANGUAGE_TR_ACTIVE 0
-#define UI_PRINTER_NAME "DeltiQ_L"
-#define UI_PRINTER_COMPANY "TRILAB"
+#define UI_PRINTER_COMPANY "    TriLAB Group    "
+#define UI_PRINTER_NAME    "      DeltiQ L      "
 #define UI_PAGES_DURATION 4000
 #define UI_SPEEDDEPENDENT_POSITIONING 0
 #define UI_DISABLE_AUTO_PAGESWITCH 1

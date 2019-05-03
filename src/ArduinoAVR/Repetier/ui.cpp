@@ -1051,11 +1051,15 @@ void UIDisplay::initialize() {
 #endif // CUSTOM_LOGO
     } while( u8g_NextPage(&u8g) ); //end picture loop
 #else // not DISPLAY_U8G
-    printRowP(0, versionString);
+    printRowP(0, PSTR(""));
     printRowP(1, PSTR(UI_PRINTER_NAME));
-#if UI_ROWS > 2
-    printRowP(UI_ROWS - 1, PSTR(UI_PRINTER_COMPANY));
-#endif // UI_ROWS > 2
+    printRowP(2, PSTR(UI_PRINTER_COMPANY));
+
+    HAL::delayMilliseconds(UI_START_SCREEN_DELAY);
+
+    printRowP(0, PSTR("Repetier"));
+    printRowP(1, PSTR("Version " REPETIER_VERSION));
+    printRowP(2, PSTR("Build " REPETIER_BUILD_DATE));
 
 #endif // not DISPLAY_U8G
 #endif // gameduino2
@@ -2596,8 +2600,6 @@ int UIDisplay::okAction(bool allowMoves) {
                 popMenu(true);
 
                 Printer::continuePrint();
-
-                Printer::setJamcontrolDisabled(false);
             }
             break;
 #if EXTRUDER_JAM_CONTROL
@@ -3770,8 +3772,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
               if (Printer::isPrinting())
                 Printer::pausePrint();
 
-              Printer::setJamcontrolDisabled(true);
-
               if (Extruder::current->tempControl.currentTemperatureC < FILAMENT_LOAD_UNLOAD_PURGE_TEMP) {
                 pushMenu(&ui_wiz_jamwaitheat, true);
                 Extruder::setTemperatureForExtruder(FILAMENT_LOAD_UNLOAD_PURGE_TEMP, Extruder::current->id, false, true);
@@ -3791,8 +3791,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
 #if EXTRUDER_JAM_CONTROL
         case UI_ACTION_WIZARD_JAM_EOF:
             if (mainThreadAction == action) {
-                Printer::setJamcontrolDisabled(true);
-
                 Printer::pausePrint();
 
                 Extruder::current->retractDistance(FILAMENTCHANGE_LONGRETRACT); //VT uncomment
@@ -4185,6 +4183,7 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             break;
 
         case UI_ACTION_PURGE_FILAMENT_BOWDEN:
+            popMenu(false);
             Printer::homeAxis(true, true, true);
             Extruder::selectExtruderById(0);
 
@@ -4197,10 +4196,10 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
-            pushMenu(&ui_wiz_filamentchange, true);
             break;
 
         case UI_ACTION_PURGE_FILAMENT_DIRECT:
+            popMenu(false);
             Printer::homeAxis(true, true, true);
             Extruder::selectExtruderById(1);
 
@@ -4213,7 +4212,6 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             Commands::waitUntilEndOfAllBuffers();
 
             popMenu(false);
-            pushMenu(&ui_wiz_filamentchange, true);
             break;
 
         case UI_ACTION_FACTORY_RESET_CONFIRM:

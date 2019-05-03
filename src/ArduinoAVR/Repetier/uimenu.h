@@ -98,10 +98,12 @@ UI_MENU_ACTION4_T(ui_menu_epos, UI_ACTION_EPOSITION, UI_TEXT_ACTION_EPOSITION_FA
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_xpos, UI_TEXT_X_POSITION_ID, ui_menu_xpos)
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_ypos, UI_TEXT_Y_POSITION_ID, ui_menu_ypos)
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_zpos, UI_TEXT_Z_POSITION_ID, ui_menu_zpos)
+UI_MENU_ACTIONSELECTOR_T(ui_menu_go_zpos_notest, UI_TEXT_Z_POSITION_ID, ui_menu_zpos_notest)
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_epos, UI_TEXT_E_POSITION_ID, ui_menu_epos)
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_xfast, UI_TEXT_X_POS_FAST_ID, ui_menu_xpos_fast)
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_yfast, UI_TEXT_Y_POS_FAST_ID, ui_menu_ypos_fast)
 UI_MENU_ACTIONSELECTOR_T(ui_menu_go_zfast, UI_TEXT_Z_POS_FAST_ID, ui_menu_zpos_fast)
+UI_MENU_ACTIONSELECTOR_T(ui_menu_go_zfast_notest, UI_TEXT_Z_POS_FAST_ID, ui_menu_zpos_fast_notest)
 
 #define UI_MENU_POSITIONS {&ui_menu_back, &ui_menu_home_all, &ui_menu_go_xfast, &ui_menu_go_xpos, &ui_menu_go_yfast, &ui_menu_go_ypos, &ui_menu_go_zfast, &ui_menu_go_zpos}
 UI_MENU(ui_menu_positions, UI_MENU_POSITIONS, 7)
@@ -240,9 +242,14 @@ UI_MENU(ui_menu_factory_reset_confirm, UI_MENU_FACTORY_RESET_CONFIRM, 4)
 UI_MENU_ACTIONCOMMAND_T(ui_menu_service_only, UI_TEXT_SERVICE_ONLY_ID, UI_ACTION_DUMMY)
 UI_MENU_ACTIONCOMMAND_T(ui_menu_service_only_separator, UI_TEXT_LINE_SEPARATOR_ID, UI_ACTION_DUMMY)
 
+UI_MENU_ACTIONCOMMAND_T(ui_menu_set_measured_origin, UI_TEXT_SET_MEASURED_ORIGIN_ID, UI_ACTION_SET_MEASURED_ORIGIN)
+#define UI_MENU_DELTA {&ui_menu_back, &ui_menu_home_all, &ui_menu_go_zfast_notest, &ui_menu_go_zpos_notest, &ui_menu_set_measured_origin}
+UI_MENU(ui_menu_delta, UI_MENU_DELTA, 5)
+UI_MENU_SUBMENU_T(ui_menu_conf_delta, UI_TEXT_ZCALIB_ID, ui_menu_delta)
+
 // Service menu
-#define UI_MENU_SERVICE {&ui_menu_back, &ui_menu_service_only_separator, &ui_menu_service_only, &ui_menu_service_only_separator, &ui_menu_general_baud, &ui_menu_general_stepper_inactive, &ui_menu_general_max_inactive, &ui_menu_conf_accel, &ui_menu_conf_feed, &ui_menu_conf_extr, &ui_menu_conf_bed, &ui_menu_service_cal_sub, &ui_menu_conf_to_eeprom, &ui_menu_conf_from_eeprom, &ui_menu_factory_reset}
-UI_MENU(ui_menu_service, UI_MENU_SERVICE, 15)
+#define UI_MENU_SERVICE {&ui_menu_back, &ui_menu_service_only_separator, &ui_menu_service_only, &ui_menu_service_only_separator, &ui_menu_general_baud, &ui_menu_general_stepper_inactive, &ui_menu_general_max_inactive, &ui_menu_conf_accel, &ui_menu_conf_feed, &ui_menu_conf_extr, &ui_menu_conf_bed, &ui_menu_conf_delta, &ui_menu_service_cal_sub, &ui_menu_conf_to_eeprom, &ui_menu_conf_from_eeprom, &ui_menu_factory_reset}
+UI_MENU(ui_menu_service, UI_MENU_SERVICE, 16)
 UI_MENU_SUBMENU_FILTER_T(ui_menu_service_sub, UI_TEXT_NA_ID , ui_menu_service, 0, MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
 
@@ -303,7 +310,7 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_fan_ignoreM106, UI_TEXT_IGNORE_M106_ID, UI_ACTIO
 UI_MENU_ACTIONCOMMAND_FILTER_T(ui_menu_fan_ignoreM106_printing, UI_TEXT_IGNORE_M106_ID, UI_ACTION_IGNORE_M106,MENU_MODE_PRINTING,0)
 
 // Main menu
-#define UI_MENU_MAIN {&ui_menu_back, &ui_stop, &ui_pause, &ui_continue, &ui_menu_home_all, &ui_menu_sd_printfile, &ui_menu_quick_changefil_printing, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
+#define UI_MENU_MAIN {&ui_menu_back, &ui_menu_home_all, &ui_stop, &ui_pause, &ui_continue, &ui_menu_sd_printfile, &ui_menu_quick_changefil_printing, &ui_menu_load_filament, &ui_menu_unload_filament, &ui_menu_purge_filament, &ui_menu_move, &ui_menu_extrudercontrol, &ui_menu_settings, &ui_menu_service_sub, &ui_menu_ext_temp0_printing, &ui_menu_ext_temp1_printing, &ui_menu_bed_temp_printing, &ui_menu_quick_zbaby_printing, &ui_menu_quick_speedmultiply_printing, &ui_menu_quick_flowmultiply_printing, &ui_menu_fan_fanspeed_printing, &ui_menu_fan_ignoreM106_printing} 
 UI_MENU(ui_menu_main, UI_MENU_MAIN, 22)
 
 

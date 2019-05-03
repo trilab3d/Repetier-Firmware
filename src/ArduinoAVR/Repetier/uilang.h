@@ -473,7 +473,7 @@
 
 #define UI_TEXT_FACTORY_RESET_ID 355 //  "Factory reset"
 #define UI_TEXT_FACTORY_RESET_CONFIRM_ID 356 //  "Confirm factory reset ?"
-#define UI_TEXT_SERVICE_ONLY_ID 357 // "!!! Service only !!!"
+#define UI_TEXT_SERVICE_ONLY_ID 357 // "!! Service only !!"
 #define UI_TEXT_LINE_SEPARATOR_ID 358 // "===================="
 
 #define UI_TEXT_Z_HOME_CALIB_ID 359 // "Z home calib"
@@ -877,7 +877,7 @@
 #define UI_TEXT_FACTORY_RESET_EN "Factory reset"
 #define UI_TEXT_FACTORY_RESET_CONFIRM_EN "Confirm factory reset ?"
 
-#define UI_TEXT_SERVICE_ONLY_EN "!! Service only !!!"
+#define UI_TEXT_SERVICE_ONLY_EN "!! Service only !!"
 #define UI_TEXT_LINE_SEPARATOR_EN "==================="
 
 #define UI_TEXT_Z_HOME_CALIB_EN "Z home calib"
