@@ -4213,6 +4213,14 @@ int UIDisplay::executeAction(unsigned int action, bool allowMoves) {
             popMenu(false);
             break;
 
+        case UI_ACTION_PID_TUNING:
+            Printer::homeAxis(true, true, true);
+
+            pushMenu(&ui_menu_pid_tuning_running, true);
+            tempController[0]->autotunePID(210, 0, 5, true, 10);
+            popMenu(false);
+            break;
+
         case UI_ACTION_FACTORY_RESET_CONFIRM:
             pushMenu(&ui_menu_factory_reset_confirm, true);
             break;
