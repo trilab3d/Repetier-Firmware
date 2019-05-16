@@ -24,8 +24,8 @@
 
 #include <math.h>
 #include <stdint.h>
-#define REPETIER_VERSION "1.0.1.2-dev"
-#define REPETIER_BUILD_DATE "2019-05-03"
+#define REPETIER_VERSION "1.0.1.3-dev"
+#define REPETIER_BUILD_DATE "2019-05-16"
 
 // Use new communication model for multiple channels - only until stable, then old version gets deleted
 #define NEW_COMMUNICATION 1

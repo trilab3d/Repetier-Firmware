@@ -98,7 +98,7 @@
 #define LANGUAGE_FI_ID 11
 
 #define NUM_LANGUAGES_KNOWN 12 //12
-#define NUM_TRANSLATED_WORDS 360 //322
+#define NUM_TRANSLATED_WORDS 362 //322
 
 // For selectable translations we refer to each text by a id which gets
 // defined here. The list starts at 0 and defines the position in the
@@ -477,6 +477,9 @@
 #define UI_TEXT_LINE_SEPARATOR_ID 358 // "===================="
 
 #define UI_TEXT_Z_HOME_CALIB_ID 359 // "Z home calib"
+
+#define UI_TEXT_PID_TUNING_ID 360 // "PID tuning"
+#define UI_TEXT_PID_TUNING_RUNNING_ID 361 // "PID tuning running..."
 
 // Universal definitions
 
@@ -881,6 +884,9 @@
 #define UI_TEXT_LINE_SEPARATOR_EN "==================="
 
 #define UI_TEXT_Z_HOME_CALIB_EN "Z home calib"
+
+#define UI_TEXT_PID_TUNING_EN "PID tuning"
+#define UI_TEXT_PID_TUNING_RUNNING_EN "PID tuning running"
 
 // *************** German translation ****************
 

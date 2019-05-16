@@ -247,9 +247,16 @@ UI_MENU_ACTIONCOMMAND_T(ui_menu_set_measured_origin, UI_TEXT_SET_MEASURED_ORIGIN
 UI_MENU(ui_menu_delta, UI_MENU_DELTA, 5)
 UI_MENU_SUBMENU_T(ui_menu_conf_delta, UI_TEXT_ZCALIB_ID, ui_menu_delta)
 
+UI_MENU_ACTIONCOMMAND_T(ui_menu_pid_tuning, UI_TEXT_PID_TUNING_ID, UI_ACTION_PID_TUNING)
+
+
+UI_MENU_HEADLINE_T(ui_menu_pid_tuning_running_1, UI_TEXT_PID_TUNING_RUNNING_ID)
+#define UI_MENU_PID_TUNING_RUNNING {&ui_menu_please_wait, &ui_menu_empty, &ui_menu_pid_tuning_running_1, &ui_menu_empty}
+UI_MENU(ui_menu_pid_tuning_running, UI_MENU_PID_TUNING_RUNNING, 4)
+
 // Service menu
-#define UI_MENU_SERVICE {&ui_menu_back, &ui_menu_service_only_separator, &ui_menu_service_only, &ui_menu_service_only_separator, &ui_menu_general_baud, &ui_menu_general_stepper_inactive, &ui_menu_general_max_inactive, &ui_menu_conf_accel, &ui_menu_conf_feed, &ui_menu_conf_extr, &ui_menu_conf_bed, &ui_menu_conf_delta, &ui_menu_service_cal_sub, &ui_menu_conf_to_eeprom, &ui_menu_conf_from_eeprom, &ui_menu_factory_reset}
-UI_MENU(ui_menu_service, UI_MENU_SERVICE, 16)
+#define UI_MENU_SERVICE {&ui_menu_back, &ui_menu_service_only_separator, &ui_menu_service_only, &ui_menu_service_only_separator, &ui_menu_general_baud, &ui_menu_general_stepper_inactive, &ui_menu_general_max_inactive, &ui_menu_conf_accel, &ui_menu_conf_feed, &ui_menu_conf_extr, &ui_menu_conf_bed, &ui_menu_conf_delta, &ui_menu_pid_tuning, &ui_menu_service_cal_sub, &ui_menu_conf_to_eeprom, &ui_menu_conf_from_eeprom, &ui_menu_factory_reset}
+UI_MENU(ui_menu_service, UI_MENU_SERVICE, 17)
 UI_MENU_SUBMENU_FILTER_T(ui_menu_service_sub, UI_TEXT_NA_ID , ui_menu_service, 0, MENU_MODE_PRINTING + MENU_MODE_PAUSED)
 
 
