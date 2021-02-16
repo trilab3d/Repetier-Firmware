@@ -98,7 +98,7 @@
 #define LANGUAGE_FI_ID 11
 
 #define NUM_LANGUAGES_KNOWN 12 //12
-#define NUM_TRANSLATED_WORDS 347 //322
+#define NUM_TRANSLATED_WORDS 362 //322
 
 // For selectable translations we refer to each text by a id which gets
 // defined here. The list starts at 0 and defines the position in the
@@ -449,16 +449,37 @@
 #define UI_TEXT_CAL_RESULT_3_ID 335
 #define UI_TEXT_CAL_RESULT_4_ID 336
 
-#define UI_TEXT_X_ENDSTOP_OFFSET_ID 337 // "X endstop offset %@x"
-#define UI_TEXT_Y_ENDSTOP_OFFSET_ID 338 // "Y endstop offset %@y"
-#define UI_TEXT_Z_ENDSTOP_OFFSET_ID 339 // "Z endstop offset %@z"
-#define UI_TEXT_DELTA_RADIUS_ID 340 // "Delta radius %@r"
-#define UI_TEXT_X_TOWER_ANGLE_ID 341 // "X tower angle %@a"
-#define UI_TEXT_Y_TOWER_ANGLE_ID 342 // "Y tower angle %@b"
-#define UI_TEXT_Z_TOWER_ANGLE_ID 343 // "Z tower angle %@c"
-#define UI_TEXT_DIAGONAL_ROD_LENGTH_ID 344 // "Diagonal rod %@l"
-#define UI_TEXT_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
-#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_ID 346 // "Confirm reset ?"
+#define UI_TEXT_CAL_X_ENDSTOP_OFFSET_ID 337 // "X endstop offset %@x"
+#define UI_TEXT_CAL_Y_ENDSTOP_OFFSET_ID 338 // "Y endstop offset %@y"
+#define UI_TEXT_CAL_Z_ENDSTOP_OFFSET_ID 339 // "Z endstop offset %@z"
+#define UI_TEXT_CAL_DELTA_RADIUS_ID 340 // "Delta radius %@r"
+#define UI_TEXT_CAL_X_TOWER_ANGLE_ID 341 // "X tower angle %@a"
+#define UI_TEXT_CAL_Y_TOWER_ANGLE_ID 342 // "Y tower angle %@b"
+#define UI_TEXT_CAL_Z_TOWER_ANGLE_ID 343 // "Z tower angle %@c"
+#define UI_TEXT_CAL_DIAGONAL_ROD_LENGTH_ID 344 // "Diagonal rod %@l"
+#define UI_TEXT_CAL_RESET_TO_DEFAULTS_ID 345 // "Reset to defaults"
+#define UI_TEXT_CAL_CONFIRM_RESET_TO_DEFAULTS_ID 346 // "Confirm reset ?"
+
+#define UI_TEXT_LOAD_FILAMENT_ID 347 // "Load filament"
+#define UI_TEXT_UNLOAD_FILAMENT_ID 348 // "Unload filament"
+#define UI_TEXT_PURGE_FILAMENT_ID 349 // "Purge filament"
+
+#define UI_TEXT_BOWDEN_EXTRUDER_ID 350 // "Bowden extruder"
+#define UI_TEXT_DIRECT_EXTRUDER_ID 351 // "Direct extruder"
+
+#define UI_TEXT_LOADING_FILAMENT_ID 352 // "Loading filament ..."
+#define UI_TEXT_UNLOADING_FILAMENT_ID 353 // "Unloading filament ..."
+#define UI_TEXT_PURGING_FILAMENT_ID 354 // "Purging filament ..."
+
+#define UI_TEXT_FACTORY_RESET_ID 355 //  "Factory reset"
+#define UI_TEXT_FACTORY_RESET_CONFIRM_ID 356 //  "Confirm factory reset ?"
+#define UI_TEXT_SERVICE_ONLY_ID 357 // "!! Service only !!"
+#define UI_TEXT_LINE_SEPARATOR_ID 358 // "===================="
+
+#define UI_TEXT_Z_HOME_CALIB_ID 359 // "Z home calib"
+
+#define UI_TEXT_PID_TUNING_ID 360 // "PID tuning"
+#define UI_TEXT_PID_TUNING_RUNNING_ID 361 // "PID tuning running..."
 
 // Universal definitions
 
@@ -834,16 +855,38 @@
 #define UI_TEXT_CAL_RESULT_3_EN "Ze %@k Za %@o"
 #define UI_TEXT_CAL_RESULT_4_EN "DR %@p Dev %@q"
 
-#define UI_TEXT_X_ENDSTOP_OFFSET_EN "X endstop offst %@x"
-#define UI_TEXT_Y_ENDSTOP_OFFSET_EN "Y endstop offst %@y"
-#define UI_TEXT_Z_ENDSTOP_OFFSET_EN "Z endstop offst %@z"
-#define UI_TEXT_DELTA_RADIUS_EN "Delta radius %@r"
-#define UI_TEXT_X_TOWER_ANGLE_EN "X tower angl %@a"
-#define UI_TEXT_Y_TOWER_ANGLE_EN "Y tower angl %@b"
-#define UI_TEXT_Z_TOWER_ANGLE_EN "Z tower angl %@c"
-#define UI_TEXT_DIAGONAL_ROD_LENGTH_EN "Diagonal rod %@l"
-#define UI_TEXT_RESET_TO_DEFAULTS_EN "Reset to defaults"
-#define UI_TEXT_CONFIRM_RESET_TO_DEFAULTS_EN "Confirm reset ?"
+#define UI_TEXT_CAL_X_ENDSTOP_OFFSET_EN "X endstop offst %@x"
+#define UI_TEXT_CAL_Y_ENDSTOP_OFFSET_EN "Y endstop offst %@y"
+#define UI_TEXT_CAL_Z_ENDSTOP_OFFSET_EN "Z endstop offst %@z"
+#define UI_TEXT_CAL_DELTA_RADIUS_EN "Delta radius %@r"
+#define UI_TEXT_CAL_X_TOWER_ANGLE_EN "X tower angl %@a"
+#define UI_TEXT_CAL_Y_TOWER_ANGLE_EN "Y tower angl %@b"
+#define UI_TEXT_CAL_Z_TOWER_ANGLE_EN "Z tower angl %@c"
+#define UI_TEXT_CAL_DIAGONAL_ROD_LENGTH_EN "Diagonal rod %@l"
+#define UI_TEXT_CAL_RESET_TO_DEFAULTS_EN "Reset to defaults"
+#define UI_TEXT_CAL_CONFIRM_RESET_TO_DEFAULTS_EN "Confirm reset ?"
+
+#define UI_TEXT_LOAD_FILAMENT_EN "Load filament"
+#define UI_TEXT_UNLOAD_FILAMENT_EN "Unload filament"
+#define UI_TEXT_PURGE_FILAMENT_EN "Purge filament"
+
+#define UI_TEXT_BOWDEN_EXTRUDER_EN "Bowden extruder"
+#define UI_TEXT_DIRECT_EXTRUDER_EN "Direct extruder"
+
+#define UI_TEXT_LOADING_FILAMENT_EN "Loading filament ..."
+#define UI_TEXT_UNLOADING_FILAMENT_EN "Unloading filament ..."
+#define UI_TEXT_PURGING_FILAMENT_EN "Purging filament ..."
+
+#define UI_TEXT_FACTORY_RESET_EN "Factory reset"
+#define UI_TEXT_FACTORY_RESET_CONFIRM_EN "Confirm factory reset ?"
+
+#define UI_TEXT_SERVICE_ONLY_EN "!! Service only !!"
+#define UI_TEXT_LINE_SEPARATOR_EN "==================="
+
+#define UI_TEXT_Z_HOME_CALIB_EN "Z home calib"
+
+#define UI_TEXT_PID_TUNING_EN "PID tuning"
+#define UI_TEXT_PID_TUNING_RUNNING_EN "PID tuning running"
 
 // *************** German translation ****************
 
